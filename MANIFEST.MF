@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Created-By: 1.7.0_17 (Oracle Corporation)
-Class-Path: antlr-4.0-complete.jar
-Main-Class: MyTestRig
-

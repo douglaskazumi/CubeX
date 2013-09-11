@@ -3,7 +3,7 @@
 if(true){
 	Int `This is the first line
 	`Sec
-	`In the # middle'ond'' x == 10;
+	`In the # middle'ond'' x := 10;
 }
 else{
 	while(false){
