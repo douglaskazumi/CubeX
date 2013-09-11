@@ -1,0 +1,20 @@
+
+	"asjdiajsd#``````comment'laksdasdk"
+if(true){
+	Int `This is the first line
+	`Sec
+	`In the # middle'ond'' x == 10;
+}
+else{
+	while(false){
+		return 10; # return
+	}
+}
+
+interface Int3_Rface extends Nothing{
+	fun Thing function();
+	lname.function();
+	.< .. << ... . < <
+}
+
+x:int,y:string,z:;
