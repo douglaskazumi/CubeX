@@ -18,7 +18,8 @@ THING : 'Thing';
 NOTHING : 'Nothing';
 
 INT : [0-9]+;
-NAMEU : [A-Z][a-zA-Z0-9_]*;
+NAMEUSINGLE : [A-Z];
+NAMEU : [A-Z][a-zA-Z0-9_]+;
 NAMEL : [a-z][a-zA-Z0-9_]*;
 STRING : '"' .*? '"';
 
