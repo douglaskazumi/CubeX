@@ -1,3 +1,0 @@
-((decl=functiondecl SEMICOLON {decls.add(new CubeXFunction($decl.x));})|(f=function {decls.add($f.x);}))*
-
-(decl=functiondecl SEMICOLON {decls.add(new CubeXFunction($decl.x));})

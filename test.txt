@@ -1,2 +1,9 @@
-# parser test program 3
-if(a>b) {z:=a-b; x:=u.v(z);}
+for(n in 3)
+while(3!=4)
+{
+return 1;
+if(2)
+{
+return 2+2;
+}
+}

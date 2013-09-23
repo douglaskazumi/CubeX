@@ -49,13 +49,13 @@ expr returns [CubeXExpression x]
 	| LBRACK elist=exprlist RBRACK
 	{$x = new CubeXIterable($elist.x);}
 	| op=(DASH|BANG) e1=expr
-	{$x = $op.type==DASH ? new CubeXNegative($e.x) : new CubeXNegate($e.x);}
+	{$x = $op.type==DASH ? new CubeXNegative($e1.x) : new CubeXNegate($e1.x);}
 	| e1=expr op=(STAR|SLASH|PERCENT) e2=expr
 	{$x = $op.type==STAR ? new CubeXMultiply($e1.x, $e2.x) :
 		$op.type==SLASH ? new CubeXDivide($e1.x, $e2.x) : new CubeXMod($e1.x, $e2.x);}
 	| e1=expr op=(PLUS|DASH) e2=expr
 	{$x = $op.type==PLUS ? new CubeXPlus($e1.x, $e2.x) : new CubeXMinus($e1.x, $e2.x) ;}
-	| op=(DOTDOTDOT|LESSDOTDOT) e1=expr
+	|  e1=expr op=(DOTDOTDOT|LESSDOTDOT)
 	{$x = $op.type==DOTDOTDOT ? new CubeXOnwards($e1.x, true) : new CubeXOnwards($e1.x, false);}
 	| e1=expr op=(DOTDOT|LESSDOT|DOTLESS|LESSLESS) e2=expr
 	{$x = $op.type==DOTDOT ? new CubeXThrough($e1.x, $e2.x, true, true) 
