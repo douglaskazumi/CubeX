@@ -1,0 +1,2 @@
+The assignment was fairly difficult. It was not very hard to think of a solution for it, but there was some mechanical work.
+Philip was in charge of the main programming part, while Alisson and Douglas took care of reviewing and testing it with more complex test cases, besides setting up unit tests for the whole thing.
