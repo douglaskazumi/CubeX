@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 
 
-public class MyTestRig  implements ANTLRErrorListener {
+public class MyTestRig {
 	
 public static void main(String[] args) throws IOException
 {
@@ -29,79 +29,90 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(args[0]));
 	CubeXLexer lexer = new CubeXLexer(input);
 	lexer.removeErrorListeners();
-	lexer.addErrorListener(this);
+	lexer.addErrorListener(new LexerError());
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
+	CubeXParser parser = new CubeXParser(tokens);
+	//parser.removeErrorListeners();
+	//parser.addErrorListener(new ParserError());
 	
-	tokens.fill();
-	String prefix="";
-	StringBuilder sb = new StringBuilder();
-	for (Token t : tokens.getTokens())
-	{
-		if(t.getType()==-1)
-			break;
+	CubeXProgram prog = parser.testprogram().x;
+	System.out.println(prog.toString());
+}
 		
-		String result="";
-		switch(lexer.getRuleNames()[t.getType()-1])
-		{
-		case "NAMEU":
-			result = "Name";
-			break;
-		case "NAMEL":
-			result = "name";
-			break;
-		case "STRING":
-			result = "\"\"";
-			break;
-		case "INT":
-			result = "0";
-			break;
-		case "TRUE":
-		case "FALSE":
-			result = "true";
-			break;
-		default:	
-			result = t.getText();
-			break;
-		}
-		
-		sb.append(prefix).append(result);
-		prefix=" ";
-	}
-	System.out.print(sb);
-
 }
 
-		@Override
-		public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3,
-				BitSet arg4, ATNConfigSet arg5) {
-			print();
-		}
+class LexerError  implements ANTLRErrorListener
+{
 
-		@Override
-		public void reportAttemptingFullContext(Parser arg0, DFA arg1,
-				int arg2, int arg3, ATNConfigSet arg4) {
-			// TODO Auto-generated method stub
-			print();
-		}
+	@Override
+	public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3,
+			BitSet arg4, ATNConfigSet arg5) {
+		print();
+	}
 
-		@Override
-		public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2,
-				int arg3, ATNConfigSet arg4) {
-			// TODO Auto-generated method stub
-			print();
-		}
+	@Override
+	public void reportAttemptingFullContext(Parser arg0, DFA arg1,
+			int arg2, int arg3, ATNConfigSet arg4) {
+		// TODO Auto-generated method stub
+		print();
+	}
 
-		@Override
-		public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2,
-				int arg3, String arg4, RecognitionException arg5) {
-			print();
-			
-		}
+	@Override
+	public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2,
+			int arg3, ATNConfigSet arg4) {
+		// TODO Auto-generated method stub
+		print();
+	}
+
+	@Override
+	public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2,
+			int arg3, String arg4, RecognitionException arg5) {
+		print();
 		
-		private void print()
-		{
-			System.out.println("error");
-			System.exit(-1);
-		}
+	}
+	
+	private void print()
+	{
+		System.out.println("lexer error");
+		System.exit(-1);
+	}
+	
+}
+
+class ParserError  implements ANTLRErrorListener
+{
+
+	@Override
+	public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3,
+			BitSet arg4, ATNConfigSet arg5) {
+		print();
+	}
+
+	@Override
+	public void reportAttemptingFullContext(Parser arg0, DFA arg1,
+			int arg2, int arg3, ATNConfigSet arg4) {
+		// TODO Auto-generated method stub
+		print();
+	}
+
+	@Override
+	public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2,
+			int arg3, ATNConfigSet arg4) {
+		// TODO Auto-generated method stub
+		print();
+	}
+
+	@Override
+	public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2,
+			int arg3, String arg4, RecognitionException arg5) {
+		print();
 		
+	}
+	
+	private void print()
+	{
+		System.out.println("parser error");
+		System.exit(-1);
+	}
+	
 }
