@@ -3,14 +3,14 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="C:/Users/kazumi/workspace/CubeX/Parser.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="./Parser.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="main.MyTestRig"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="C:/Users/kazumi/workspace/CubeX/bin"/>
-			<fileset dir="C:/Users/kazumi/workspace/CubeX/src/main"/>
-            <zipfileset excludes="META-INF/*.SF" src="C:/Users/kazumi/workspace/CubeX/antlr-4.0-complete.jar"/>
+            <fileset dir="./bin"/>
+			<fileset dir="./src/main"/>
+            <zipfileset excludes="META-INF/*.SF" src="./antlr-4.0-complete.jar"/>
         </jar>
     </target>
 </project>
