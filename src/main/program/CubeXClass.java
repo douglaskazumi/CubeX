@@ -1,6 +1,7 @@
 package main.program;
 import java.util.ArrayList;
 
+import main.context.FunctionContext;
 import main.expression.CubeXExpression;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
@@ -9,15 +10,15 @@ import main.type.CubeXTypeVariable;
 
 public class CubeXClass extends CubeXProgramPiece {
 
-	String name;
-	ArrayList<CubeXTypeVariable> types;
-	CubeXType parentType;
-	ArrayList<CubeXFunction> functions;
-	ArrayList<CubeXArgument> constructorArgs;
-	ArrayList<CubeXStatement> statements;
-	ArrayList<CubeXExpression> superArgs;
+	private String name;
+	private ArrayList<CubeXTypeVariable> types;
+	private CubeXType parentType;
+	private ArrayList<CubeXFunction> functions;
+	private ArrayList<CubeXArgument> constructorArgs;
+	private ArrayList<CubeXStatement> statements;
+	private ArrayList<CubeXExpression> superArgs;
 	
-	
+	private FunctionContext myFunctionContext;
 	
 	
 	public CubeXClass(String name, ArrayList<CubeXTypeVariable> types, ArrayList<CubeXArgument> constructorArgs, CubeXType parentType, ArrayList<CubeXStatement> stats, ArrayList<CubeXExpression> superArgs, ArrayList<CubeXFunction> functions)
@@ -34,6 +35,13 @@ public class CubeXClass extends CubeXProgramPiece {
 		this.statements=stats;
 		this.superArgs=superArgs;
 		this.functions=functions;
+		
+		//TODO initialize function context somewhere!
+	}
+	
+	public FunctionContext getFunctionContext()
+	{
+		return myFunctionContext;
 	}
 	
 	public String toString()

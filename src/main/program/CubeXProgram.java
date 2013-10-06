@@ -1,11 +1,7 @@
 package main.program;
 import java.util.ArrayList;
 
-import main.context.BaseContext;
 import main.context.*;
-import main.context.GlobalContexts;
-import main.expression.CubeXVariable;
-
 
 public class CubeXProgram {
 	

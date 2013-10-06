@@ -2,10 +2,13 @@ package main.expression;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeCheckError;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
+import main.exceptions.ContextException;
 import main.type.CubeXType;
 
 
@@ -57,6 +60,18 @@ public class CubeXFunctionCall extends CubeXExpression
 		}
 		sb.append(")");
 		return sb.toString();
+	}
+
+	@Override
+	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) throws TypeCheckError,	ContextException 
+	{
+		if(parent!=null)
+		{
+			CubeXType ptype = parent.getType(classCon, funCon, varCon, typeVarCon);
+			if(ptype.isVariable())
+				throw
+		}
+		return null;
 	}
 
 }

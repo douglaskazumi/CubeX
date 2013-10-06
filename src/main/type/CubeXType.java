@@ -2,41 +2,51 @@ package main.type;
 
 import main.context.ClassContext;
 import main.context.TypeVariableContext;
+import main.exceptions.ContextException;
+import main.program.CubeXFunction;
 
 public abstract class CubeXType 
 {
 
 	
-	public static CubeXTypeBoolean CubeXBool = new CubeXTypeBoolean();
+	public static CubeXTypeBoolean cubeXBool = new CubeXTypeBoolean();
 	public static CubeXTypeBoolean getBoolean()
 	{
-		return CubeXBool;
+		return cubeXBool;
 	}
 	
-	public static CubeXTypeInteger CubeXInt = new CubeXTypeInteger();
+	public static CubeXTypeInteger cubeXInt = new CubeXTypeInteger();
 	public static CubeXTypeInteger getInteger()
 	{
-		return CubeXInt;
+		return cubeXInt;
 	}
 	
-	public static CubeXTypeCharacter CubeXChar = new CubeXTypeCharacter();
+	public static CubeXTypeCharacter cubeXChar = new CubeXTypeCharacter();
 	public static CubeXTypeCharacter getCharacter()
 	{
-		return CubeXChar;
+		return cubeXChar;
 	}	
 	
-	public static CubeXTypeSpecial CubeXThing = new CubeXTypeSpecial(true);
+	public static CubeXTypeSpecial cubeXThing = new CubeXTypeSpecial(true);
 	public static CubeXTypeSpecial getThing()
 	{
-		return CubeXThing;
+		return cubeXThing;
 	}	
 	
-	public static CubeXTypeSpecial CubeXNothing = new CubeXTypeSpecial(false);
+	public static CubeXTypeSpecial cubeXNothing = new CubeXTypeSpecial(false);
 	public static CubeXTypeSpecial getNothing()
 	{
-		return CubeXNothing;
+		return cubeXNothing;
 	}	
 	
+	public static CubeXTypeString cubeXString = new CubeXTypeString();
+	public static CubeXTypeString getString()
+	{
+		return cubeXString;
+	}	
+	
+	
+	//TODO finish this!
 	@Override
 	public boolean equals(Object other)
 	{
@@ -45,6 +55,7 @@ public abstract class CubeXType
 		return ((CubeXType)other).equals(this);
 	}	
 	
+	public abstract CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException;
 	
 	public boolean isBool()
 	{
@@ -92,5 +103,6 @@ public abstract class CubeXType
 		return null;
 		//TODO 
 	}
+
 }
 

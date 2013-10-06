@@ -2,6 +2,11 @@ package main.exceptions;
 
 public class ContextException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8633387361616341178L;
+
 	public ContextException() {
 		// TODO Auto-generated constructor stub
 	}

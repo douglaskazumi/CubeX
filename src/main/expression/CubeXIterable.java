@@ -1,11 +1,14 @@
 package main.expression;
 import java.util.ArrayList;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeCheckError;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
-import main.type.CubeXType;
+import main.exceptions.ContextException;
+import main.type.*;
 
 public class CubeXIterable extends CubeXExpression
 {
@@ -31,13 +34,13 @@ public class CubeXIterable extends CubeXExpression
 	}
 
 	@Override
-	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon)
+	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) throws TypeCheckError, ContextException
 	{
 		CubeXType curType=CubeXType.getNothing();
 		for(CubeXExpression exp : entries)
 		{
 			curType = CubeXType.join(curType, exp.getType(classCon, funCon, varCon, typeVarCon), classCon, typeVarCon);
 		}
-		return new 
+		return new CubeXTypeIterable(curType);
 	}
 }

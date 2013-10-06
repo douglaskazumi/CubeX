@@ -1,5 +1,11 @@
 package main.type;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import main.context.*;
+import main.exceptions.ContextException;
+import main.program.CubeXClass;
+import main.program.CubeXFunction;
 
 
 public class CubeXTypeClass extends CubeXType 
@@ -7,6 +13,7 @@ public class CubeXTypeClass extends CubeXType
 	
 	private String name;
 	private ArrayList<CubeXType> parameters;
+	private CubeXClass classDeclaration;
 	
 	public CubeXTypeClass(String name, ArrayList<CubeXType> parameters)
 	{
@@ -19,6 +26,13 @@ public class CubeXTypeClass extends CubeXType
 	public boolean isClass()
 	{
 		return true;
+	}
+	
+	public CubeXClass getClassDecl(ClassContext classCon) throws ContextException
+	{
+		if (classDeclaration==null)
+			classDeclaration=classCon.lookup(name);
+		return classDeclaration;
 	}
 	
 	public String toString()
@@ -35,6 +49,13 @@ public class CubeXTypeClass extends CubeXType
 		sb.append(">");
 		return sb.toString();
 	}
+
+	@Override
+	public CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException
+	{
+		return getClassDecl(classCon).getFunctionContext().lookup(name);
+	}
+
 }
 
 class CubeXTypeBoolean extends CubeXTypeClass
@@ -92,12 +113,13 @@ class CubeXTypeCharacter extends CubeXTypeClass
 	}
 }
 
-class CubeXTypeIterable extends CubeXTypeClass
+
+class CubeXTypeString extends CubeXTypeClass
 {
 
-	public CubeXTypeIterable(String name, ArrayList<CubeXType> parameters) {
-		super(name, parameters);
-		// TODO Auto-generated constructor stub
+	public CubeXTypeString()
+	{
+		super("String", new ArrayList<CubeXType>(Arrays.asList(CubeXType.getCharacter())));
 	}
 	
 }
