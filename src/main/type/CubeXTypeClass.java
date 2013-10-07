@@ -35,6 +35,11 @@ public class CubeXTypeClass extends CubeXType
 		return classDeclaration;
 	}
 	
+	public CubeXType getConstructableComponent()
+	{
+		return this;
+	}
+	
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();

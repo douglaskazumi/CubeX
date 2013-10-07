@@ -3,6 +3,7 @@ package main.type;
 import main.context.ClassContext;
 import main.context.TypeVariableContext;
 import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.program.CubeXFunction;
 
 public abstract class CubeXType 
@@ -55,7 +56,7 @@ public abstract class CubeXType
 		return ((CubeXType)other).equals(this);
 	}	
 	
-	public abstract CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException;
+	public abstract CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException;
 	
 	public boolean isBool()
 	{
@@ -102,6 +103,11 @@ public abstract class CubeXType
 	public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon, TypeVariableContext typeVarCon) {
 		return null;
 		//TODO 
+	}
+	
+	public CubeXType getConstructableComponent()
+	{
+		return CubeXType.getThing();
 	}
 
 }

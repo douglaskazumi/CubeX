@@ -1,5 +1,11 @@
 package main.type;
 
+
+import main.context.ClassContext;
+import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
+import main.program.CubeXFunction;
+
 public class CubeXTypeSpecial extends CubeXType 
 {
 	private boolean isThing;
@@ -24,4 +30,11 @@ public class CubeXTypeSpecial extends CubeXType
 		sb.append(isThing?"Thing":"Nothing");
 		return sb.toString();
 	}
+
+	@Override
+	public CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException
+	{
+		throw new TypeCheckException();
+	}
+	
 }

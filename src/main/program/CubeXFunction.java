@@ -13,6 +13,18 @@ public class CubeXFunction extends CubeXProgramPiece
 
 	private String name;
 	private ArrayList<CubeXTypeVariable> types;
+	public ArrayList<CubeXTypeVariable> getTypes() {
+		return types;
+	}
+
+	public ArrayList<CubeXArgument> getArglist() {
+		return arglist;
+	}
+
+	public CubeXType getReturnType() {
+		return returnType;
+	}
+
 	private ArrayList<CubeXArgument> arglist;
 	private CubeXType returnType;
 	

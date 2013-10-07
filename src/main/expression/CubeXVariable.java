@@ -5,9 +5,9 @@ import main.context.FunctionContext;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.type.CubeXType;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeCheckError;
 
 public class CubeXVariable extends CubeXExpression 
 {
@@ -24,7 +24,7 @@ public class CubeXVariable extends CubeXExpression
 	}
 
 	@Override
-	protected CubeXType calculateType(ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon) throws TypeCheckError,	ContextException
+	protected CubeXType calculateType(ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon) throws ContextException, TypeCheckException
 	{
 		return varCon.lookup(name).getType(classCon, funCon, varCon, typeVarCon);
 	}
