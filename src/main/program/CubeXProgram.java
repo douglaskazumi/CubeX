@@ -42,26 +42,27 @@ public class CubeXProgram {
 
 	private void initializeContexts()
 	{
-		GlobalContexts.classContext=new ClassContext(null);
-		GlobalContexts.functionContext =new FunctionContext(null);
-		GlobalContexts.variableContext=new VariableContext(null);
+		GlobalContexts.classContext = new ClassContext(null);
+		GlobalContexts.functionContext = new FunctionContext(null);
+		GlobalContexts.variableContext = new VariableContext(null);
 		
 		//TODO finish this
 		ArrayList<CubeXClass> classes = new ArrayList<CubeXClass>();
-		ArrayList<CubeXFunctionDeclaration> functions = new ArrayList<CubeXFunctionDeclaration>();
+		ArrayList<CubeXFunction> functions = new ArrayList<CubeXFunction>();
 		CubeXClass newClass;
-		CubeXFunctionDeclaration newFunction;
+		CubeXFunction newFunction;
 		CubeXScheme newScheme;
 		
 		//Iterable
 		newClass = new CubeXClass("Iterable", new ArrayList<CubeXTypeVariable>(Arrays.asList(new CubeXTypeVariable("E"))), null, CubeXType.getThing(), null, null, null);
 		classes.add(newClass);
 		
+		//Boolean
 		newScheme = new CubeXScheme(null, null, CubeXType.getBoolean());
-		newFunction = new CubeXFunctionDeclaration("negate",newScheme);
+		newFunction = new CubeXFunction(new CubeXFunctionHeader("negate",newScheme));
 		functions.add(newFunction);
 		
-		newClass = new CubeXClass("Boolean", null, null, CubeXType.getThing(), null, null, null);
+		newClass = new CubeXClass("Boolean", null, null, CubeXType.getThing(), null, null, functions);
 		classes.add(newClass);
 		
 	}
@@ -74,7 +75,7 @@ public class CubeXProgram {
 		{
 			for(CubeXProgramPiece piece : pieces )
 			{
-				//piece.typecheck();
+//				piece.typecheck();
 			}
 		}
 		catch (Exception e)

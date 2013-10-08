@@ -1,6 +1,6 @@
 package main.program;
 
-public class CubeXProgramPiece 
+public abstract class CubeXProgramPiece 
 {
-
+	public abstract void typecheck();
 }

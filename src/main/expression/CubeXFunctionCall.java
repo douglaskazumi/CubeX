@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import sun.reflect.generics.tree.TypeVariableSignature;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -74,6 +73,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) throws ContextException, TypeCheckException 
 	{
 		CubeXFunction fun;
+		//Object function calls
 		if(parent!=null)
 		{
 			CubeXType pType = parent.getType(classCon, funCon, varCon, typeVarCon);
@@ -90,12 +90,12 @@ public class CubeXFunctionCall extends CubeXExpression
 			TypeVarSubstitution funSub = new TypeVarSubstitution(fun.getTypes(), parameters);
 			TypeVarSubstitution classSub = res.first;
 			
-			Iterator<? extends CubeXExpression> thisArgIt = args.iterator();
-			Iterator<? extends CubeXArgument> thatArgIt = fun.getArglist().iterator();
-			while(thisArgIt.hasNext())
+			Iterator<? extends CubeXExpression> argValuesIt = args.iterator();
+			Iterator<? extends CubeXArgument> argExpectedTypesIt = fun.getArglist().iterator();
+			while(argValuesIt.hasNext())
 			{
-				CubeXExpression exp = thisArgIt.next();
-				CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(thatArgIt.next().type, classSub), funSub);
+				CubeXExpression exp = argValuesIt.next();
+				CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(argExpectedTypesIt.next().type, classSub), funSub);
 				
 				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
 					throw new TypeCheckException();
@@ -105,9 +105,13 @@ public class CubeXFunctionCall extends CubeXExpression
 		}
 		else
 		{
-			if(name.toLowerCase().equals(name))//is function
+			//Global function call
+			if(name.toLowerCase().equals(name))
 			{
-				fun=funCon.lookup(name); 
+				fun=funCon.lookup(name);
+				if(fun == null){
+					throw new ContextException();
+				}
 
 				if(fun.getTypes().size()!=this.parameters.size())
 					throw new TypeCheckException();
@@ -130,6 +134,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				return CubeXType.makeSubstitution(fun.getReturnType(), sub);
 			}
 			else
+			//Constructor
 			{
 				CubeXClassBase base = classCon.lookup(name);
 				if(base==null)

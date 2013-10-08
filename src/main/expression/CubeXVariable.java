@@ -26,9 +26,9 @@ public class CubeXVariable extends CubeXExpression
 	@Override
 	protected CubeXType calculateType(ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon) throws ContextException, TypeCheckException
 	{
-		CubeXType varType = varCon.lookup(name).getType(classCon, funCon, varCon, typeVarCon);
-		if(varType==null)
+		CubeXVariable var= varCon.lookup(name);
+		if(var==null)
 			throw new ContextException();
-		return varType;
+		return var.getType(classCon, funCon, varCon, typeVarCon);
 	}
 }

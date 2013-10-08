@@ -116,18 +116,25 @@ public abstract class CubeXType
 		//TODO 
 	}
 	
-
+	
 	public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub)
 	{
 		//TODO!!
 		return null;
 	}
 
-
+	/**
+	 * Checks if type 1 is subtype of type2
+	 * @param type1
+	 * @param type2
+	 * @return True if it is.
+	 */
 	public static boolean isSubType(CubeXType type1, CubeXType type2) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// TODO
+//	private array of classbase getParentSet(type)
 }
 

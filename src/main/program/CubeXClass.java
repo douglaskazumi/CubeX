@@ -39,7 +39,7 @@ public class CubeXClass extends CubeXClassBase {
 		this.constructorArgs=constructorArgs;
 		this.statements=stats;
 		this.superArgs=superArgs;
-		
+		//TODO verify null and assign empty arraylist
 		//TODO initialize function context somewhere!
 	}
 	

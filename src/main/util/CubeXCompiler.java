@@ -9,11 +9,11 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 
-public class MyTestRig {
+public class CubeXCompiler {
 	
 public static void main(String[] args) throws IOException
 {
-	MyTestRig mtr = new MyTestRig();
+	CubeXCompiler mtr = new CubeXCompiler();
 	mtr.run(args);
 }
 
@@ -38,6 +38,14 @@ public void run(String[] args) throws FileNotFoundException, IOException
 //	parser.addErrorListener(new ParserError());
 	
 	CubeXProgram prog = parser.testprogram().x;
+	
+	if(prog.typeCheck()){
+		System.out.println("accept");
+	}
+	else{
+		System.out.println("reject");
+	}
+	
 	System.out.println(prog.toString());
 }
 		

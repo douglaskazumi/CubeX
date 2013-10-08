@@ -14,8 +14,7 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 {
 	
 	private CubeXClass classDeclaration;
-	
-	
+		
 	public CubeXTypeClass(String name, ArrayList<? extends CubeXType> parameters)
 	{
 		super(name, parameters);
