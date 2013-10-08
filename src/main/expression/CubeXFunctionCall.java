@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import sun.reflect.generics.tree.TypeVariableSignature;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -10,8 +11,13 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXArgument;
+import main.program.CubeXClass;
+import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.type.CubeXType;
+import main.type.CubeXTypeClass;
+import main.type.Tuple;
+import main.util.TypeVarSubstitution;
 
 
 public class CubeXFunctionCall extends CubeXExpression 
@@ -20,8 +26,6 @@ public class CubeXFunctionCall extends CubeXExpression
 	private String name;
 	private ArrayList<? extends CubeXType> parameters;
 	private ArrayList<? extends CubeXExpression> args;
-	
-	private TypeVariableContext;
 	
 	public CubeXFunctionCall(CubeXExpression parent, String name, ArrayList<? extends CubeXType> parameters, ArrayList<? extends CubeXExpression> args)
 	{
@@ -76,30 +80,87 @@ public class CubeXFunctionCall extends CubeXExpression
 			if(pType.isVariable())
 				throw new TypeCheckException();
 			
-			fun=pType.methodLookup(name, classCon);
-			
+			Tuple<TypeVarSubstitution, CubeXFunction> res = pType.methodLookup(name, classCon);
+			fun = res.second;
 			if(fun.getTypes().size()!=this.parameters.size())
 				throw new TypeCheckException();
 			if(fun.getArglist().size()!=this.args.size())
 				throw new TypeCheckException();
 			
-			
+			TypeVarSubstitution funSub = new TypeVarSubstitution(fun.getTypes(), parameters);
+			TypeVarSubstitution classSub = res.first;
 			
 			Iterator<? extends CubeXExpression> thisArgIt = args.iterator();
 			Iterator<? extends CubeXArgument> thatArgIt = fun.getArglist().iterator();
 			while(thisArgIt.hasNext())
 			{
-				CubeXType.get
-			}
+				CubeXExpression exp = thisArgIt.next();
+				CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(thatArgIt.next().type, classSub), funSub);
 				
-			for(CubeXExpression arg : args)
+				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
+					throw new TypeCheckException();
+			}
+			
+			return CubeXType.makeSubstitution(CubeXType.makeSubstitution(fun.getReturnType(), classSub), funSub);
+		}
+		else
+		{
+			if(name.toLowerCase().equals(name))//is function
 			{
-				fun.getArglist().iterator()
+				fun=funCon.lookup(name); 
+
+				if(fun.getTypes().size()!=this.parameters.size())
+					throw new TypeCheckException();
+				if(fun.getArglist().size()!=this.args.size())
+					throw new TypeCheckException();
+				
+				TypeVarSubstitution sub = new TypeVarSubstitution(fun.getTypes(), parameters);
+				
+				Iterator<? extends CubeXExpression> thisArgIt = args.iterator();
+				Iterator<? extends CubeXArgument> thatArgIt = fun.getArglist().iterator();
+				while(thisArgIt.hasNext())
+				{
+					CubeXExpression exp = thisArgIt.next();
+					CubeXType tpe = CubeXType.makeSubstitution(thatArgIt.next().type, sub);
+					
+					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
+						throw new TypeCheckException();
+				}
+				
+				return CubeXType.makeSubstitution(fun.getReturnType(), sub);
+			}
+			else
+			{
+				CubeXClassBase base = classCon.lookup(name);
+				if(base==null)
+					throw new ContextException();
+				
+				if(base.isInterface())
+					throw new TypeCheckException();
+				
+				CubeXClass clss = (CubeXClass)base;
+				
+				if(clss.getTypes().size()!=this.parameters.size())
+					throw new TypeCheckException();
+				if(clss.getConstructorArgs().size()!=this.args.size())
+					throw new TypeCheckException();
+				
+				TypeVarSubstitution sub = new TypeVarSubstitution(clss.getTypes(), parameters);
+				
+				Iterator<? extends CubeXExpression> thisArgIt = args.iterator();
+				Iterator<? extends CubeXArgument> thatArgIt = clss.getConstructorArgs().iterator();
+				while(thisArgIt.hasNext())
+				{
+					CubeXExpression exp = thisArgIt.next();
+					CubeXType tpe = CubeXType.makeSubstitution(thatArgIt.next().type, sub);
+					
+					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
+						throw new TypeCheckException();
+				}
+				
+				return new CubeXTypeClass(name, parameters);
 			}
 		}
-		
-		
-		return null;
 	}
 
 }

@@ -5,6 +5,7 @@ import main.context.TypeVariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXFunction;
+import main.util.TypeVarSubstitution;
 
 public abstract class CubeXType 
 {
@@ -56,7 +57,7 @@ public abstract class CubeXType
 		return ((CubeXType)other).equals(this);
 	}	
 	
-	public abstract CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException;
+	public abstract Tuple<TypeVarSubstitution,CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException;
 	
 	public boolean isBool()
 	{
@@ -71,6 +72,10 @@ public abstract class CubeXType
 		return false;
 	}
 	public boolean isClass()
+	{
+		return false;
+	}
+	public boolean isInterface()
 	{
 		return false;
 	}
@@ -100,14 +105,28 @@ public abstract class CubeXType
 		return true;
 	}
 	
+	public CubeXType getConstructableComponent()
+	{
+		return CubeXType.getThing();
+	}
+	
+	
 	public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon, TypeVariableContext typeVarCon) {
 		return null;
 		//TODO 
 	}
 	
-	public CubeXType getConstructableComponent()
+
+	public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub)
 	{
-		return CubeXType.getThing();
+		//TODO!!
+		return null;
+	}
+
+
+	public static boolean isSubType(CubeXType type1, CubeXType type2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

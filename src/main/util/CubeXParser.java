@@ -1039,7 +1039,7 @@ public class CubeXParser extends Parser {
 	}
 
 	public static class FunctiondeclContext extends ParserRuleContext {
-		public CubeXFunctionDeclaration x;
+		public CubeXFunctionHeader x;
 		public Token v;
 		public SchemeContext sch;
 		public SchemeContext scheme() {
@@ -1062,7 +1062,7 @@ public class CubeXParser extends Parser {
 			setState(274); match(FUN);
 			setState(275); ((FunctiondeclContext)_localctx).v = match(NAMEL);
 			setState(276); ((FunctiondeclContext)_localctx).sch = scheme();
-			((FunctiondeclContext)_localctx).x = new CubeXFunctionDeclaration((((FunctiondeclContext)_localctx).v!=null?((FunctiondeclContext)_localctx).v.getText():null), ((FunctiondeclContext)_localctx).sch.x);
+			((FunctiondeclContext)_localctx).x = new CubeXFunctionHeader((((FunctiondeclContext)_localctx).v!=null?((FunctiondeclContext)_localctx).v.getText():null), ((FunctiondeclContext)_localctx).sch.x);
 			}
 		}
 		catch (RecognitionException re) {

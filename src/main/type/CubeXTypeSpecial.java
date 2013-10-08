@@ -5,6 +5,7 @@ import main.context.ClassContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXFunction;
+import main.util.TypeVarSubstitution;
 
 public class CubeXTypeSpecial extends CubeXType 
 {
@@ -32,7 +33,7 @@ public class CubeXTypeSpecial extends CubeXType
 	}
 
 	@Override
-	public CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException
+	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException
 	{
 		throw new TypeCheckException();
 	}

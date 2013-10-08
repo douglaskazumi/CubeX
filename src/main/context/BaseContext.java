@@ -20,7 +20,7 @@ public class BaseContext<T> {
 	{
 		if(id==null)
 			throw new ContextException();
-		T value = internalLookup(id);
+		T value = lookup(id);
 		if(value==null)
 		{
 			context.put(id, item);
@@ -51,14 +51,6 @@ public class BaseContext<T> {
 	
 	public T lookup(String id) throws ContextException
 	{
-		T value = internalLookup(id);
-		if(value==null)
-			throw new ContextException("Bad Id = "+id);
-		return value;
-	}
-	
-	private T internalLookup(String id) throws ContextException
-	{
 		if(context.containsKey(id))
 		{
 			return context.get(id);
@@ -67,7 +59,7 @@ public class BaseContext<T> {
 		{
 			if(parent!=null)
 			{
-				return parent.internalLookup(id);
+				return parent.lookup(id);
 			}
 			else
 			{
