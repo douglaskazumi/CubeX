@@ -5,8 +5,8 @@ import main.type.CubeXType;
 
 public class CubeXArgument {
 
-	private CubeXType type;
-	private CubeXVariable variable;
+	public CubeXType type;
+	public CubeXVariable variable;
 	
 	public CubeXArgument(CubeXVariable variable, CubeXType type)
 	{

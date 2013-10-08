@@ -13,6 +13,35 @@ public class CubeXFunction extends CubeXProgramPiece
 
 	private String name;
 	private ArrayList<CubeXTypeVariable> types;
+
+	private ArrayList<CubeXArgument> arglist;
+	private CubeXType returnType;
+	
+	private CubeXStatement statement;
+	
+	
+
+	public CubeXFunction(CubeXFunctionHeader decl, CubeXStatement stat)
+	{
+		name=decl.name;
+		types=decl.scheme.types;
+		arglist=decl.scheme.arglist;
+		returnType=decl.scheme.returnType;
+		
+		statement=stat;
+	}
+	
+	public CubeXFunction(CubeXFunctionHeader decl, CubeXExpression expr)
+	{
+		this(decl, new CubeXReturnStatement(expr));
+	}
+	
+	public CubeXFunction(CubeXFunctionHeader decl)
+	{
+		this(decl, (CubeXStatement)null);
+	}
+	
+	
 	public ArrayList<CubeXTypeVariable> getTypes() {
 		return types;
 	}
@@ -23,31 +52,6 @@ public class CubeXFunction extends CubeXProgramPiece
 
 	public CubeXType getReturnType() {
 		return returnType;
-	}
-
-	private ArrayList<CubeXArgument> arglist;
-	private CubeXType returnType;
-	
-	private CubeXStatement statement;
-
-	public CubeXFunction(CubeXFunctionDeclaration decl, CubeXStatement stat)
-	{
-		name=decl.name;
-		types=decl.scheme.types;
-		arglist=decl.scheme.arglist;
-		returnType=decl.scheme.returnType;
-		
-		statement=stat;
-	}
-	
-	public CubeXFunction(CubeXFunctionDeclaration decl, CubeXExpression expr)
-	{
-		this(decl, new CubeXReturnStatement(expr));
-	}
-	
-	public CubeXFunction(CubeXFunctionDeclaration decl)
-	{
-		this(decl, (CubeXStatement)null);
 	}
 	
 	public String toString()

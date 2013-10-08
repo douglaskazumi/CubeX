@@ -101,9 +101,9 @@ stat returns [CubeXStatement x]
 	| RETURN e=expr SEMICOLON
 	{$x = new CubeXReturnStatement($e.x) ;};
 	
-functiondecl returns [CubeXFunctionDeclaration x]
+functiondecl returns [CubeXFunctionHeader x]
 	: FUN v=NAMEL sch=scheme
-		{$x=new CubeXFunctionDeclaration($v.text, $sch.x);};
+		{$x=new CubeXFunctionHeader($v.text, $sch.x);};
 	
 function returns [CubeXFunction x]
 	: d=functiondecl EQUAL e=expr SEMICOLON

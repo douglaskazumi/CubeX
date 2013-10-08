@@ -5,34 +5,41 @@ import java.util.Arrays;
 import main.context.*;
 import main.exceptions.ContextException;
 import main.program.CubeXClass;
+import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
+import main.util.TypeVarSubstitution;
 
 
-public class CubeXTypeClass extends CubeXType 
+public class CubeXTypeClass extends CubeXTypeClassBase
 {
 	
-	private String name;
-	private ArrayList<CubeXType> parameters;
 	private CubeXClass classDeclaration;
 	
-	public CubeXTypeClass(String name, ArrayList<CubeXType> parameters)
-	{
-		this.name=name;
-		if(parameters==null)
-			parameters=new ArrayList<CubeXType>();
-		this.parameters = parameters;
-	}
 	
-	public boolean isClass()
+	public CubeXTypeClass(String name, ArrayList<? extends CubeXType> parameters)
 	{
-		return true;
+		super(name, parameters);
 	}
 	
 	public CubeXClass getClassDecl(ClassContext classCon) throws ContextException
 	{
 		if (classDeclaration==null)
-			classDeclaration=classCon.lookup(name);
+		{
+			CubeXClassBase base = classCon.lookup(name);
+			
+			if (base==null || !base.isClass())
+			{
+				throw new ContextException("Bad Class");
+			}
+			classDeclaration = (CubeXClass)base;
+		}
+			
 		return classDeclaration;
+	}
+	
+	public TypeVarSubstitution geTypeVarSub(ClassContext classCon) throws ContextException
+	{
+		return new TypeVarSubstitution(getClassDecl(classCon).getTypes(),parameters);
 	}
 	
 	public CubeXType getConstructableComponent()
@@ -40,6 +47,11 @@ public class CubeXTypeClass extends CubeXType
 		return this;
 	}
 	
+	public boolean isClass()
+	{
+		return true;
+	}
+
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -56,9 +68,12 @@ public class CubeXTypeClass extends CubeXType
 	}
 
 	@Override
-	public CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException
+	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException
 	{
-		return getClassDecl(classCon).getFunctionContext().lookup(name);
+		CubeXFunction fun = getClassDecl(classCon).getFunctionContext().lookup(name);
+		if(fun==null)
+			throw new ContextException();
+		return new Tuple<TypeVarSubstitution, CubeXFunction>(geTypeVarSub(classCon),fun);
 	}
 
 }

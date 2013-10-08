@@ -1,12 +1,12 @@
 package main.program;
 
-public class CubeXFunctionDeclaration 
+public class CubeXFunctionHeader 
 {
 
 	public String name;
 	public CubeXScheme scheme;
 	
-	public CubeXFunctionDeclaration(String name, CubeXScheme scheme)
+	public CubeXFunctionHeader(String name, CubeXScheme scheme)
 	{
 		this.name=name;
 		this.scheme=scheme;

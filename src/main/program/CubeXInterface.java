@@ -1,28 +1,24 @@
 package main.program;
 import java.util.ArrayList;
 
+import main.context.BaseContext;
+import main.context.FunctionContext;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
 
 
-public class CubeXInterface extends CubeXProgramPiece {
+public class CubeXInterface extends CubeXClassBase {
 
-	String name;
-	ArrayList<CubeXTypeVariable> types;
-	CubeXType parentType;
-	ArrayList<CubeXFunction> declarations;
 	
-	
-	
-	public CubeXInterface(String name, ArrayList<CubeXTypeVariable> types, CubeXType parentType, ArrayList<CubeXFunction> declarations)
+	public boolean isInterface()
 	{
-		if(parentType==null)
-			parentType=CubeXType.getThing();
-		
-		this.name=name;
-		this.types=types;
-		this.parentType=parentType;
-		this.declarations=declarations;
+		return true;
+	}
+	
+	
+	public CubeXInterface(String name, ArrayList<CubeXTypeVariable> types, CubeXType parentType, ArrayList<CubeXFunction> functions)
+	{
+		super(name, types,parentType,functions);
 	}
 
 	
@@ -39,12 +35,12 @@ public class CubeXInterface extends CubeXProgramPiece {
 		}
 		sb.append("> extends ").append(parentType.toString()).append(" {");
 		
-		for(CubeXFunction a : declarations)
+		for(CubeXFunction a : functions)
 		{
 			sb.append(" ").append(a.toString());
 		}	
 		sb.append(" }");
 		return sb.toString();
 	}
-	
+
 }

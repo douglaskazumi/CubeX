@@ -4,6 +4,7 @@ import main.context.ClassContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXFunction;
+import main.util.TypeVarSubstitution;
 
 public class CubeXTypeIntersection extends CubeXType {
 
@@ -31,14 +32,18 @@ public class CubeXTypeIntersection extends CubeXType {
 	}
 
 	@Override
-	public CubeXFunction methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException 
+	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException 
 	{
-		CubeXType constructable = getConstructableComponent();
-		if (constructable.isThing())
-			throw new TypeCheckException();
-		CubeXTypeClass constructableClass = (CubeXTypeClass)constructable;
-		return constructableClass.methodLookup(name, classCon);
-		
+		Tuple<TypeVarSubstitution, CubeXFunction> res = A.methodLookup(name, classCon);
+		if(res.second==null)
+		{
+			res=B.methodLookup(name, classCon);
+			if(res.second==null)
+			{
+				throw new TypeCheckException();
+			}
+		}		
+		return res;
 	}
 	
 	public CubeXType getConstructableComponent()

@@ -8,19 +8,22 @@ import main.type.*;
 public class TypeVarSubstitution
 {
 
-	HashMap<CubeXTypeVariable, CubeXType> mapping;
+	public HashMap<CubeXTypeVariable, CubeXType> mapping;
 	
 	//precondition that they have the same length
-	public TypeVarSubstitution(ArrayList<CubeXTypeVariable> vars, ArrayList<CubeXType> vals)
+	public TypeVarSubstitution(ArrayList<CubeXTypeVariable> vars, ArrayList<? extends CubeXType> parameters)
 	{
 		mapping=new HashMap<CubeXTypeVariable, CubeXType>();
 		
 		for(int i=0; i<vars.size();++i)
 		{
-			mapping.put(vars.get(i), vals.get(i));
+			mapping.put(vars.get(i), parameters.get(i));
 		}
 	}
 	
-	public TypeVar
+	public CubeXType get(CubeXTypeVariable var)
+	{
+		return mapping.get(var);
+	}
 
 }
