@@ -31,6 +31,10 @@ public class CubeXFunction extends CubeXProgramPiece
 		statement=stat;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
 	public CubeXFunction(CubeXFunctionHeader decl, CubeXExpression expr)
 	{
 		this(decl, new CubeXReturnStatement(expr));
@@ -52,6 +56,11 @@ public class CubeXFunction extends CubeXProgramPiece
 
 	public CubeXType getReturnType() {
 		return returnType;
+	}
+	
+	public boolean isDeclaration()
+	{
+		return statement==null;
 	}
 	
 	public String toString()

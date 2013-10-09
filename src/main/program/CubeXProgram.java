@@ -1,5 +1,4 @@
 package main.program;
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -75,7 +74,7 @@ public class CubeXProgram {
 		{
 			for(CubeXProgramPiece piece : pieces )
 			{
-//				piece.typecheck();
+				piece.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
 			}
 		}
 		catch (Exception e)

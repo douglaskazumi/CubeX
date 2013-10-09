@@ -3,8 +3,6 @@ package main.program;
 import java.util.ArrayList;
 
 import main.context.FunctionContext;
-import main.expression.CubeXExpression;
-import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
 

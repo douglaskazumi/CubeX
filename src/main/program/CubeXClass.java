@@ -1,11 +1,20 @@
 package main.program;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import main.context.ClassContext;
 import main.context.FunctionContext;
+import main.context.TypeVariableContext;
+import main.context.VariableContext;
+import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
+import main.type.CubeXTypeClass;
 import main.type.CubeXTypeVariable;
+import main.type.Tuple;
+import main.util.TypeVarSubstitution;
 
 
 public class CubeXClass extends CubeXClassBase {
@@ -95,5 +104,85 @@ public class CubeXClass extends CubeXClassBase {
 		
 		sb.append(" }");
 		return sb.toString();
+	}
+	
+	@Override
+	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException 
+	{
+		if (classCon.lookup(name)!=null)
+			throw new ContextException();
+	
+		TypeVariableContext classTypeVarCon = (TypeVariableContext)typeVarCon.createChildContext();
+		CubeXType.validateType(parentType, classCon, typeVarCon);
+
+		classCon.add(name, this);
+		VariableContext newVarCon = (VariableContext)varCon.createChildContext();
+		
+		for(CubeXArgument arg : constructorArgs)
+		{
+			CubeXType.validateType(arg.type, classCon, classTypeVarCon);
+			newVarCon.add(arg.variable.getName(), arg.type);
+		}
+		
+		for(CubeXStatement stat : statements)
+		{
+			stat.typecheck(classCon, funCon, newVarCon, classTypeVarCon);
+		}
+		
+		CubeXType pConstructor = parentType.getConstructableComponent();
+		if(pConstructor==CubeXType.getThing())
+		{
+			if(superArgs.size()!=0)
+				throw new TypeCheckException();
+		}
+		else
+		{
+			CubeXTypeClass pClass = (CubeXTypeClass)pConstructor;
+			
+			ArrayList<CubeXArgument> expectedSuperArgs = pClass.getClassDecl(classCon).getConstructorArgs();
+			
+			Iterator<? extends CubeXExpression> thisArgIt = superArgs.iterator();
+			Iterator<? extends CubeXArgument> thatArgIt = expectedSuperArgs.iterator();
+			while(thisArgIt.hasNext())
+			{
+				CubeXExpression exp = thisArgIt.next();
+				CubeXType tpe = thatArgIt.next().type;
+				
+				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
+					throw new TypeCheckException();
+			}
+			
+		}
+		
+		FunctionContext innerFunCon = (FunctionContext)funCon.createChildContext();
+		
+		for(CubeXFunction f : functions)
+		{
+			if(f.isDeclaration())
+			{
+				Tuple<TypeVarSubstitution, CubeXFunction> methodTuple=parentType.methodLookup(f.getName(), classCon);
+				if(methodTuple.second==null)
+					throw new TypeCheckException();
+				f=methodTuple.second;
+			}
+			else
+			{
+				CubeXFunction g = funCon.lookup(f.getName());
+				if(g!=null)
+					throw new TypeCheckException();
+				
+			}
+			innerFunCon.add(f.getName(), f);
+		}
+		
+		for(CubeXFunction f : functions)
+		{
+			if(!f.isDeclaration())
+				f.typecheck(classCon, innerFunCon, newVarCon, classTypeVarCon);
+		}
+		
+		this.myFunctionContext=innerFunCon;
+		
+		return null;
 	}
 }

@@ -120,12 +120,12 @@ public class CubeXFunctionCall extends CubeXExpression
 				
 				TypeVarSubstitution sub = new TypeVarSubstitution(fun.getTypes(), parameters);
 				
-				Iterator<? extends CubeXExpression> thisArgIt = args.iterator();
-				Iterator<? extends CubeXArgument> thatArgIt = fun.getArglist().iterator();
-				while(thisArgIt.hasNext())
+				Iterator<? extends CubeXExpression> argValuesIt = args.iterator();
+				Iterator<? extends CubeXArgument> argExpectedTypesIt = fun.getArglist().iterator();
+				while(argValuesIt.hasNext())
 				{
-					CubeXExpression exp = thisArgIt.next();
-					CubeXType tpe = CubeXType.makeSubstitution(thatArgIt.next().type, sub);
+					CubeXExpression exp = argValuesIt.next();
+					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
 					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
 						throw new TypeCheckException();
@@ -152,12 +152,12 @@ public class CubeXFunctionCall extends CubeXExpression
 				
 				TypeVarSubstitution sub = new TypeVarSubstitution(clss.getTypes(), parameters);
 				
-				Iterator<? extends CubeXExpression> thisArgIt = args.iterator();
-				Iterator<? extends CubeXArgument> thatArgIt = clss.getConstructorArgs().iterator();
-				while(thisArgIt.hasNext())
+				Iterator<? extends CubeXExpression> argValuesIt = args.iterator();
+				Iterator<? extends CubeXArgument> argExpectedTypesIt = clss.getConstructorArgs().iterator();
+				while(argValuesIt.hasNext())
 				{
-					CubeXExpression exp = thisArgIt.next();
-					CubeXType tpe = CubeXType.makeSubstitution(thatArgIt.next().type, sub);
+					CubeXExpression exp = argValuesIt.next();
+					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
 					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
 						throw new TypeCheckException();

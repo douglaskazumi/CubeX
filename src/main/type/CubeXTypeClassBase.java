@@ -2,9 +2,6 @@ package main.type;
 
 import java.util.ArrayList;
 
-import main.context.FunctionContext;
-
-
 public abstract class CubeXTypeClassBase extends CubeXType 
 {
 	

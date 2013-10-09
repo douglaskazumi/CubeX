@@ -134,6 +134,12 @@ public abstract class CubeXType
 		return false;
 	}
 
+
+	public static void validateType(CubeXType type,	ClassContext classCon, TypeVariableContext typeVarCon) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	// TODO
 //	private array of classbase getParentSet(type)
 }
