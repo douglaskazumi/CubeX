@@ -1,8 +1,8 @@
 package main.context;
 
-import main.expression.CubeXVariable;
+import main.type.CubeXTypeVariable;
 
-public class TypeVariableContext extends BaseContext<CubeXVariable> {
+public class TypeVariableContext extends BaseContext<CubeXTypeVariable> {
 
 	public TypeVariableContext(TypeVariableContext p)
 	{

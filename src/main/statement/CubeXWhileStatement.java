@@ -1,6 +1,14 @@
 package main.statement;
 
+import main.context.ClassContext;
+import main.context.FunctionContext;
+import main.context.TypeVariableContext;
+import main.context.VariableContext;
+import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.type.CubeXType;
+import main.type.Tuple;
 
 public class CubeXWhileStatement extends CubeXStatement 
 {
@@ -19,6 +27,21 @@ public class CubeXWhileStatement extends CubeXStatement
 		StringBuilder sb = new StringBuilder();
 		sb.append("while ( ").append(condition.toString()).append(" ) ").append(whilestatement.toString());
 		return sb.toString();
+	}
+
+
+	@Override
+	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException 
+	{
+		CubeXType condType = condition.getType(classCon, funCon, varCon, typeVarCon);
+		if(!condType.isBool())
+			throw new TypeCheckException();
+		boolean mutable = varCon.isMutable();
+		varCon.setMutable(false);;
+		whilestatement.typecheck(classCon, funCon, (VariableContext) varCon.createChildContext(), typeVarCon);
+		varCon.setMutable(mutable);
+		
+		return new Tuple<Boolean, CubeXType>(false, null);
 	}
 	
 }

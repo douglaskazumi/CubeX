@@ -2,7 +2,7 @@ package main.statement;
 
 import main.program.CubeXProgramPiece;
 
-public class CubeXStatement extends CubeXProgramPiece
+public abstract class CubeXStatement extends CubeXProgramPiece
 {
 	public boolean isBlock()
 	{

@@ -1,6 +1,15 @@
 package main.statement;
 import java.util.ArrayList;
 
+import main.context.ClassContext;
+import main.context.FunctionContext;
+import main.context.TypeVariableContext;
+import main.context.VariableContext;
+import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
+import main.type.CubeXType;
+import main.type.Tuple;
+
 
 public class CubeXBlock extends CubeXStatement
 {
@@ -44,5 +53,25 @@ public class CubeXBlock extends CubeXStatement
 		}
 		sb.append(" }");
 		return sb.toString();
+	}
+
+	@Override
+	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException 
+	{
+		boolean willReturn=false;
+		CubeXType returnType=CubeXType.getNothing();
+		for(CubeXStatement stat : innerStatements)
+		{
+			Tuple<Boolean, CubeXType> res = stat.typecheck(classCon, funCon, varCon, typeVarCon);
+			if(res.first)
+			{
+				willReturn=true;
+				CubeXType.join(res.second, returnType, classCon, typeVarCon);
+			}
+		}
+		
+		if(willReturn==false)
+			returnType=null;
+		return new Tuple<Boolean, CubeXType>(willReturn, returnType);
 	}
 }

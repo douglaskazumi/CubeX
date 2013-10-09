@@ -8,7 +8,7 @@ public class BaseContext<T> {
 
 	protected BaseContext<T> parent;
 	private HashMap<String, T> context;
-	private boolean isMutable = false;
+	private boolean isMutable = true;
 	
 	public BaseContext(BaseContext<T> parent) 
 	{
@@ -39,6 +39,10 @@ public class BaseContext<T> {
 		
 	}
 	
+	public boolean isMutable() {
+		return isMutable;
+	}
+
 	public void setMutable(boolean isMut)
 	{
 		isMutable=isMut;
