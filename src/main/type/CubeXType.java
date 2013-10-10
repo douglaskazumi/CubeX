@@ -49,16 +49,6 @@ public abstract class CubeXType
 		return cubeXString;
 	}	
 	
-	
-	//TODO finish this!
-	@Override
-	public boolean equals(Object other)
-	{
-		if (other == null)
-			return false;
-		return ((CubeXType)other).equals(this);
-	}	
-	
 	public abstract Tuple<TypeVarSubstitution,CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException;
 	
 	public boolean isBool()

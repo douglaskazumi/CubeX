@@ -14,7 +14,12 @@ public class CubeXScheme {
 	
 	public CubeXScheme(ArrayList<CubeXTypeVariable> types, ArrayList<CubeXArgument> arglist, CubeXType returnType)
 	{
-		//TODO check null and assign empty arraylist
+		
+		if(types==null)
+			types=new ArrayList<CubeXTypeVariable>();
+		if(arglist==null)
+			arglist=new ArrayList<CubeXArgument>();
+		
 		this.types = types;
 		this.arglist = arglist;
 		this.returnType = returnType;

@@ -45,12 +45,13 @@ public class CubeXClass extends CubeXClassBase {
 	
 		if(superArgs==null)
 			superArgs=new ArrayList<CubeXExpression>();
+		if(constructorArgs==null)
+			constructorArgs=new ArrayList<CubeXArgument>();
+		
 		
 		this.constructorArgs=constructorArgs;
 		this.statements=stats;
 		this.superArgs=superArgs;
-		//TODO verify null and assign empty arraylist
-		//TODO initialize function context somewhere!
 	}
 	
 

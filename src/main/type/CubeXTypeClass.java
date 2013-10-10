@@ -66,8 +66,6 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		return sb.toString();
 	}
 
-	
-	//TODO does this cause typevariable errors if used
 	@Override
 	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException
 	{
