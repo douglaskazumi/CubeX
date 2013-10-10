@@ -56,7 +56,7 @@ public class CubeXIfStatement extends CubeXStatement {
 		
 		varCon.setMutable(mutable);
 		
-		VariableContext.merge(varCon, innerConTrue, innerConFalse);
+		VariableContext.merge(varCon, innerConTrue, innerConFalse, classCon, typeVarCon);
 		
 		if(!resTrue.first)
 			return new Tuple<Boolean, CubeXType>(false, null);

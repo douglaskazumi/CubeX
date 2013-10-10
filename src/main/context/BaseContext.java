@@ -7,7 +7,7 @@ import main.exceptions.ContextException;
 public class BaseContext<T> {
 
 	protected BaseContext<T> parent;
-	private HashMap<String, T> context;
+	protected HashMap<String, T> context;
 	private boolean isMutable = true;
 	
 	public BaseContext(BaseContext<T> parent) 

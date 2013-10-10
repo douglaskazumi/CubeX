@@ -1,10 +1,6 @@
 
 Initialize contexts
 
-VariableContext
-public static void merge(VariableContext varCon, VariableContext innerConTrue, VariableContext innerConFalse)
-
-
 CubeXType
 public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon, TypeVariableContext typeVarCon)	
 public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub)

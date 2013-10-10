@@ -1,5 +1,9 @@
 package main.context;
 
+import com.sun.xml.internal.bind.CycleRecoverable.Context;
+
+import main.exceptions.ContextException;
+import main.expression.CubeXVariable;
 import main.type.CubeXType;
 
 public class VariableContext extends BaseContext<CubeXType> {
@@ -8,11 +12,21 @@ public class VariableContext extends BaseContext<CubeXType> {
 	{
 		super(p);
 	}
-
-	public static void merge(VariableContext varCon, VariableContext innerConTrue, VariableContext innerConFalse)
+	
+	
+	
+	public static void merge(VariableContext varCon, VariableContext innerConTrue, VariableContext innerConFalse, ClassContext classCon, TypeVariableContext typeVarCon) throws ContextException
 	{
-		// TODO Auto-generated method stub
-		
+		for(String id : innerConTrue.context.keySet())
+		{
+			if(!innerConFalse.context.containsKey(id))
+				continue;
+			CubeXType typeA = innerConTrue.context.get(id);
+			CubeXType typeB = innerConFalse.context.get(id);
+			CubeXType mergedType = CubeXType.join(typeA, typeB, classCon, typeVarCon);
+			
+			varCon.add(id, mergedType);
+		}
 	}
 
 }
