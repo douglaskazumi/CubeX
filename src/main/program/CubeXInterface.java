@@ -1,10 +1,14 @@
 package main.program;
 import java.util.ArrayList;
-
-import main.context.BaseContext;
+import main.context.ClassContext;
 import main.context.FunctionContext;
+import main.context.TypeVariableContext;
+import main.context.VariableContext;
+import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
+import main.type.Tuple;
 
 
 public class CubeXInterface extends CubeXClassBase {
@@ -41,6 +45,45 @@ public class CubeXInterface extends CubeXClassBase {
 		}	
 		sb.append(" }");
 		return sb.toString();
+	}
+	
+	@Override
+	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException 
+	{
+		if (classCon.lookup(name)!=null)
+			throw new ContextException();
+	
+		TypeVariableContext classTypeVarCon = (TypeVariableContext)typeVarCon.createChildContext();
+		CubeXType.validateType(parentType, classCon, typeVarCon);
+
+		for(CubeXTypeVariable tvar : types)
+		{
+			classTypeVarCon.add(tvar.getName(), tvar);
+		}
+		
+		classCon.add(name, this);
+		VariableContext newVarCon = (VariableContext)varCon.createChildContext();
+			
+		FunctionContext innerFunCon = (FunctionContext)funCon.createChildContext();
+		
+		for(CubeXFunction f : functions)
+		{
+			CubeXFunction g = funCon.lookup(f.getName());
+			if(g!=null)
+				throw new TypeCheckException();
+			innerFunCon.add(f.getName(), f);
+			
+		}
+				
+		for(CubeXFunction f : functions)
+		{
+			if(!f.isDeclaration())
+				f.typecheck(classCon, innerFunCon, newVarCon, classTypeVarCon);
+		}
+		
+		this.myFunctionContext=innerFunCon;
+		
+		return null;
 	}
 
 }

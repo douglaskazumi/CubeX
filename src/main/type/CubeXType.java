@@ -1,5 +1,7 @@
 package main.type;
 
+import java.util.ArrayList;
+
 import main.context.ClassContext;
 import main.context.TypeVariableContext;
 import main.exceptions.ContextException;
@@ -138,6 +140,13 @@ public abstract class CubeXType
 	public static void validateType(CubeXType type,	ClassContext classCon, TypeVariableContext typeVarCon) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	public static ArrayList<CubeXTypeClassBase> getSuperTypes(
+			CubeXType parentType) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	// TODO

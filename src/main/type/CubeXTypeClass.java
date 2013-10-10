@@ -20,7 +20,7 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		super(name, parameters);
 	}
 	
-	public CubeXClass getClassDecl(ClassContext classCon) throws ContextException
+	public CubeXClass getDeclaration(ClassContext classCon) throws ContextException
 	{
 		if (classDeclaration==null)
 		{
@@ -38,7 +38,7 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 	
 	public TypeVarSubstitution geTypeVarSub(ClassContext classCon) throws ContextException
 	{
-		return new TypeVarSubstitution(getClassDecl(classCon).getTypes(),parameters);
+		return new TypeVarSubstitution(getDeclaration(classCon).getTypes(),parameters);
 	}
 	
 	public CubeXType getConstructableComponent()
@@ -71,7 +71,7 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 	@Override
 	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException
 	{
-		CubeXFunction fun = getClassDecl(classCon).getFunctionContext().lookup(name);
+		CubeXFunction fun = getDeclaration(classCon).getFunctionContext().lookup(name);
 		if(fun==null)
 			throw new ContextException();
 		return new Tuple<TypeVarSubstitution, CubeXFunction>(geTypeVarSub(classCon),fun);

@@ -2,6 +2,10 @@ package main.type;
 
 import java.util.ArrayList;
 
+import main.context.ClassContext;
+import main.exceptions.ContextException;
+import main.program.CubeXClassBase;
+
 public abstract class CubeXTypeClassBase extends CubeXType 
 {
 	
@@ -16,4 +20,5 @@ public abstract class CubeXTypeClassBase extends CubeXType
 		this.parameters = parameters;
 	}
 	
+	public abstract CubeXClassBase getDeclaration(ClassContext classCon) throws ContextException;
 }

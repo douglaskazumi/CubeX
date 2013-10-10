@@ -12,6 +12,7 @@ import main.expression.CubeXExpression;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClass;
+import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
 import main.type.Tuple;
 import main.util.TypeVarSubstitution;
@@ -113,6 +114,12 @@ public class CubeXClass extends CubeXClassBase {
 			throw new ContextException();
 	
 		TypeVariableContext classTypeVarCon = (TypeVariableContext)typeVarCon.createChildContext();
+		
+		for(CubeXTypeVariable tvar : types)
+		{
+			classTypeVarCon.add(tvar.getName(), tvar);
+		}
+		
 		CubeXType.validateType(parentType, classCon, typeVarCon);
 
 		classCon.add(name, this);
@@ -139,7 +146,7 @@ public class CubeXClass extends CubeXClassBase {
 		{
 			CubeXTypeClass pClass = (CubeXTypeClass)pConstructor;
 			
-			ArrayList<CubeXArgument> expectedSuperArgs = pClass.getClassDecl(classCon).getConstructorArgs();
+			ArrayList<CubeXArgument> expectedSuperArgs = pClass.getDeclaration(classCon).getConstructorArgs();
 			
 			Iterator<? extends CubeXExpression> thisArgIt = superArgs.iterator();
 			Iterator<? extends CubeXArgument> thatArgIt = expectedSuperArgs.iterator();
@@ -148,7 +155,7 @@ public class CubeXClass extends CubeXClassBase {
 				CubeXExpression exp = thisArgIt.next();
 				CubeXType tpe = thatArgIt.next().type;
 				
-				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
+				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, classTypeVarCon), tpe))
 					throw new TypeCheckException();
 			}
 			
@@ -173,6 +180,25 @@ public class CubeXClass extends CubeXClassBase {
 				
 			}
 			innerFunCon.add(f.getName(), f);
+			
+		}
+		
+		ArrayList<CubeXTypeClassBase> parents = CubeXType.getSuperTypes(parentType);
+		
+		for(CubeXTypeClassBase p : parents)
+		{
+			for(CubeXFunction pFun : p.getDeclaration(classCon).functions)
+			{
+				CubeXFunction testFun = innerFunCon.lookup(pFun.getName());
+				if(testFun==null)
+				{
+					if(pFun.isDeclaration())
+						throw new TypeCheckException();
+					functions.add(pFun);
+					innerFunCon.add(pFun.getName(), pFun);
+				}
+			}
+			
 		}
 		
 		for(CubeXFunction f : functions)
