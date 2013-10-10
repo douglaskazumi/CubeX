@@ -130,4 +130,9 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		return res;
 	}
+	
+	public boolean isFunction()
+	{
+		return true;
+	}
 }

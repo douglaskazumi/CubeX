@@ -12,4 +12,9 @@ import main.type.Tuple;
 public abstract class CubeXProgramPiece 
 {
 	public abstract Tuple<Boolean, CubeXType> typecheck(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) throws ContextException, TypeCheckException;
+
+	public boolean isFunction()
+	{
+		return false;
+	}
 }

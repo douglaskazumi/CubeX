@@ -1,8 +1,11 @@
 package main.program;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import main.context.*;
+import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
 
@@ -72,10 +75,26 @@ public class CubeXProgram {
 		
 		try
 		{
-			for(CubeXProgramPiece piece : pieces )
+			Iterator<CubeXProgramPiece> piecesIt = pieces.iterator();
+			boolean wasFunction = false;
+			ArrayList<CubeXFunction> curFunSet = new ArrayList<CubeXFunction>();
+			while(piecesIt.hasNext())
 			{
-				piece.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
+				CubeXProgramPiece piece = piecesIt.next();
+				if(piece.isFunction())
+				{
+					curFunSet.add((CubeXFunction)piece);
+					wasFunction = true;
+					continue;
+				}
+				
+				checkFunctionBlock(wasFunction, curFunSet);
+
+				wasFunction=false;
 			}
+			
+			//shouldn't need this
+			checkFunctionBlock(wasFunction, curFunSet);
 		}
 		catch (Exception e)
 		{
@@ -85,6 +104,23 @@ public class CubeXProgram {
 		}
 		
 		return true;
+	}
+	
+	private void checkFunctionBlock(boolean wasFunction, ArrayList<CubeXFunction> curFunSet) throws ContextException, TypeCheckException
+	{
+		if(wasFunction)
+		{
+			for(CubeXFunction f : curFunSet)
+			{
+				GlobalContexts.functionContext.add(f.getName(), f);
+			}
+			for(CubeXFunction f : curFunSet)
+			{
+				f.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
+			}
+			curFunSet.clear();
+		}
+
 	}
 	
 }
