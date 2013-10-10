@@ -1354,7 +1354,7 @@ public class CubeXParser extends Parser {
 				_la = _input.LA(1);
 			}
 			boolean supertest=false;
-			setState(352);
+			setState(353);
 			_la = _input.LA(1);
 			if (_la==SUPER) {
 				{
@@ -1362,11 +1362,11 @@ public class CubeXParser extends Parser {
 				setState(347); match(LPAREN);
 				setState(348); ((Classx3Context)_localctx).superlist = exprlist();
 				setState(349); match(RPAREN);
+				setState(350); match(SEMICOLON);
 				supertest=true;
 				}
 			}
 
-			setState(354); match(SEMICOLON);
 			ArrayList<CubeXFunction> funs = new ArrayList<CubeXFunction>();
 			setState(361);
 			_errHandler.sync(this);
@@ -1443,7 +1443,6 @@ public class CubeXParser extends Parser {
 		public StatContext stat(int i) {
 			return getRuleContext(StatContext.class,i);
 		}
-		public TerminalNode CLASS() { return getToken(CubeXParser.CLASS, 0); }
 		public ProgramContext program() {
 			return getRuleContext(ProgramContext.class,0);
 		}
@@ -1476,13 +1475,14 @@ public class CubeXParser extends Parser {
 		enterRule(_localctx, 26, RULE_program);
 		try {
 			int _alt;
-			setState(420);
+			setState(418);
 			switch ( getInterpreter().adaptivePredict(_input,33,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
 				((ProgramContext)_localctx).x =  new CubeXProgram();
-				setState(371); match(CLASS);
+				setState(371); ((ProgramContext)_localctx).s = stat();
+				_localctx.x.addPiece(((ProgramContext)_localctx).s.x);
 				}
 				break;
 
@@ -1490,16 +1490,7 @@ public class CubeXParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				((ProgramContext)_localctx).x =  new CubeXProgram();
-				setState(373); ((ProgramContext)_localctx).s = stat();
-				_localctx.x.addPiece(((ProgramContext)_localctx).s.x);
-				}
-				break;
-
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-				((ProgramContext)_localctx).x =  new CubeXProgram();
-				setState(380); 
+				setState(378); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,29,_ctx);
 				do {
@@ -1507,7 +1498,7 @@ public class CubeXParser extends Parser {
 					case 1:
 						{
 						{
-						setState(377); ((ProgramContext)_localctx).s = stat();
+						setState(375); ((ProgramContext)_localctx).s = stat();
 						_localctx.x.addPiece(((ProgramContext)_localctx).s.x);
 						}
 						}
@@ -1515,11 +1506,40 @@ public class CubeXParser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(382); 
+					setState(380); 
 					_errHandler.sync(this);
 					_alt = getInterpreter().adaptivePredict(_input,29,_ctx);
 				} while ( _alt!=2 && _alt!=-1 );
-				setState(384); ((ProgramContext)_localctx).p = program();
+				setState(382); ((ProgramContext)_localctx).p = program();
+				_localctx.x.addPieces(((ProgramContext)_localctx).p.x);
+				}
+				break;
+
+			case 3:
+				enterOuterAlt(_localctx, 3);
+				{
+				((ProgramContext)_localctx).x =  new CubeXProgram();
+				setState(389); 
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,30,_ctx);
+				do {
+					switch (_alt) {
+					case 1:
+						{
+						{
+						setState(386); ((ProgramContext)_localctx).f = function();
+						_localctx.x.addPiece(((ProgramContext)_localctx).f.x);
+						}
+						}
+						break;
+					default:
+						throw new NoViableAltException(this);
+					}
+					setState(391); 
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,30,_ctx);
+				} while ( _alt!=2 && _alt!=-1 );
+				setState(393); ((ProgramContext)_localctx).p = program();
 				_localctx.x.addPieces(((ProgramContext)_localctx).p.x);
 				}
 				break;
@@ -1528,27 +1548,27 @@ public class CubeXParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				((ProgramContext)_localctx).x =  new CubeXProgram();
-				setState(391); 
+				setState(400); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,30,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
 				do {
 					switch (_alt) {
 					case 1:
 						{
 						{
-						setState(388); ((ProgramContext)_localctx).f = function();
-						_localctx.x.addPiece(((ProgramContext)_localctx).f.x);
+						setState(397); ((ProgramContext)_localctx).i = interfacex3();
+						_localctx.x.addPiece(((ProgramContext)_localctx).i.x);
 						}
 						}
 						break;
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(393); 
+					setState(402); 
 					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,30,_ctx);
+					_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
 				} while ( _alt!=2 && _alt!=-1 );
-				setState(395); ((ProgramContext)_localctx).p = program();
+				setState(404); ((ProgramContext)_localctx).p = program();
 				_localctx.x.addPieces(((ProgramContext)_localctx).p.x);
 				}
 				break;
@@ -1557,36 +1577,7 @@ public class CubeXParser extends Parser {
 				enterOuterAlt(_localctx, 5);
 				{
 				((ProgramContext)_localctx).x =  new CubeXProgram();
-				setState(402); 
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
-				do {
-					switch (_alt) {
-					case 1:
-						{
-						{
-						setState(399); ((ProgramContext)_localctx).i = interfacex3();
-						_localctx.x.addPiece(((ProgramContext)_localctx).i.x);
-						}
-						}
-						break;
-					default:
-						throw new NoViableAltException(this);
-					}
-					setState(404); 
-					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,31,_ctx);
-				} while ( _alt!=2 && _alt!=-1 );
-				setState(406); ((ProgramContext)_localctx).p = program();
-				_localctx.x.addPieces(((ProgramContext)_localctx).p.x);
-				}
-				break;
-
-			case 6:
-				enterOuterAlt(_localctx, 6);
-				{
-				((ProgramContext)_localctx).x =  new CubeXProgram();
-				setState(413); 
+				setState(411); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,32,_ctx);
 				do {
@@ -1594,7 +1585,7 @@ public class CubeXParser extends Parser {
 					case 1:
 						{
 						{
-						setState(410); ((ProgramContext)_localctx).c = classx3();
+						setState(408); ((ProgramContext)_localctx).c = classx3();
 						_localctx.x.addPiece(((ProgramContext)_localctx).c.x);
 						}
 						}
@@ -1602,11 +1593,11 @@ public class CubeXParser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(415); 
+					setState(413); 
 					_errHandler.sync(this);
 					_alt = getInterpreter().adaptivePredict(_input,32,_ctx);
 				} while ( _alt!=2 && _alt!=-1 );
-				setState(417); ((ProgramContext)_localctx).p = program();
+				setState(415); ((ProgramContext)_localctx).p = program();
 				_localctx.x.addPieces(((ProgramContext)_localctx).p.x);
 				}
 				break;
@@ -1663,7 +1654,7 @@ public class CubeXParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\2\3:\u01a9\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
+		"\2\3:\u01a7\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
 		"\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\3\2\3"+
 		"\2\3\2\3\2\3\2\3\2\5\2&\n\2\3\2\3\2\3\2\3\2\3\2\5\2-\n\2\3\2\3\2\3\2\3"+
 		"\2\3\2\7\2\64\n\2\f\2\16\2\67\13\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3"+
@@ -1685,19 +1676,19 @@ public class CubeXParser extends Parser {
 		"\f\3\f\5\f\u0130\n\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\7\f\u013b\n\f"+
 		"\f\f\16\f\u013e\13\f\3\f\3\f\3\f\3\r\3\r\3\r\5\r\u0146\n\r\3\r\3\r\3\r"+
 		"\3\r\3\r\3\r\3\r\3\r\5\r\u0150\n\r\3\r\3\r\3\r\3\r\3\r\7\r\u0157\n\r\f"+
-		"\r\16\r\u015a\13\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u0163\n\r\3\r\3\r\3"+
+		"\r\16\r\u015a\13\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u0164\n\r\3\r\3"+
 		"\r\3\r\3\r\7\r\u016a\n\r\f\r\16\r\u016d\13\r\3\r\3\r\3\r\3\16\3\16\3\16"+
-		"\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\6\17\u017f\n\17\r\17"+
-		"\16\17\u0180\3\17\3\17\3\17\3\17\3\17\3\17\3\17\6\17\u018a\n\17\r\17\16"+
-		"\17\u018b\3\17\3\17\3\17\3\17\3\17\3\17\3\17\6\17\u0195\n\17\r\17\16\17"+
-		"\u0196\3\17\3\17\3\17\3\17\3\17\3\17\3\17\6\17\u01a0\n\17\r\17\16\17\u01a1"+
-		"\3\17\3\17\3\17\5\17\u01a7\n\17\3\17\2\20\2\4\6\b\n\f\16\20\22\24\26\30"+
-		"\32\34\2\n\4\32\32\37\37\3\24\25\3\33\35\3\36\37\3 #\3(+\3,-\3$%\u01d5"+
-		"\2,\3\2\2\2\48\3\2\2\2\6J\3\2\2\2\b[\3\2\2\2\nm\3\2\2\2\fu\3\2\2\2\16"+
-		"\u00a3\3\2\2\2\20\u0112\3\2\2\2\22\u0114\3\2\2\2\24\u0123\3\2\2\2\26\u0125"+
-		"\3\2\2\2\30\u0142\3\2\2\2\32\u0171\3\2\2\2\34\u01a6\3\2\2\2\36\37\b\2"+
-		"\1\2\37 \7\23\2\2 -\b\2\1\2!\"\b\2\1\2\"%\7\24\2\2#$\b\2\1\2$&\5\4\3\2"+
-		"%#\3\2\2\2%&\3\2\2\2&\'\3\2\2\2\'-\b\2\1\2()\7\20\2\2)-\b\2\1\2*+\7\21"+
+		"\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\6\17\u017d\n\17\r\17\16\17\u017e"+
+		"\3\17\3\17\3\17\3\17\3\17\3\17\3\17\6\17\u0188\n\17\r\17\16\17\u0189\3"+
+		"\17\3\17\3\17\3\17\3\17\3\17\3\17\6\17\u0193\n\17\r\17\16\17\u0194\3\17"+
+		"\3\17\3\17\3\17\3\17\3\17\3\17\6\17\u019e\n\17\r\17\16\17\u019f\3\17\3"+
+		"\17\3\17\5\17\u01a5\n\17\3\17\2\20\2\4\6\b\n\f\16\20\22\24\26\30\32\34"+
+		"\2\n\4\32\32\37\37\3\24\25\3\33\35\3\36\37\3 #\3(+\3,-\3$%\u01d2\2,\3"+
+		"\2\2\2\48\3\2\2\2\6J\3\2\2\2\b[\3\2\2\2\nm\3\2\2\2\fu\3\2\2\2\16\u00a3"+
+		"\3\2\2\2\20\u0112\3\2\2\2\22\u0114\3\2\2\2\24\u0123\3\2\2\2\26\u0125\3"+
+		"\2\2\2\30\u0142\3\2\2\2\32\u0171\3\2\2\2\34\u01a4\3\2\2\2\36\37\b\2\1"+
+		"\2\37 \7\23\2\2 -\b\2\1\2!\"\b\2\1\2\"%\7\24\2\2#$\b\2\1\2$&\5\4\3\2%"+
+		"#\3\2\2\2%&\3\2\2\2&\'\3\2\2\2\'-\b\2\1\2()\7\20\2\2)-\b\2\1\2*+\7\21"+
 		"\2\2+-\b\2\1\2,\36\3\2\2\2,!\3\2\2\2,(\3\2\2\2,*\3\2\2\2-\65\3\2\2\2."+
 		"/\6\2\2\3/\60\7\60\2\2\60\61\5\2\2\2\61\62\b\2\1\2\62\64\3\2\2\2\63.\3"+
 		"\2\2\2\64\67\3\2\2\2\65\63\3\2\2\2\65\66\3\2\2\2\66\3\3\2\2\2\67\65\3"+
@@ -1785,34 +1776,33 @@ public class CubeXParser extends Parser {
 		"\u0151\3\2\2\2\u0151\u0152\7\66\2\2\u0152\u0158\b\r\1\2\u0153\u0154\5"+
 		"\20\t\2\u0154\u0155\b\r\1\2\u0155\u0157\3\2\2\2\u0156\u0153\3\2\2\2\u0157"+
 		"\u015a\3\2\2\2\u0158\u0156\3\2\2\2\u0158\u0159\3\2\2\2\u0159\u015b\3\2"+
-		"\2\2\u015a\u0158\3\2\2\2\u015b\u0162\b\r\1\2\u015c\u015d\7\r\2\2\u015d"+
-		"\u015e\7\62\2\2\u015e\u015f\5\f\7\2\u015f\u0160\7\63\2\2\u0160\u0161\b"+
-		"\r\1\2\u0161\u0163\3\2\2\2\u0162\u015c\3\2\2\2\u0162\u0163\3\2\2\2\u0163"+
-		"\u0164\3\2\2\2\u0164\u0165\7\30\2\2\u0165\u016b\b\r\1\2\u0166\u0167\5"+
-		"\24\13\2\u0167\u0168\b\r\1\2\u0168\u016a\3\2\2\2\u0169\u0166\3\2\2\2\u016a"+
+		"\2\2\u015a\u0158\3\2\2\2\u015b\u0163\b\r\1\2\u015c\u015d\7\r\2\2\u015d"+
+		"\u015e\7\62\2\2\u015e\u015f\5\f\7\2\u015f\u0160\7\63\2\2\u0160\u0161\7"+
+		"\30\2\2\u0161\u0162\b\r\1\2\u0162\u0164\3\2\2\2\u0163\u015c\3\2\2\2\u0163"+
+		"\u0164\3\2\2\2\u0164\u0165\3\2\2\2\u0165\u016b\b\r\1\2\u0166\u0167\5\24"+
+		"\13\2\u0167\u0168\b\r\1\2\u0168\u016a\3\2\2\2\u0169\u0166\3\2\2\2\u016a"+
 		"\u016d\3\2\2\2\u016b\u0169\3\2\2\2\u016b\u016c\3\2\2\2\u016c\u016e\3\2"+
 		"\2\2\u016d\u016b\3\2\2\2\u016e\u016f\7\67\2\2\u016f\u0170\b\r\1\2\u0170"+
 		"\31\3\2\2\2\u0171\u0172\5\34\17\2\u0172\u0173\b\16\1\2\u0173\33\3\2\2"+
-		"\2\u0174\u0175\b\17\1\2\u0175\u01a7\7\16\2\2\u0176\u0177\b\17\1\2\u0177"+
-		"\u0178\5\20\t\2\u0178\u0179\b\17\1\2\u0179\u01a7\3\2\2\2\u017a\u017e\b"+
-		"\17\1\2\u017b\u017c\5\20\t\2\u017c\u017d\b\17\1\2\u017d\u017f\3\2\2\2"+
-		"\u017e\u017b\3\2\2\2\u017f\u0180\3\2\2\2\u0180\u017e\3\2\2\2\u0180\u0181"+
-		"\3\2\2\2\u0181\u0182\3\2\2\2\u0182\u0183\5\34\17\2\u0183\u0184\b\17\1"+
-		"\2\u0184\u01a7\3\2\2\2\u0185\u0189\b\17\1\2\u0186\u0187\5\24\13\2\u0187"+
-		"\u0188\b\17\1\2\u0188\u018a\3\2\2\2\u0189\u0186\3\2\2\2\u018a\u018b\3"+
-		"\2\2\2\u018b\u0189\3\2\2\2\u018b\u018c\3\2\2\2\u018c\u018d\3\2\2\2\u018d"+
-		"\u018e\5\34\17\2\u018e\u018f\b\17\1\2\u018f\u01a7\3\2\2\2\u0190\u0194"+
-		"\b\17\1\2\u0191\u0192\5\26\f\2\u0192\u0193\b\17\1\2\u0193\u0195\3\2\2"+
-		"\2\u0194\u0191\3\2\2\2\u0195\u0196\3\2\2\2\u0196\u0194\3\2\2\2\u0196\u0197"+
-		"\3\2\2\2\u0197\u0198\3\2\2\2\u0198\u0199\5\34\17\2\u0199\u019a\b\17\1"+
-		"\2\u019a\u01a7\3\2\2\2\u019b\u019f\b\17\1\2\u019c\u019d\5\30\r\2\u019d"+
-		"\u019e\b\17\1\2\u019e\u01a0\3\2\2\2\u019f\u019c\3\2\2\2\u01a0\u01a1\3"+
-		"\2\2\2\u01a1\u019f\3\2\2\2\u01a1\u01a2\3\2\2\2\u01a2\u01a3\3\2\2\2\u01a3"+
-		"\u01a4\5\34\17\2\u01a4\u01a5\b\17\1\2\u01a5\u01a7\3\2\2\2\u01a6\u0174"+
-		"\3\2\2\2\u01a6\u0176\3\2\2\2\u01a6\u017a\3\2\2\2\u01a6\u0185\3\2\2\2\u01a6"+
-		"\u0190\3\2\2\2\u01a6\u019b\3\2\2\2\u01a7\35\3\2\2\2$%,\65BEHSVYhk~\u0081"+
-		"\u00a3\u00d9\u00db\u00e5\u00f9\u0112\u0123\u0129\u012f\u013a\u013c\u0145"+
-		"\u014f\u0158\u0162\u016b\u0180\u018b\u0196\u01a1\u01a6";
+		"\2\u0174\u0175\b\17\1\2\u0175\u0176\5\20\t\2\u0176\u0177\b\17\1\2\u0177"+
+		"\u01a5\3\2\2\2\u0178\u017c\b\17\1\2\u0179\u017a\5\20\t\2\u017a\u017b\b"+
+		"\17\1\2\u017b\u017d\3\2\2\2\u017c\u0179\3\2\2\2\u017d\u017e\3\2\2\2\u017e"+
+		"\u017c\3\2\2\2\u017e\u017f\3\2\2\2\u017f\u0180\3\2\2\2\u0180\u0181\5\34"+
+		"\17\2\u0181\u0182\b\17\1\2\u0182\u01a5\3\2\2\2\u0183\u0187\b\17\1\2\u0184"+
+		"\u0185\5\24\13\2\u0185\u0186\b\17\1\2\u0186\u0188\3\2\2\2\u0187\u0184"+
+		"\3\2\2\2\u0188\u0189\3\2\2\2\u0189\u0187\3\2\2\2\u0189\u018a\3\2\2\2\u018a"+
+		"\u018b\3\2\2\2\u018b\u018c\5\34\17\2\u018c\u018d\b\17\1\2\u018d\u01a5"+
+		"\3\2\2\2\u018e\u0192\b\17\1\2\u018f\u0190\5\26\f\2\u0190\u0191\b\17\1"+
+		"\2\u0191\u0193\3\2\2\2\u0192\u018f\3\2\2\2\u0193\u0194\3\2\2\2\u0194\u0192"+
+		"\3\2\2\2\u0194\u0195\3\2\2\2\u0195\u0196\3\2\2\2\u0196\u0197\5\34\17\2"+
+		"\u0197\u0198\b\17\1\2\u0198\u01a5\3\2\2\2\u0199\u019d\b\17\1\2\u019a\u019b"+
+		"\5\30\r\2\u019b\u019c\b\17\1\2\u019c\u019e\3\2\2\2\u019d\u019a\3\2\2\2"+
+		"\u019e\u019f\3\2\2\2\u019f\u019d\3\2\2\2\u019f\u01a0\3\2\2\2\u01a0\u01a1"+
+		"\3\2\2\2\u01a1\u01a2\5\34\17\2\u01a2\u01a3\b\17\1\2\u01a3\u01a5\3\2\2"+
+		"\2\u01a4\u0174\3\2\2\2\u01a4\u0178\3\2\2\2\u01a4\u0183\3\2\2\2\u01a4\u018e"+
+		"\3\2\2\2\u01a4\u0199\3\2\2\2\u01a5\35\3\2\2\2$%,\65BEHSVYhk~\u0081\u00a3"+
+		"\u00d9\u00db\u00e5\u00f9\u0112\u0123\u0129\u012f\u013a\u013c\u0145\u014f"+
+		"\u0158\u0163\u016b\u017e\u0189\u0194\u019f\u01a4";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {

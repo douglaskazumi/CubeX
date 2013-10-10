@@ -27,25 +27,25 @@ public void run(String[] args) throws FileNotFoundException, IOException
 //	}
 
 	
-	ANTLRInputStream input = new ANTLRInputStream("xasd:=1+2*3;");
-//	ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(args[0]));
+	ANTLRInputStream input = new ANTLRInputStream("return Foo < Bar & Baz>() ;");
+	//	ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(args[0]));
 	CubeXLexer lexer = new CubeXLexer(input);
 	lexer.removeErrorListeners();
 	lexer.addErrorListener(new LexerError());
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
 	CubeXParser parser = new CubeXParser(tokens);
-//	parser.removeErrorListeners();
-//	parser.addErrorListener(new ParserError());
+	parser.removeErrorListeners();
+	parser.addErrorListener(new ParserError());
 	
 	CubeXProgram prog = parser.testprogram().x;
-	
+	/*
 	if(prog.typeCheck()){
 		System.out.println("accept");
 	}
 	else{
 		System.out.println("reject");
 	}
-	
+	*/
 	System.out.println(prog.toString());
 }
 		
@@ -93,31 +93,31 @@ class ParserError  implements ANTLRErrorListener
 	@Override
 	public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3,
 			BitSet arg4, ATNConfigSet arg5) {
+		System.out.println("parser error");
 		print();
 	}
 
 	@Override
 	public void reportAttemptingFullContext(Parser arg0, DFA arg1,
 			int arg2, int arg3, ATNConfigSet arg4) {
-		print();
 	}
 
 	@Override
 	public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2,
 			int arg3, ATNConfigSet arg4) {
-		print();
 	}
 
 	@Override
 	public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2,
 			int arg3, String arg4, RecognitionException arg5) {
+		System.out.println("parser error");
 		print();
 		
 	}
 	
 	private void print()
 	{
-		System.out.println("parser error");
+		
 		System.exit(-1);
 	}
 	

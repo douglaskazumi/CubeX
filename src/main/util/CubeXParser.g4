@@ -116,18 +116,17 @@ interfacex3 returns [CubeXInterface x]
 		{$x = new CubeXInterface($n.text, $tvlist.x, extttest?$extt.x:null, decls);};
 
 classx3 returns [CubeXClass x]
-	: CLASS n=NAMEU tvlist=typevarlist? LPAREN alist=arglist RPAREN {boolean extttest=false;} (EXTENDS extt=type {extttest=true;})? LBRACE {ArrayList<CubeXStatement> stats = new ArrayList<CubeXStatement>();} (s=stat {stats.add($s.x);})* {boolean supertest=false;}(SUPER LPAREN superlist=exprlist RPAREN {supertest=true;})? SEMICOLON {ArrayList<CubeXFunction> funs = new ArrayList<CubeXFunction>();}(f=function {funs.add($f.x);})* RBRACE
+	: CLASS n=NAMEU tvlist=typevarlist? LPAREN alist=arglist RPAREN {boolean extttest=false;} (EXTENDS extt=type {extttest=true;})? LBRACE {ArrayList<CubeXStatement> stats = new ArrayList<CubeXStatement>();} (s=stat {stats.add($s.x);})* {boolean supertest=false;}(SUPER LPAREN superlist=exprlist RPAREN SEMICOLON {supertest=true;})? {ArrayList<CubeXFunction> funs = new ArrayList<CubeXFunction>();}(f=function {funs.add($f.x);})* RBRACE
     {$x = new CubeXClass($n.text, $tvlist.x, $alist.x, extttest?$extt.x:null, stats, supertest?$superlist.x:null, funs);};
 
 testprogram returns [CubeXProgram x]
 : p=program {$x = $p.x;};
 
 program returns [CubeXProgram x]
-	: {$x = new CubeXProgram();} CLASS
-	| {$x = new CubeXProgram();} s=stat {$x.addPiece($s.x);}
+	: {$x = new CubeXProgram();} s=stat {$x.addPiece($s.x);}
 	| {$x = new CubeXProgram();} (s=stat {$x.addPiece($s.x);})+ p=program {$x.addPieces($p.x);}
 	| {$x = new CubeXProgram();}(f=function {$x.addPiece($f.x);})+ p=program  {$x.addPieces($p.x);}
 	| {$x = new CubeXProgram();}(i=interfacex3 {$x.addPiece($i.x);})+ p=program {$x.addPieces($p.x);}
-	| {$x = new CubeXProgram();}(c=classx3 {$x.addPiece($c.x);})+ p=program {$x.addPieces($p.x);};
+	| {$x = new CubeXProgram();}( c=classx3 {$x.addPiece($c.x);})+ p=program {$x.addPieces($p.x);};
 	
 	

@@ -50,7 +50,10 @@ public class CubeXFunctionCall extends CubeXExpression
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(parent.toString()).append(" . ").append(name).append(" < ");
+		if(parent!=null)
+			sb.append(parent.toString()).append(" . ");
+		
+		sb.append(name).append(" < ");
 		String prefix ="";
 		for(CubeXType t : parameters)
 		{
