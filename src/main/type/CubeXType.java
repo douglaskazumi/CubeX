@@ -133,10 +133,27 @@ public abstract class CubeXType
 	}
 
 
-	public static ArrayList<CubeXTypeClassBase> getSuperTypes(
-			CubeXType parentType) {
-		// TODO Auto-generated method stub
-		return null;
+	public static ArrayList<CubeXTypeClassBase> getSuperTypes(CubeXType parentType) {
+		ArrayList<CubeXTypeClassBase> supers =new ArrayList<CubeXTypeClassBase>();
+		
+		if(parentType.isInterface())
+		{
+			supers.add((CubeXTypeInterface)parentType);
+			return supers;
+		}
+		if(parentType.isClass())
+		{
+			supers.add((CubeXTypeClass)parentType);
+			return supers;
+		}
+		if(parentType.isIntersection())
+		{
+			supers.addAll(getSuperTypes(((CubeXTypeIntersection)parentType).A));
+			supers.addAll(getSuperTypes(((CubeXTypeIntersection)parentType).B));
+			return supers;
+		}
+		
+		return supers;
 	}
 
 	// TODO

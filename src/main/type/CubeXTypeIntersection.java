@@ -8,8 +8,8 @@ import main.util.TypeVarSubstitution;
 
 public class CubeXTypeIntersection extends CubeXType {
 
-	private CubeXType A;
-	private CubeXType B;
+	public CubeXType A;
+	public CubeXType B;
 	
 	CubeXType constructableType;
 	
