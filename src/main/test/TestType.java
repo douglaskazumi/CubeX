@@ -158,7 +158,7 @@ public class TestType {
 
 	@Test
 	public void parserTests() throws IOException {
-		for (int i = 1; i <= 6; i++) {
+		for (int i = 1; i <= 5; i++) {
 			String in_filename = "tests/parser_test" + i + ".in";
 			String out_filename = "tests/parser_test" + i + ".out";
 			String in_content = new String(Files.readAllBytes(Paths
@@ -180,13 +180,13 @@ public class TestType {
 			CubeXProgram prog = parser.testprogram().x;
 			
 			System.out.println(i);
-			if (!thereIsParserError && !thereIsLexerError) {
+			if (!thereIsLexerError && !thereIsParserError) {
 				outputString = prog.toString();
-			} else if  (thereIsParserError){
-				outputString = "parser error";
+			} else if  (thereIsLexerError){
+				outputString = "lexer error";
 			}
 			else {
-				outputString = "lexer error";
+				outputString = "parser error";
 			}
 			assertEquals(out_content, outputString);
 			
