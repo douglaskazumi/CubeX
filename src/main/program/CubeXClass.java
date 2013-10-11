@@ -184,10 +184,14 @@ public class CubeXClass extends CubeXClassBase {
 			
 		}
 		
-		ArrayList<CubeXTypeClassBase> parents = CubeXType.getSuperTypes(parentType);
+		ArrayList<CubeXType> parents = CubeXType.getSuperTypes(parentType);
 		
-		for(CubeXTypeClassBase p : parents)
+		for(CubeXType pp : parents)
 		{
+			if(pp.isVariable())
+				throw new TypeCheckException();
+			CubeXTypeClassBase p = (CubeXTypeClassBase)pp;
+			
 			for(CubeXFunction pFun : p.getDeclaration(classCon).functions)
 			{
 				CubeXFunction testFun = innerFunCon.lookup(pFun.getName());
