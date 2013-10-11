@@ -1,7 +1,6 @@
 package main.context;
 
 import main.exceptions.ContextException;
-import main.expression.CubeXVariable;
 import main.type.CubeXType;
 
 public class VariableContext extends BaseContext<CubeXType> {

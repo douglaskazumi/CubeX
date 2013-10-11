@@ -278,7 +278,10 @@ public abstract class CubeXType
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/master
 	public static ArrayList<CubeXType> getSuperTypes(CubeXType parentType) {
 		ArrayList<CubeXType> supers =new ArrayList<CubeXType>();
 		
