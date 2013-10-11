@@ -1,2 +1,2 @@
-The assignment was fairly difficult. It was not very hard to think of a solution for it, but there was some mechanical work.
-Philip was in charge of the main programming part, while Alisson and Douglas took care of reviewing and testing it with more complex test cases, besides setting up unit tests for the whole thing.
+The assignment was way more difficult than the previous ones. It was not easy to think of a solution for all of the problems that kept appearing, and there was a lot mechanical work.
+Everybody worked together on physical meetings to think of solutions for the problems we had. Everybody had at least a little contribution on every part, but Philip and Douglas were mainly responsible for the actual solution code writing, while Alisson was mainly responsible for testing and debugging.
