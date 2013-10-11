@@ -10,4 +10,8 @@ public class TypeVariableContext extends BaseContext<CubeXTypeVariable> {
 		setMutable(false);
 	}
 
+	public TypeVariableContext createChildContext()
+	{
+		return new TypeVariableContext(this);
+	}
 }

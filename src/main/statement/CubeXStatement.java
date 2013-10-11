@@ -8,4 +8,9 @@ public abstract class CubeXStatement extends CubeXProgramPiece
 	{
 		return false;
 	}
+	
+	public boolean isStatement()
+	{
+		return true;
+	}
 }

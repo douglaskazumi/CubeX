@@ -62,7 +62,7 @@ expr returns [CubeXExpression x]
 	| op=(DASH|BANG) e1=expr
 	{$x = $op.type==DASH ? new CubeXFunctionCall($e1.x,"negative",null) : new CubeXFunctionCall($e1.x,"negate",null);}
 	| e1=expr op=(STAR|SLASH|PERCENT) e2=expr
-	{$x = $op.type==STAR ? new CubeXFunctionCall($e1.x,"multiply",$e2.x) :
+	{$x = $op.type==STAR ? new CubeXFunctionCall($e1.x,"times",$e2.x) :
 		$op.type==SLASH ? new CubeXFunctionCall($e1.x,"divide",$e2.x) : new CubeXFunctionCall($e1.x,"modulo",$e2.x);}
 	| e1=expr op=(PLUS|DASH) e2=expr
 	{$x = $op.type==PLUS ? new CubeXFunctionCall($e1.x,"plus", $e2.x) : new CubeXFunctionCall($e1.x,"minus",$e2.x) ;}

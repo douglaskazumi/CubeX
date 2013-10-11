@@ -1,5 +1,7 @@
 package main.type;
 
+import java.util.ArrayList;
+
 import main.context.ClassContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
@@ -67,5 +69,10 @@ public class CubeXTypeVariable extends CubeXType {
 	public int hashCode()
 	{
 		return name.hashCode();
+	}
+
+	@Override
+	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
+		return new ArrayList<CubeXFunction>();
 	}
 }

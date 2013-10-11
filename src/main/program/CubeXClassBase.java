@@ -12,6 +12,8 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 	protected ArrayList<CubeXTypeVariable> types;
 	protected CubeXType parentType;
 	protected ArrayList<CubeXFunction> functions;
+
+
 	protected FunctionContext myFunctionContext;
 	
 	
@@ -21,9 +23,9 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		if(parentType==null)
 			parentType=CubeXType.getThing();
 		if(this.types==null)
-			this.types = new ArrayList<CubeXTypeVariable>();
+			types = new ArrayList<CubeXTypeVariable>();
 		if(this.functions==null)
-			this.functions=new ArrayList<CubeXFunction>();
+			functions=new ArrayList<CubeXFunction>();
 		
 		this.name = name;
 		this.types = types;
@@ -31,6 +33,11 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		this.functions = functions;
 	}
 
+	public ArrayList<CubeXFunction> getFunctions() {
+		return functions;
+	}
+
+	
 	public boolean isClass()
 	{
 		return false;

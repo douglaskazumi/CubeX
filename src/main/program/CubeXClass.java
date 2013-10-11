@@ -38,6 +38,17 @@ public class CubeXClass extends CubeXClassBase {
 		return true;
 	}
 	
+	public void setFunctionContextManual(ArrayList<CubeXFunction> funs, FunctionContext funCon) throws ContextException
+	{
+		FunctionContext innerCon = (FunctionContext) funCon.createChildContext();
+		
+		for(CubeXFunction f : funs)
+		{
+			innerCon.add(f.getName(), f);
+		}
+		
+		myFunctionContext=innerCon;
+	}
 	
 	public CubeXClass(String name, ArrayList<CubeXTypeVariable> types, ArrayList<CubeXArgument> constructorArgs, CubeXType parentType, ArrayList<CubeXStatement> stats, ArrayList<CubeXExpression> superArgs, ArrayList<CubeXFunction> functions)
 	{
@@ -47,7 +58,8 @@ public class CubeXClass extends CubeXClassBase {
 			superArgs=new ArrayList<CubeXExpression>();
 		if(constructorArgs==null)
 			constructorArgs=new ArrayList<CubeXArgument>();
-		
+		if(stats==null)
+			stats=new ArrayList<CubeXStatement>();		
 		
 		this.constructorArgs=constructorArgs;
 		this.statements=stats;
@@ -185,7 +197,7 @@ public class CubeXClass extends CubeXClassBase {
 		}
 		
 		ArrayList<CubeXType> parents = CubeXType.getSuperTypes(parentType);
-		
+		ArrayList<CubeXFunction> noChecking = new ArrayList<CubeXFunction>();
 		for(CubeXType pp : parents)
 		{
 			if(pp.isVariable())
@@ -199,7 +211,7 @@ public class CubeXClass extends CubeXClassBase {
 				{
 					if(pFun.isDeclaration())
 						throw new TypeCheckException();
-					functions.add(pFun);
+					noChecking.add(pFun);
 					innerFunCon.add(pFun.getName(), pFun);
 				}
 			}
@@ -211,6 +223,8 @@ public class CubeXClass extends CubeXClassBase {
 			if(!f.isDeclaration())
 				f.typecheck(classCon, innerFunCon, newVarCon, classTypeVarCon);
 		}
+		
+		functions.addAll(noChecking);
 		
 		this.myFunctionContext=innerFunCon;
 		

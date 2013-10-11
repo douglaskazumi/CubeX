@@ -12,6 +12,11 @@ public class CubeXTypeIterable extends CubeXTypeClass
 		innerType=parameter;
 	}
 	
+	CubeXTypeIterable(String name) {
+		super(name, new ArrayList<CubeXType>());
+		innerType=CubeXType.getCharacter();
+	}
+	
 	public boolean isIterable()
 	{
 		return true;
@@ -25,5 +30,16 @@ public class CubeXTypeIterable extends CubeXTypeClass
 	public CubeXType getInnerType() {
 		return innerType;
 	}
+	
+}
+
+class CubeXTypeString extends CubeXTypeIterable
+{
+
+	public CubeXTypeString()
+	{
+		super("String");
+	}
+	
 	
 }

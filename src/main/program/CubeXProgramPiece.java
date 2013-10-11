@@ -17,4 +17,9 @@ public abstract class CubeXProgramPiece
 	{
 		return false;
 	}
+	
+	public boolean isStatement()
+	{
+		return false;
+	}
 }

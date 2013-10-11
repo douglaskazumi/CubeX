@@ -712,7 +712,7 @@ public class CubeXParser extends Parser {
 						}
 						consume();
 						setState(165); ((ExprContext)_localctx).e2 = expr(10);
-						((ExprContext)_localctx).x =  (((ExprContext)_localctx).op!=null?((ExprContext)_localctx).op.getType():0)==STAR ? new CubeXFunctionCall(((ExprContext)_localctx).e1.x,"multiply",((ExprContext)_localctx).e2.x) :
+						((ExprContext)_localctx).x =  (((ExprContext)_localctx).op!=null?((ExprContext)_localctx).op.getType():0)==STAR ? new CubeXFunctionCall(((ExprContext)_localctx).e1.x,"times",((ExprContext)_localctx).e2.x) :
 						          		(((ExprContext)_localctx).op!=null?((ExprContext)_localctx).op.getType():0)==SLASH ? new CubeXFunctionCall(((ExprContext)_localctx).e1.x,"divide",((ExprContext)_localctx).e2.x) : new CubeXFunctionCall(((ExprContext)_localctx).e1.x,"modulo",((ExprContext)_localctx).e2.x);
 						}
 						break;

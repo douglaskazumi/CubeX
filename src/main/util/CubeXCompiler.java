@@ -25,9 +25,8 @@ public void run(String[] args) throws FileNotFoundException, IOException
 //		System.out.println("usage: java lexer <filename>");
 //		System.exit(-1);
 //	}
-
 	
-	ANTLRInputStream input = new ANTLRInputStream("return Foo < Bar & Baz>() ;");
+	ANTLRInputStream input = new ANTLRInputStream("return ;");
 	//	ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(args[0]));
 	CubeXLexer lexer = new CubeXLexer(input);
 	lexer.removeErrorListeners();
@@ -38,14 +37,12 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	parser.addErrorListener(new ParserError());
 	
 	CubeXProgram prog = parser.testprogram().x;
-	/*
 	if(prog.typeCheck()){
 		System.out.println("accept");
 	}
 	else{
 		System.out.println("reject");
 	}
-	*/
 	System.out.println(prog.toString());
 }
 		

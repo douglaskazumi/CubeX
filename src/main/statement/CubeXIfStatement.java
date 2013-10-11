@@ -63,7 +63,7 @@ public class CubeXIfStatement extends CubeXStatement {
 		if(!resFalse.first)
 			return new Tuple<Boolean, CubeXType>(false, null);
 		
-		CubeXType returnType = CubeXType.join(resTrue.second, resFalse.second, classCon, typeVarCon);
+		CubeXType returnType = CubeXType.join(resTrue.second, resFalse.second);
 		
 		return new Tuple<Boolean, CubeXType>(true, returnType) ;
 	}

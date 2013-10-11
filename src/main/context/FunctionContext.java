@@ -9,4 +9,8 @@ public class FunctionContext extends BaseContext<CubeXFunction> {
 		setMutable(false);
 	}
 
+	public FunctionContext createChildContext()
+	{
+		return new FunctionContext(this);
+	}
 }

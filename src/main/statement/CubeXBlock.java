@@ -66,7 +66,7 @@ public class CubeXBlock extends CubeXStatement
 			if(res.first)
 			{
 				willReturn=true;
-				CubeXType.join(res.second, returnType, classCon, typeVarCon);
+				CubeXType.join(res.second, returnType);
 			}
 		}
 		

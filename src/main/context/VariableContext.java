@@ -18,10 +18,13 @@ public class VariableContext extends BaseContext<CubeXType> {
 				continue;
 			CubeXType typeA = innerConTrue.context.get(id);
 			CubeXType typeB = innerConFalse.context.get(id);
-			CubeXType mergedType = CubeXType.join(typeA, typeB, classCon, typeVarCon);
+			CubeXType mergedType = CubeXType.join(typeA, typeB);
 			
 			varCon.add(id, mergedType);
 		}
 	}
-
+	public VariableContext createChildContext()
+	{
+		return new VariableContext(this);
+	}
 }

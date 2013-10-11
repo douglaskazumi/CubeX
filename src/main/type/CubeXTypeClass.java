@@ -1,6 +1,5 @@
 package main.type;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import main.context.*;
 import main.exceptions.ContextException;
@@ -76,6 +75,8 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		return new Tuple<TypeVarSubstitution, CubeXFunction>(geTypeVarSub(classCon),fun);
 	}
 
+
+
 }
 
 class CubeXTypeBoolean extends CubeXTypeClass
@@ -134,12 +135,3 @@ class CubeXTypeCharacter extends CubeXTypeClass
 }
 
 
-class CubeXTypeString extends CubeXTypeClass
-{
-
-	public CubeXTypeString()
-	{
-		super("String", new ArrayList<CubeXType>(Arrays.asList(CubeXType.getCharacter())));
-	}
-	
-}

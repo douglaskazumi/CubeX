@@ -110,31 +110,66 @@ public abstract class CubeXType
 	
 	public abstract boolean equals(CubeXType other);
 	
+	public boolean equals(Object other)
+	{
+		return equals((CubeXType)other);
+	}
 	
 	
-	public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon, TypeVariableContext typeVarCon) {
-		ArrayList<CubeXType> inter = getSuperTypes(a);
+	
+	public static CubeXType join(CubeXType a, CubeXType b) {
+		if(a.isNothing())
+			return b;
+		if(a.isNothing())
+			return a;
+		if(a.isThing() || b.isThing())
+			return CubeXType.getThing();
+		if(a.isIterable() && b.isIterable())
+		{
+			return new CubeXTypeIterable(join(((CubeXTypeIterable)a).getInnerType(),((CubeXTypeIterable)b).getInnerType()));
+		}
+		
+		ArrayList<CubeXType> aSupers = getSuperTypes(a);
+		ArrayList<CubeXType> intersection = new ArrayList<CubeXType>();
 		ArrayList<CubeXType> aux = getSuperTypes(b);
-		inter.retainAll(aux);
+		
+		for(CubeXType aS : aSupers){
+			if(aux.contains(aS)){
+				intersection.add(aS);
+			}
+		}
+					
 		aux = new ArrayList<CubeXType>();
 		
-		for(CubeXType c : inter){
-			for(CubeXType p : inter){
-				if(isSubType(c, p))
-					aux.add(p);
+		for(CubeXType c : intersection){
+			for(CubeXType p : intersection){
+				if(!c.equals(p) && isSubType(c, p))
+					if(!aux.contains(p))
+						aux.add(p);
 			}
 		}
 		
-		inter.removeAll(aux);
+		intersection.removeAll(aux);
 		
-		if(inter.size() == 0)
+		if(intersection.size() == 0)
 			return getThing();
-		if(inter.size() == 1)
-			return inter.get(0);		
+		if(intersection.size() == 1)
+			return intersection.get(0);		
 		
-		CubeXTypeIntersection join = new CubeXTypeIntersection(inter.get(0),inter.get(1));
-		for(int i = 2; i < inter.size(); i++ ){
-			join = new CubeXTypeIntersection(inter.get(i),join);
+		CubeXType firstElement = intersection.get(0);
+		for(CubeXType c : intersection){
+			if(c.isClass()){
+				int index = intersection.indexOf(c);
+				firstElement = intersection.get(0);
+				intersection.set(0, c);
+				intersection.set(index, firstElement);
+				break;
+			}
+		}
+		
+		CubeXTypeIntersection join = new CubeXTypeIntersection(intersection.get(0),intersection.get(1));
+		for(int i = 2; i < intersection.size(); i++ ){
+			join = new CubeXTypeIntersection(join,intersection.get(i));
 		}
 		
 		return join;
@@ -204,11 +239,22 @@ public abstract class CubeXType
 				}
 			}
 			
-			//TODO need to make sure all left functions are different from all right functions 
-			
+			ArrayList<CubeXFunction> leftFuns = intersection.left.getAllFunctions(classCon);
+			ArrayList<CubeXFunction> rightFuns = intersection.right.getAllFunctions(classCon);
+
+			for(CubeXFunction leftFun : leftFuns)
+			{
+				for(CubeXFunction rightFun : rightFuns)
+				{
+					if(leftFun.getName().equals(rightFun.getName()))
+						throw new TypeCheckException();
+				}
+			}
 		}
 		
 	}
+	
+	protected abstract ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException;
 
 	/**
 	 * Checks if child is subtype of parent

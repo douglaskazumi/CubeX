@@ -1,5 +1,7 @@
 package main.type;
 
+import java.util.ArrayList;
+
 import main.context.ClassContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
@@ -67,6 +69,13 @@ public class CubeXTypeIntersection extends CubeXType {
 		if((left.equals(otherIntersection.left)&&right.equals(otherIntersection.right)) || (left.equals(otherIntersection.right)&&right.equals(otherIntersection.left)))
 			return true;
 		return false;
+	}
+
+	@Override
+	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
+		ArrayList<CubeXFunction> funs = left.getAllFunctions(classCon);
+		funs.addAll(right.getAllFunctions(classCon));
+		return funs;
 	}
 
 }

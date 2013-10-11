@@ -6,6 +6,7 @@ import java.util.Iterator;
 import main.context.ClassContext;
 import main.exceptions.ContextException;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 
 public abstract class CubeXTypeClassBase extends CubeXType 
 {
@@ -23,12 +24,15 @@ public abstract class CubeXTypeClassBase extends CubeXType
 	
 	public abstract CubeXClassBase getDeclaration(ClassContext classCon) throws ContextException;
 	
+	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
+		return getDeclaration(classCon).getFunctions();
+	}
 	
 	public boolean equals(CubeXType other)
 	{
 		if (other==null)
 			return false;
-		if(!other.isClass() || !other.isInterface())
+		if(!other.isClass() && !other.isInterface())
 			return false;
 		
 		CubeXTypeClassBase otherBase = (CubeXTypeClassBase) other;

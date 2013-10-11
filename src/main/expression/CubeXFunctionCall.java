@@ -35,7 +35,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			parameters = new ArrayList<CubeXType>();
 		}
 		this.parameters=parameters;
-		if(args==null)
+		if(args==null || (args.size()>0 && args.get(0)==null))
 		{
 			args = new ArrayList<CubeXExpression>();
 		}
@@ -101,7 +101,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(argExpectedTypesIt.next().type, classSub), funSub);
 				
 				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
-					throw new TypeCheckException();
+					throw new TypeCheckException("BAD ARGUMENT TO FUNCTION CALL");
 			}
 			
 			return CubeXType.makeSubstitution(CubeXType.makeSubstitution(fun.getReturnType(), classSub), funSub);
