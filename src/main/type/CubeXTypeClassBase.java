@@ -51,4 +51,5 @@ public abstract class CubeXTypeClassBase extends CubeXType
 		}
 		return true;
 	}
+	
 }

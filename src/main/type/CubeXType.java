@@ -6,6 +6,7 @@ import main.context.ClassContext;
 import main.context.TypeVariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.util.Tuple;
 import main.util.TypeVarSubstitution;
@@ -135,8 +136,54 @@ public abstract class CubeXType
 		return type;
 	}
 	
-	public static void validateType(CubeXType type, boolean isInExtends, ClassContext classCon, TypeVariableContext typeVarCon) {
-		// TODO Auto-generated method stub
+	public static void validateType(CubeXType type, boolean isInExtends, ClassContext classCon, TypeVariableContext typeVarCon) throws TypeCheckException, ContextException 
+	{
+		if(type.isNothing() && isInExtends)
+			throw new TypeCheckException();
+		
+		if(type.isThing())
+			return;
+		
+		if(!type.isExtendable() && isInExtends)
+			throw new TypeCheckException();
+		
+		if(type.isClass()||type.isInterface())
+		{
+			CubeXClassBase base = classCon.lookup(((CubeXTypeClassBase)type).name);
+			if(base==null)
+				throw new ContextException();
+			
+			CubeXTypeClassBase typeBase =(CubeXTypeClassBase)type;
+			
+			for(CubeXType t : typeBase.parameters)
+			{
+				validateType(t, false, classCon, typeVarCon);
+			}
+			
+		}
+
+		if(type.isIntersection())
+		{
+			CubeXTypeIntersection intersection = (CubeXTypeIntersection)type;
+			
+			validateType(intersection.left, isInExtends, classCon, typeVarCon);
+			validateType(intersection.right, isInExtends, classCon, typeVarCon);
+			
+			if(!intersection.right.getConstructableComponent().isThing())
+				throw new TypeCheckException();
+			
+			for(CubeXType superTypeLeft : getSuperTypes(intersection.left))
+			{
+				for(CubeXType superTypeRight : getSuperTypes(intersection.right))
+				{
+					if(superTypeLeft.equals(superTypeRight))
+						throw new TypeCheckException();
+				}
+			}
+			
+			//TODO need to make sure all left functions are different from all right functions 
+			
+		}
 		
 	}
 
@@ -209,8 +256,6 @@ public abstract class CubeXType
 	}
 
 
-
-
 	public static ArrayList<CubeXType> getSuperTypes(CubeXType parentType) {
 		ArrayList<CubeXType> supers =new ArrayList<CubeXType>();
 		
@@ -229,6 +274,6 @@ public abstract class CubeXType
 			return supers;
 		}
 	}
-
+	
 }
 

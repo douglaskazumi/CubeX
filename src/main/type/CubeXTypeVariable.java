@@ -21,6 +21,12 @@ public class CubeXTypeVariable extends CubeXType {
 		return true;
 	}
 	
+	@Override
+	public boolean isExtendable()
+	{
+		return false;
+	}
+	
 	public String getName()
 	{
 		return name;

@@ -1,9 +1,6 @@
 package main.context;
 
-import com.sun.xml.internal.bind.CycleRecoverable.Context;
-
 import main.exceptions.ContextException;
-import main.expression.CubeXVariable;
 import main.type.CubeXType;
 
 public class VariableContext extends BaseContext<CubeXType> {
