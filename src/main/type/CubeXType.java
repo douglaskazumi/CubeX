@@ -112,8 +112,31 @@ public abstract class CubeXType
 	
 	
 	public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon, TypeVariableContext typeVarCon) {
-		return null;
-		//TODO 
+		ArrayList<CubeXType> inter = getSuperTypes(a);
+		ArrayList<CubeXType> aux = getSuperTypes(b);
+		inter.retainAll(aux);
+		aux = new ArrayList<CubeXType>();
+		
+		for(CubeXType c : inter){
+			for(CubeXType p : inter){
+				if(isSubType(c, p))
+					aux.add(p);
+			}
+		}
+		
+		inter.removeAll(aux);
+		
+		if(inter.size() == 0)
+			return getThing();
+		if(inter.size() == 1)
+			return inter.get(0);		
+		
+		CubeXTypeIntersection join = new CubeXTypeIntersection(inter.get(0),inter.get(1));
+		for(int i = 2; i < inter.size(); i++ ){
+			join = new CubeXTypeIntersection(inter.get(i),join);
+		}
+		
+		return join;
 	}
 	
 	public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub)
@@ -141,63 +164,63 @@ public abstract class CubeXType
 	}
 
 	/**
-	 * Checks if type 1 is subtype of type2
-	 * @param type1
-	 * @param type2
+	 * Checks if child is subtype of parent
+	 * @param child
+	 * @param parent
 	 * @return True if it is.
 	 */
-	public static boolean isSubType(CubeXType type1, CubeXType type2)
+	public static boolean isSubType(CubeXType child, CubeXType parent)
 	{
-		if(type1.isNothing())
+		if(child.isNothing())
 			return true;
-		if(type1.isThing())
-			return type2.isThing();
-		if(type2.isNothing())
+		if(child.isThing())
+			return parent.isThing();
+		if(parent.isNothing())
 			return false;
-		if(type2.isThing())
+		if(parent.isThing())
 			return true;
 		
-		if(type1.isIntersection())
+		if(child.isIntersection())
 		{
-			CubeXTypeIntersection intersection1 = (CubeXTypeIntersection)type1;
-			return isSubType(intersection1.left, type2) || isSubType(intersection1.right, type2);
+			CubeXTypeIntersection intersection1 = (CubeXTypeIntersection)child;
+			return isSubType(intersection1.left, parent) || isSubType(intersection1.right, parent);
 		}
 		
-		if(type2.isIntersection())
+		if(parent.isIntersection())
 		{
-			CubeXTypeIntersection intersection2 = (CubeXTypeIntersection)type2;
-			return isSubType(type1, intersection2.left) && isSubType(type1, intersection2.right);
+			CubeXTypeIntersection intersection2 = (CubeXTypeIntersection)parent;
+			return isSubType(child, intersection2.left) && isSubType(child, intersection2.right);
 		}
 		
-		if(type1.isIterable())
+		if(child.isIterable())
 		{
-			if(type2.isIterable())
+			if(parent.isIterable())
 			{
-				CubeXTypeIterable iterable1 = (CubeXTypeIterable)type1;
-				CubeXTypeIterable iterable2 = (CubeXTypeIterable)type2;
+				CubeXTypeIterable iterable1 = (CubeXTypeIterable)child;
+				CubeXTypeIterable iterable2 = (CubeXTypeIterable)parent;
 				return isSubType(iterable1.getInnerType(), iterable2.getInnerType());
 			}
 			
 			return false;
 		}
-		if(type2.isIterable())
+		if(parent.isIterable())
 			return false;
 	
-		if(type1.isVariable())
+		if(child.isVariable())
 		{
-			if(type2.isVariable())
+			if(parent.isVariable())
 			{
-				CubeXTypeVariable var1 = (CubeXTypeVariable)type1;
-				CubeXTypeVariable var2 = (CubeXTypeVariable)type2;
+				CubeXTypeVariable var1 = (CubeXTypeVariable)child;
+				CubeXTypeVariable var2 = (CubeXTypeVariable)parent;
 				return var1.equals(var2);
 			}
 			return false;
 		}
-		if(type2.isVariable())
+		if(parent.isVariable())
 			return false;
 		
-		CubeXTypeClassBase base1 = (CubeXTypeClassBase)type1;
-		CubeXTypeClassBase base2 = (CubeXTypeClassBase)type2;
+		CubeXTypeClassBase base1 = (CubeXTypeClassBase)child;
+		CubeXTypeClassBase base2 = (CubeXTypeClassBase)parent;
 		
 		for(CubeXType base1Type : getSuperTypes(base1))
 		{
@@ -207,9 +230,6 @@ public abstract class CubeXType
 		
 		return false;
 	}
-
-
-
 
 	public static ArrayList<CubeXType> getSuperTypes(CubeXType parentType) {
 		ArrayList<CubeXType> supers =new ArrayList<CubeXType>();
