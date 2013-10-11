@@ -97,8 +97,8 @@ public class TestType {
 	@Test
 	public void lexerTests() throws IOException {
 		for (int i = 1; i <= 6; i++) {
-			String in_filename = "tests/lexer_test" + i + ".in";
-			String out_filename = "tests/lexer_test" + i + ".out";
+			String in_filename = "tests/lexer/lexer_test" + i + ".in";
+			String out_filename = "tests/lexer/lexer_test" + i + ".out";
 			String in_content = new String(Files.readAllBytes(Paths
 					.get(in_filename)));
 			String out_content = new String(Files.readAllBytes(Paths
@@ -159,8 +159,8 @@ public class TestType {
 	@Test
 	public void parserTests() throws IOException {
 		for (int i = 1; i <= 5; i++) {
-			String in_filename = "tests/parser_test" + i + ".in";
-			String out_filename = "tests/parser_test" + i + ".out";
+			String in_filename = "tests/parser/parser_test" + i + ".in";
+			String out_filename = "tests/parser/parser_test" + i + ".out";
 			String in_content = new String(Files.readAllBytes(Paths
 					.get(in_filename)));
 			String out_content = new String(Files.readAllBytes(Paths
@@ -187,6 +187,52 @@ public class TestType {
 			}
 			else {
 				outputString = "parser error";
+			}
+			assertEquals(out_content, outputString);
+			
+			thereIsLexerError = false;
+			thereIsParserError = false;
+		}
+	}
+
+	
+	@Test
+	public void typeCheckTests() throws IOException {
+		for (int i = 1; i <= 20; i++) {
+			String in_filename = "tests/typeCheck/tc_test" + i + ".in";
+			String out_filename = "tests/typeCheck/tc_test" + i + ".out";
+			String in_content = new String(Files.readAllBytes(Paths
+					.get(in_filename)));
+			String out_content = new String(Files.readAllBytes(Paths
+					.get(out_filename)));
+			String outputString = "";
+			
+			ANTLRInputStream input = new ANTLRInputStream(in_content);
+			CubeXLexer lexer = new CubeXLexer(input);
+			lexer.removeErrorListeners();
+			lexer.addErrorListener(new LexerError());
+
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			CubeXParser parser = new CubeXParser(tokens);
+			parser.removeErrorListeners();
+			parser.addErrorListener(new ParserError());
+
+			CubeXProgram prog = parser.testprogram().x;
+			if(prog.typeCheck()){
+				outputString = "accept";
+			}
+			else{
+				outputString = "reject";
+			}
+			
+			System.out.println(i);
+			if (!thereIsLexerError && !thereIsParserError) {
+				outputString = prog.toString();
+			} else if  (thereIsLexerError){
+				outputString = "reject";
+			}
+			else {
+				outputString = "reject";
 			}
 			assertEquals(out_content, outputString);
 			
