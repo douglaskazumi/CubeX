@@ -1,4 +1,4 @@
-package main.type;
+package main.util;
 
 public class Tuple<P,Q> {
 

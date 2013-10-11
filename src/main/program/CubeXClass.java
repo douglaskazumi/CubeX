@@ -14,7 +14,7 @@ import main.type.CubeXType;
 import main.type.CubeXTypeClass;
 import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
-import main.type.Tuple;
+import main.util.Tuple;
 import main.util.TypeVarSubstitution;
 
 
@@ -121,14 +121,14 @@ public class CubeXClass extends CubeXClassBase {
 			classTypeVarCon.add(tvar.getName(), tvar);
 		}
 		
-		CubeXType.validateType(parentType, classCon, typeVarCon);
+		CubeXType.validateType(parentType, true, classCon, typeVarCon);
 
 		classCon.add(name, this);
 		VariableContext newVarCon = (VariableContext)varCon.createChildContext();
 		
 		for(CubeXArgument arg : constructorArgs)
 		{
-			CubeXType.validateType(arg.type, classCon, classTypeVarCon);
+			CubeXType.validateType(arg.type, false,  classCon, classTypeVarCon);
 			newVarCon.add(arg.variable.getName(), arg.type);
 		}
 		

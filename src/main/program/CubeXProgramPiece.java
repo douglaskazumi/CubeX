@@ -7,7 +7,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.type.CubeXType;
-import main.type.Tuple;
+import main.util.Tuple;
 
 public abstract class CubeXProgramPiece 
 {

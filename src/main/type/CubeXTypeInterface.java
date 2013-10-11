@@ -7,6 +7,7 @@ import main.exceptions.ContextException;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXInterface;
+import main.util.Tuple;
 import main.util.TypeVarSubstitution;
 
 public class CubeXTypeInterface extends CubeXTypeClassBase 

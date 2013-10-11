@@ -1,5 +1,6 @@
 package main.program;
 import java.util.ArrayList;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -8,7 +9,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
-import main.type.Tuple;
+import main.util.Tuple;
 
 
 public class CubeXInterface extends CubeXClassBase {
@@ -54,7 +55,7 @@ public class CubeXInterface extends CubeXClassBase {
 			throw new ContextException();
 	
 		TypeVariableContext classTypeVarCon = (TypeVariableContext)typeVarCon.createChildContext();
-		CubeXType.validateType(parentType, classCon, typeVarCon);
+		CubeXType.validateType(parentType, true, classCon, typeVarCon);
 
 		for(CubeXTypeVariable tvar : types)
 		{

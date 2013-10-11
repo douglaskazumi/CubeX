@@ -5,6 +5,7 @@ import main.context.ClassContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXFunction;
+import main.util.Tuple;
 import main.util.TypeVarSubstitution;
 
 public class CubeXTypeSpecial extends CubeXType 
@@ -37,5 +38,20 @@ public class CubeXTypeSpecial extends CubeXType
 	{
 		throw new TypeCheckException();
 	}
+
+	@Override
+	public boolean equals(CubeXType other) 
+	{
+		if(other==null)
+			return false;
+		if(this.isThing() && other.isThing())
+			return true;
+		if(this.isNothing() && other.isNothing())
+			return true;
+		
+		return false;
+	}
+	
+	
 	
 }

@@ -15,7 +15,7 @@ import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.type.CubeXType;
 import main.type.CubeXTypeClass;
-import main.type.Tuple;
+import main.util.Tuple;
 import main.util.TypeVarSubstitution;
 
 

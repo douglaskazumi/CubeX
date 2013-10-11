@@ -8,7 +8,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
 import main.type.CubeXType;
-import main.type.Tuple;
+import main.util.Tuple;
 
 public class CubeXIfStatement extends CubeXStatement {
 

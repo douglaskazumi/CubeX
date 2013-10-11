@@ -12,7 +12,7 @@ import main.statement.CubeXReturnStatement;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
-import main.type.Tuple;
+import main.util.Tuple;
 
 
 public class CubeXFunction extends CubeXProgramPiece
@@ -118,11 +118,11 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		for(CubeXArgument arg : arglist)
 		{
-			CubeXType.validateType(arg.type, classCon, funTypeVarCon);
+			CubeXType.validateType(arg.type, false, classCon, funTypeVarCon);
 			newVarCon.add(arg.variable.getName(), arg.type);
 		}
 		
-		CubeXType.validateType(returnType, classCon, funTypeVarCon);
+		CubeXType.validateType(returnType, false, classCon, funTypeVarCon);
 		
 		Tuple<Boolean, CubeXType> res = statement.typecheck(classCon, funCon, newVarCon, funTypeVarCon);
 		if(!res.first)

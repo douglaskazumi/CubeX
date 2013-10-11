@@ -6,4 +6,3 @@ public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon, Ty
 public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub)
 public static boolean isSubType(CubeXType type1, CubeXType type2)
 public static void validateType(CubeXType type,	ClassContext classCon, TypeVariableContext typeVarCon)
-public static ArrayList<CubeXTypeClassBase> getSuperTypes(CubeXType parentType)

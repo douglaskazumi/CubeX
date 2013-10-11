@@ -9,7 +9,7 @@ import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
-import main.type.Tuple;
+import main.util.Tuple;
 
 public class CubeXAssignment extends CubeXStatement {
 

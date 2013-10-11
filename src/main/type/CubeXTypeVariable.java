@@ -4,6 +4,7 @@ import main.context.ClassContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXFunction;
+import main.util.Tuple;
 import main.util.TypeVarSubstitution;
 
 public class CubeXTypeVariable extends CubeXType {
@@ -37,12 +38,11 @@ public class CubeXTypeVariable extends CubeXType {
 	}
 	
 	@Override
-	public boolean equals(Object other)
+	public boolean equals(CubeXType other)
 	{
 		if(other==null)
 			return false;
-		CubeXType otherType = (CubeXType)other;
-		if(!otherType.isVariable())
+		if(!other.isVariable())
 			return false;
 		return ((CubeXTypeVariable)other).name.equals(name);
 	}
