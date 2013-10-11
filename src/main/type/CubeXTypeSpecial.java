@@ -17,6 +17,11 @@ public class CubeXTypeSpecial extends CubeXType
 		this.isThing=isThing;
 	}
 	
+	public boolean isSpecial()
+	{
+		return true;
+	}
+	
 	public boolean isThing()
 	{
 		return isThing;

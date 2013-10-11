@@ -38,6 +38,16 @@ public class CubeXTypeVariable extends CubeXType {
 	}
 	
 	@Override
+	public boolean equals(Object other)
+	{
+		if(other==null)
+			return false;
+		if(other instanceof CubeXType)
+			return equals((CubeXType)other);
+		return false;
+	}
+	
+	@Override
 	public boolean equals(CubeXType other)
 	{
 		if(other==null)

@@ -1,7 +1,6 @@
 package main.type;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import main.context.ClassContext;
 import main.context.TypeVariableContext;
@@ -77,6 +76,10 @@ public abstract class CubeXType
 	{
 		return false;
 	}
+	public boolean isSpecial()
+	{
+		return false;
+	}
 	public boolean isThing()
 	{
 		return false;
@@ -106,16 +109,35 @@ public abstract class CubeXType
 	
 	public abstract boolean equals(CubeXType other);
 	
+	
+	
 	public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon, TypeVariableContext typeVarCon) {
 		return null;
 		//TODO 
 	}
 	
-	
 	public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub)
 	{
-		//TODO!!
-		return null;
+		if(type.isVariable())
+		{
+			CubeXType res = sub.get((CubeXTypeVariable)type);
+			if(res==null)
+				return type;
+			return res;
+		}
+		
+		if(type.isIntersection())
+		{
+			CubeXTypeIntersection intersection = (CubeXTypeIntersection)type; 
+			return new CubeXTypeIntersection(makeSubstitution(intersection.left, sub), makeSubstitution(intersection.right, sub));
+		}
+
+		return type;
+	}
+	
+	public static void validateType(CubeXType type, boolean isInExtends, ClassContext classCon, TypeVariableContext typeVarCon) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -187,10 +209,6 @@ public abstract class CubeXType
 	}
 
 
-	public static void validateType(CubeXType type, boolean isInExtends, ClassContext classCon, TypeVariableContext typeVarCon) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 	public static ArrayList<CubeXType> getSuperTypes(CubeXType parentType) {
@@ -212,7 +230,5 @@ public abstract class CubeXType
 		}
 	}
 
-	// TODO
-//	private array of classbase getParentSet(type)
 }
 
