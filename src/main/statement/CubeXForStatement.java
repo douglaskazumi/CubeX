@@ -41,10 +41,9 @@ public class CubeXForStatement extends CubeXStatement {
 		CubeXType innerType=forIterable.getInnerType();
 		
 		boolean mutable = varCon.isMutable();
-		varCon.setMutable(false);;
 		VariableContext innerCon = (VariableContext)varCon.createChildContext();
 		innerCon.add(variable, innerType);
-		forbody.typecheck(classCon, funCon, (VariableContext) varCon.createChildContext(), typeVarCon);
+		forbody.typecheck(classCon, funCon, innerCon, typeVarCon);
 		varCon.setMutable(mutable);
 		
 		return new Tuple<Boolean, CubeXType>(false, null);

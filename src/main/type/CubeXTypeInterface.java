@@ -28,6 +28,11 @@ public class CubeXTypeInterface extends CubeXTypeClassBase
 		return new Tuple<TypeVarSubstitution, CubeXFunction>(geTypeVarSub(classCon),fun);
 	}
 
+	@Override
+	public CubeXType getConstructableComponent()
+	{
+		return CubeXType.getThing();
+	}
 
 	public CubeXInterface getDeclaration(ClassContext classCon) throws ContextException
 	{
@@ -37,7 +42,7 @@ public class CubeXTypeInterface extends CubeXTypeClassBase
 			
 			if (base==null || !base.isInterface())
 			{
-				throw new ContextException("Bad Class");
+				throw new ContextException("Bad Interface");
 			}
 			interfaceDeclaration = (CubeXInterface)base;
 		}

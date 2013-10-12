@@ -11,9 +11,8 @@ import main.program.CubeXFunction;
 import main.util.Tuple;
 import main.util.TypeVarSubstitution;
 
-public abstract class CubeXType 
+public abstract class CubeXType
 {
-
 	
 	public static CubeXTypeBoolean cubeXBool = new CubeXTypeBoolean();
 	public static CubeXTypeBoolean getBoolean()
@@ -103,6 +102,11 @@ public abstract class CubeXType
 		return true;
 	}
 	
+	public boolean isString()
+	{
+		return false;
+	}
+	
 	public CubeXType getConstructableComponent()
 	{
 		return CubeXType.getThing();
@@ -175,7 +179,7 @@ public abstract class CubeXType
 		return join;
 	}
 	
-	public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub)
+	public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub) throws TypeCheckException
 	{
 		if(type.isVariable())
 		{
@@ -191,16 +195,44 @@ public abstract class CubeXType
 			return new CubeXTypeIntersection(makeSubstitution(intersection.left, sub), makeSubstitution(intersection.right, sub));
 		}
 
+		if(type.isClass())
+		{
+
+			CubeXTypeClass baseClass = (CubeXTypeClass)type;
+
+			ArrayList<CubeXType> newParameters =new ArrayList<CubeXType>();
+			for(int i=0; i<baseClass.parameters.size(); i++)
+			{
+				newParameters.add(makeSubstitution(baseClass.parameters.get(i), sub));
+			}
+			return CubeXTypeClass.NewCubeXTypeClass(baseClass.name, newParameters);
+		}
+		
+		if(type.isInterface())
+		{
+
+			CubeXTypeInterface baseInterface = (CubeXTypeInterface)type;
+
+			ArrayList<CubeXType> newParameters =new ArrayList<CubeXType>();
+			for(int i=0; i<baseInterface.parameters.size(); i++)
+			{
+				newParameters.add(makeSubstitution(baseInterface.parameters.get(i), sub));
+			}
+			return new CubeXTypeInterface(baseInterface.name, newParameters);
+		}
+		
+		
 		return type;
 	}
+
 	
-	public static void validateType(CubeXType type, boolean isInExtends, ClassContext classCon, TypeVariableContext typeVarCon) throws TypeCheckException, ContextException 
+	public static CubeXType validateType(CubeXType type, boolean isInExtends, ClassContext classCon, TypeVariableContext typeVarCon) throws TypeCheckException, ContextException 
 	{
 		if(type.isNothing() && isInExtends)
 			throw new TypeCheckException();
 		
 		if(type.isThing())
-			return;
+			return type;
 		
 		if(!type.isExtendable() && isInExtends)
 			throw new TypeCheckException();
@@ -213,19 +245,24 @@ public abstract class CubeXType
 			
 			CubeXTypeClassBase typeBase =(CubeXTypeClassBase)type;
 			
+			if(typeBase.isClass())
+				typeBase=((CubeXTypeClass)typeBase).getActualType(classCon);
+			
+			ArrayList<CubeXType> newParameters = new ArrayList<CubeXType>();
 			for(CubeXType t : typeBase.parameters)
 			{
-				validateType(t, false, classCon, typeVarCon);
+				newParameters.add(validateType(t, false, classCon, typeVarCon));
 			}
-			
+			typeBase.parameters=newParameters;
+			return typeBase;
 		}
 
 		if(type.isIntersection())
 		{
 			CubeXTypeIntersection intersection = (CubeXTypeIntersection)type;
 			
-			validateType(intersection.left, isInExtends, classCon, typeVarCon);
-			validateType(intersection.right, isInExtends, classCon, typeVarCon);
+			intersection.left=validateType(intersection.left, isInExtends, classCon, typeVarCon);
+			intersection.right=validateType(intersection.right, isInExtends, classCon, typeVarCon);
 			
 			if(!intersection.right.getConstructableComponent().isThing())
 				throw new TypeCheckException();
@@ -251,7 +288,7 @@ public abstract class CubeXType
 				}
 			}
 		}
-		
+		return type;
 	}
 	
 	protected abstract ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException;
@@ -325,18 +362,20 @@ public abstract class CubeXType
 	}
 
 
-	public static ArrayList<CubeXType> getSuperTypes(CubeXType parentType) {
+	public static ArrayList<CubeXType> getSuperTypes(CubeXType type) {
 		ArrayList<CubeXType> supers =new ArrayList<CubeXType>();
 		
-		if(parentType.isClass()||parentType.isInterface()||parentType.isVariable())
+		if(type.isClass()||type.isInterface()||type.isVariable())
 		{
-			supers.add(parentType);
+			//TODO
+			supers.add(type);
+			supers.addall(getSuperTypes(type.));
 			return supers;
 		}
-		else if(parentType.isIntersection())
+		else if(type.isIntersection())
 		{
-			supers.addAll(getSuperTypes(((CubeXTypeIntersection)parentType).left));
-			supers.addAll(getSuperTypes(((CubeXTypeIntersection)parentType).right));
+			supers.addAll(getSuperTypes(((CubeXTypeIntersection)type).left));
+			supers.addAll(getSuperTypes(((CubeXTypeIntersection)type).right));
 			return supers;
 		} else
 		{

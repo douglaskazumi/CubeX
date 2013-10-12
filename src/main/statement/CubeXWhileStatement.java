@@ -35,9 +35,8 @@ public class CubeXWhileStatement extends CubeXStatement
 	{
 		CubeXType condType = condition.getType(classCon, funCon, varCon, typeVarCon);
 		if(!condType.isBool())
-			throw new TypeCheckException();
+			throw new TypeCheckException("While condition not a bool");
 		boolean mutable = varCon.isMutable();
-		varCon.setMutable(false);;
 		whilestatement.typecheck(classCon, funCon, (VariableContext) varCon.createChildContext(), typeVarCon);
 		varCon.setMutable(mutable);
 		

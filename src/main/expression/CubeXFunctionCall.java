@@ -109,7 +109,7 @@ public class CubeXFunctionCall extends CubeXExpression
 		else
 		{
 			//Global function call
-			if(name.toLowerCase().equals(name))
+			if(name.substring(0, 1).toLowerCase().equals(name.substring(0, 1)))
 			{
 				fun=funCon.lookup(name);
 				if(fun == null){
@@ -143,6 +143,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				if(base==null)
 					throw new ContextException();
 				
+				
 				if(base.isInterface())
 					throw new TypeCheckException();
 				
@@ -166,7 +167,7 @@ public class CubeXFunctionCall extends CubeXExpression
 						throw new TypeCheckException();
 				}
 				
-				return new CubeXTypeClass(name, parameters);
+				return CubeXTypeClass.NewCubeXTypeClass(name, parameters);
 			}
 		}
 	}

@@ -47,7 +47,6 @@ public class CubeXIfStatement extends CubeXStatement {
 			throw new TypeCheckException();
 		
 		boolean mutable = varCon.isMutable();
-		varCon.setMutable(false);;
 		VariableContext innerConTrue = (VariableContext)varCon.createChildContext();
 		VariableContext innerConFalse = (VariableContext)varCon.createChildContext();
 		

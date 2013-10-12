@@ -55,7 +55,7 @@ public class CubeXInterface extends CubeXClassBase {
 			throw new ContextException();
 	
 		TypeVariableContext classTypeVarCon = (TypeVariableContext)typeVarCon.createChildContext();
-		CubeXType.validateType(parentType, true, classCon, typeVarCon);
+		parentType = CubeXType.validateType(parentType, true, classCon, typeVarCon);
 
 		for(CubeXTypeVariable tvar : types)
 		{
@@ -76,13 +76,15 @@ public class CubeXInterface extends CubeXClassBase {
 			
 		}
 				
+		this.myFunctionContext=innerFunCon;
+		
 		for(CubeXFunction f : functions)
 		{
 			if(!f.isDeclaration())
 				f.typecheck(classCon, innerFunCon, newVarCon, classTypeVarCon);
 		}
 		
-		this.myFunctionContext=innerFunCon;
+
 		
 		return null;
 	}

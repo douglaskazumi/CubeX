@@ -116,13 +116,19 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		VariableContext newVarCon = (VariableContext)varCon.createChildContext();
 		
+		
+		ArrayList<CubeXArgument> newArgs = new ArrayList<CubeXArgument>();
 		for(CubeXArgument arg : arglist)
 		{
-			CubeXType.validateType(arg.type, false, classCon, funTypeVarCon);
-			newVarCon.add(arg.variable.getName(), arg.type);
+			
+			
+			CubeXType newType = CubeXType.validateType(arg.type, false,  classCon, funTypeVarCon);
+			newArgs.add(new CubeXArgument(arg.variable, newType));
+			newVarCon.add(arg.variable.getName(), newType);
 		}
+		arglist=newArgs;
 		
-		CubeXType.validateType(returnType, false, classCon, funTypeVarCon);
+		returnType=CubeXType.validateType(returnType, false, classCon, funTypeVarCon);
 		
 		Tuple<Boolean, CubeXType> res = statement.typecheck(classCon, funCon, newVarCon, funTypeVarCon);
 		if(!res.first)

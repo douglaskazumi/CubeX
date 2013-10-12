@@ -27,14 +27,22 @@ public class BaseContext<T> {
 		}
 		else
 		{
-			if(isMutable && context.containsKey(id))
+			if(isMutable)
 			{
-				context.put(id, item);
+				if(context.containsKey(id))
+				{
+					context.put(id, item);
+				}
+				else
+				{
+					parent.add(id, item);
+				}
 			}
 			else
 			{
 				throw new ContextException("Trying to set immutable variable");
 			}
+		
 		}
 		
 	}

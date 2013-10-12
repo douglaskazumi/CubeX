@@ -93,7 +93,7 @@ public class TestType {
 
 	public static boolean thereIsLexerError = false;
 	public static boolean thereIsParserError = false;
-
+/*
 	@Test
 	public void lexerTests() throws IOException {
 		for (int i = 1; i <= 6; i++) {
@@ -155,7 +155,8 @@ public class TestType {
 		}
 
 	}
-
+	/**/
+/*
 	@Test
 	public void parserTests() throws IOException {
 		for (int i = 1; i <= 5; i++) {
@@ -179,7 +180,7 @@ public class TestType {
 
 			CubeXProgram prog = parser.testprogram().x;
 			
-			System.out.println(i);
+			System.out.println("Parser "+i);
 			if (!thereIsLexerError && !thereIsParserError) {
 				outputString = prog.toString();
 			} else if  (thereIsLexerError){
@@ -195,7 +196,7 @@ public class TestType {
 		}
 	}
 
-	
+	/**/
 	@Test
 	public void typeCheckTests() throws IOException {
 		for (int i = 1; i <= 20; i++) {
@@ -218,7 +219,10 @@ public class TestType {
 			parser.addErrorListener(new ParserError());
 
 			CubeXProgram prog = parser.testprogram().x;
-			if(prog.typeCheck()){
+			if  (thereIsLexerError || thereIsParserError){
+				outputString = "reject";
+			}
+			else if(prog.typeCheck()){
 				outputString = "accept";
 			}
 			else{
@@ -226,14 +230,11 @@ public class TestType {
 			}
 			
 			System.out.println(i);
-			if (!thereIsLexerError && !thereIsParserError) {
-				outputString = prog.toString();
-			} else if  (thereIsLexerError){
-				outputString = "reject";
+			
+			if(!out_content.equals(outputString)){
+				System.out.println(in_content);
 			}
-			else {
-				outputString = "reject";
-			}
+			
 			assertEquals(out_content, outputString);
 			
 			thereIsLexerError = false;

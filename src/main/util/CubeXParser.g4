@@ -16,7 +16,7 @@ type returns [CubeXType x]
 	: v=NAMEUSINGLE
 	{$x = new CubeXTypeVariable($v.text);}
 	| { boolean ttest=false;}v=NAMEU ({ttest=true;} t=typelist)?
-	{$x = new CubeXTypeClass($v.text, ttest?$t.x:null);}
+	{try {$x = CubeXTypeClass.NewCubeXTypeClass($v.text, ttest?$t.x:null);} catch(Exception e) { }}
 	| t1=type AMP t2=type
 	{ $x = new CubeXTypeIntersection($t1.x,$t2.x);}
 	| THING

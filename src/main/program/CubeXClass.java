@@ -133,16 +133,22 @@ public class CubeXClass extends CubeXClassBase {
 			classTypeVarCon.add(tvar.getName(), tvar);
 		}
 		
-		CubeXType.validateType(parentType, true, classCon, typeVarCon);
+		parentType=CubeXType.validateType(parentType, true, classCon, typeVarCon);
 
 		classCon.add(name, this);
 		VariableContext newVarCon = (VariableContext)varCon.createChildContext();
 		
+		
+		ArrayList<CubeXArgument> newArgs = new ArrayList<CubeXArgument>();
 		for(CubeXArgument arg : constructorArgs)
 		{
-			CubeXType.validateType(arg.type, false,  classCon, classTypeVarCon);
-			newVarCon.add(arg.variable.getName(), arg.type);
+			
+			
+			CubeXType newType = CubeXType.validateType(arg.type, false,  classCon, classTypeVarCon);
+			newArgs.add(new CubeXArgument(arg.variable, newType));
+			newVarCon.add(arg.variable.getName(), newType);
 		}
+		constructorArgs=newArgs;
 		
 		for(CubeXStatement stat : statements)
 		{
@@ -217,7 +223,7 @@ public class CubeXClass extends CubeXClassBase {
 			}
 			
 		}
-		
+		this.myFunctionContext=innerFunCon;
 		for(CubeXFunction f : functions)
 		{
 			if(!f.isDeclaration())
@@ -226,7 +232,7 @@ public class CubeXClass extends CubeXClassBase {
 		
 		functions.addAll(noChecking);
 		
-		this.myFunctionContext=innerFunCon;
+		
 		
 		return null;
 	}

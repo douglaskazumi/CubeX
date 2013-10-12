@@ -129,7 +129,7 @@ public class CubeXParser extends Parser {
 					}
 					break;
 				}
-				((TypeContext)_localctx).x =  new CubeXTypeClass((((TypeContext)_localctx).v!=null?((TypeContext)_localctx).v.getText():null), ttest?((TypeContext)_localctx).t.x:null);
+				try {((TypeContext)_localctx).x =  CubeXTypeClass.NewCubeXTypeClass((((TypeContext)_localctx).v!=null?((TypeContext)_localctx).v.getText():null), ttest?((TypeContext)_localctx).t.x:null);} catch(Exception e) { }
 				}
 				break;
 			case THING:

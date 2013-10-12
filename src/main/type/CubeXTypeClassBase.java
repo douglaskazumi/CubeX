@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import main.context.ClassContext;
 import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 
@@ -16,10 +17,22 @@ public abstract class CubeXTypeClassBase extends CubeXType
 	
 	public CubeXTypeClassBase(String name, ArrayList<? extends CubeXType> parameters)
 	{
-		this.name=name;
+		this.name=name;	
 		if(parameters==null)
 			parameters=new ArrayList<CubeXType>();
 		this.parameters = parameters;
+	}
+	
+	public static CubeXTypeClassBase NewCubeXTypeClassBase(String name, ArrayList<? extends CubeXType> parameters) throws TypeCheckException
+	{
+		return null;
+	}
+	
+	public CubeXTypeClassBase getActualType(ClassContext classCon) throws ContextException
+	{
+		if(!isClass())
+			return this;
+		return ((CubeXTypeClass)this).getActualType(classCon);
 	}
 	
 	public abstract CubeXClassBase getDeclaration(ClassContext classCon) throws ContextException;

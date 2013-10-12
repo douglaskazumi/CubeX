@@ -22,9 +22,9 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 	{
 		if(parentType==null)
 			parentType=CubeXType.getThing();
-		if(this.types==null)
+		if(types==null)
 			types = new ArrayList<CubeXTypeVariable>();
-		if(this.functions==null)
+		if(functions==null)
 			functions=new ArrayList<CubeXFunction>();
 		
 		this.name = name;

@@ -12,6 +12,7 @@ import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
 import main.type.CubeXTypeVariable;
+import main.util.Tuple;
 
 public class CubeXProgram {
 
@@ -242,7 +243,7 @@ public class CubeXProgram {
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
-													new CubeXArgument(new CubeXVariable("upper"), CubeXType.getBoolean()), 
+													new CubeXArgument(new CubeXVariable("upper"), T), 
 													new CubeXArgument(new CubeXVariable("includeLower"), CubeXType.getBoolean()), 
 													new CubeXArgument(new CubeXVariable("includeUpper"), CubeXType.getBoolean())
 											)), 
@@ -262,19 +263,19 @@ public class CubeXProgram {
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
-													new CubeXArgument(new CubeXVariable("that"), CubeXType.getBoolean()), 
+													new CubeXArgument(new CubeXVariable("that"), T), 
 													new CubeXArgument(new CubeXVariable("strict"), CubeXType.getBoolean())
 											)), 
-									T);
+									CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("lessThan", newScheme));
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
-													new CubeXArgument(new CubeXVariable("that"), CubeXType.getBoolean())
+													new CubeXArgument(new CubeXVariable("that"), T)
 											)), 
-									T);
+									CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("equals", newScheme));
 		functions.add(newFunction);
 	}
@@ -292,11 +293,11 @@ public class CubeXProgram {
 			boolean wasFunction = false;
 			ArrayList<CubeXFunction> curFunSet = new ArrayList<CubeXFunction>();
 			
-			boolean lastDidReturn=false;
+			Tuple<Boolean, CubeXType> lastDidReturn = null;
 			
 			while (piecesIt.hasNext()) {
 				CubeXProgramPiece piece = piecesIt.next();
-				lastDidReturn=false;
+				lastDidReturn=new Tuple<Boolean, CubeXType>(false, null);
 				if (piece.isFunction()) {
 					curFunSet.add((CubeXFunction) piece);
 					wasFunction = true;
@@ -307,7 +308,11 @@ public class CubeXProgram {
 				if(piece.isStatement())
 				{
 					CubeXStatement stat = (CubeXStatement)piece;
-					lastDidReturn=stat.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null)).first;
+					lastDidReturn=stat.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
+				}
+				else
+				{
+					piece.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
 				}
 				
 				wasFunction = false;
@@ -316,16 +321,16 @@ public class CubeXProgram {
 			// shouldn't need this
 			checkFunctionBlock(wasFunction, curFunSet);
 			
-			if(!lastDidReturn)
+			if(!lastDidReturn.first || !lastDidReturn.second.isIterable() || !((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString())
 				throw new TypeCheckException();
 		} catch (Exception e) {
+			//*
 			System.out.println(e.toString());
-			if(e.getMessage()!=null)
-				System.out.println(e.getMessage());
 			for(StackTraceElement el : e.getStackTrace())
 			{
 				System.out.println(el.toString());
 			}
+			/**/
 			return false;
 		}
 
