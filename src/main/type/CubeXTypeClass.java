@@ -103,10 +103,19 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		return true;
 	}
 
+	@Override
+	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException
+	{
+		CubeXFunction fun = getDeclaration(classCon).getFunctionContext().lookup(name);
+		if(fun==null)
+			throw new ContextException();
+		return new Tuple<TypeVarSubstitution, CubeXFunction>(geTypeVarSub(classCon),fun);
+	}
+	
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(name).append(" < ");
+		sb.append(name).append("CLASS < ");
 		
 		String prefix="";
 		for(CubeXType p : parameters)
@@ -116,15 +125,6 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		}
 		sb.append(">");
 		return sb.toString();
-	}
-
-	@Override
-	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException
-	{
-		CubeXFunction fun = getDeclaration(classCon).getFunctionContext().lookup(name);
-		if(fun==null)
-			throw new ContextException();
-		return new Tuple<TypeVarSubstitution, CubeXFunction>(geTypeVarSub(classCon),fun);
 	}
 
 }

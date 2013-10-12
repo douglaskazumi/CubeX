@@ -34,6 +34,11 @@ public class CubeXTypeInterface extends CubeXTypeClassBase
 		return CubeXType.getThing();
 	}
 
+	public boolean isInterface()
+	{
+		return true;
+	}
+	
 	public CubeXInterface getDeclaration(ClassContext classCon) throws ContextException
 	{
 		if (interfaceDeclaration==null)
@@ -53,5 +58,20 @@ public class CubeXTypeInterface extends CubeXTypeClassBase
 	public TypeVarSubstitution geTypeVarSub(ClassContext classCon) throws ContextException
 	{
 		return new TypeVarSubstitution(getDeclaration(classCon).getTypes(),parameters);
+	}
+	
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(name).append("INTERFACE < ");
+		
+		String prefix="";
+		for(CubeXType p : parameters)
+		{
+			sb.append(prefix).append(p.toString()).append(" ");
+			prefix=", ";
+		}
+		sb.append(">");
+		return sb.toString();
 	}
 }

@@ -100,7 +100,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				CubeXExpression exp = argValuesIt.next();
 				CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(argExpectedTypesIt.next().type, classSub), funSub);
 				
-				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
+				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe, classCon))
 					throw new TypeCheckException("BAD ARGUMENT TO FUNCTION CALL");
 			}
 			
@@ -130,7 +130,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					CubeXExpression exp = argValuesIt.next();
 					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
-					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
+					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe, classCon))
 						throw new TypeCheckException();
 				}
 				
@@ -163,7 +163,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					CubeXExpression exp = argValuesIt.next();
 					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
-					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe))
+					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe, classCon))
 						throw new TypeCheckException();
 				}
 				

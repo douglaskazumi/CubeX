@@ -26,57 +26,19 @@ public void run(String[] args) throws FileNotFoundException, IOException
 //		System.exit(-1);
 //	}
 	
-	ANTLRInputStream input = new ANTLRInputStream("# typechecker test program 14 (stage 6)\r\n" + 
+	ANTLRInputStream input = new ANTLRInputStream("# typechecker test program 19\r\n" + 
 			"\r\n" + 
-			"interface List<T>\r\n" + 
-			"{\r\n" + 
-			"	fun getFirst() : Iterable<T>;\r\n" + 
-			"	fun getRest() : List<T>;\r\n" + 
-			"	fun getIterable() : Iterable<T>;\r\n" + 
-			"	fun append(l:List<T>) : List<T>;\r\n" + 
-			"	fun reverse() : List<T>;\r\n" + 
-			"}\r\n" + 
-			"\r\n" + 
-			"class Nil<T>() extends List<T>\r\n" + 
+			"class Aa()\r\n" + 
 			"{\r\n" + 
 			"	super();\r\n" + 
-			"	fun getFirst() : Iterable<T> = [];\r\n" + 
-			"	fun getRest() : List<T> = Nil<T>();\r\n" + 
-			"	fun getIterable() : Iterable<T> = [];\r\n" + 
-			"	fun append(l:List<T>) : List<T> = l;\r\n" + 
-			"	fun reverse() : List<T> = Nil<T>();\r\n" + 
 			"}\r\n" + 
 			"\r\n" + 
-			"class Cons<T>(elem : T,rest : List<T>) extends List<T>\r\n" + 
+			"interface Bb extends Aa\r\n" + 
 			"{\r\n" + 
-			"	super();\r\n" + 
-			"	fun getFirst() : Iterable<T> = [elem];\r\n" + 
-			"	fun getRest() : List<T> = rest;\r\n" + 
-			"	fun getIterable() : Iterable<T>\r\n" + 
-			"	{\r\n" + 
-			"		return [elem] ++ rest.getIterable();\r\n" + 
-			"	}\r\n" + 
-			"	fun append(l:List<T>) : List<T>\r\n" + 
-			"	{\r\n" + 
-			"		return Cons<T>(elem,rest.append(l));\r\n" + 
-			"	}\r\n" + 
-			"	fun reverse() : List<T>\r\n" + 
-			"	{\r\n" + 
-			"		return rest.reverse().append(Cons<T>(elem,Nil<T>()));\r\n" + 
-			"	}\r\n" + 
+			"	fun tastic() : String;\r\n" + 
 			"}\r\n" + 
 			"\r\n" + 
-			"fun strToCons<T>(iter : Iterable<T>) : List<T>\r\n" + 
-			"{\r\n" + 
-			"	ret := Nil<T>().reverse();\r\n" + 
-			"	for(c in iter)\r\n" + 
-			"	{\r\n" + 
-			"		ret := Cons<T>(c,ret);\r\n" + 
-			"	}\r\n" + 
-			"	return ret.reverse();\r\n" + 
-			"}\r\n" + 
-			"\r\n" + 
-			"return [string(strToCons<Character>(\"Hello World!\").getIterable())];");
+			"return [\"Nope\"];");
 	//	ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(args[0]));
 	CubeXLexer lexer = new CubeXLexer(input);
 	lexer.removeErrorListeners();

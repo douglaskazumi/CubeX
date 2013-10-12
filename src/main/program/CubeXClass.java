@@ -174,7 +174,7 @@ public class CubeXClass extends CubeXClassBase {
 				CubeXExpression exp = thisArgIt.next();
 				CubeXType tpe = thatArgIt.next().type;
 				
-				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, classTypeVarCon), tpe))
+				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, classTypeVarCon), tpe, classCon))
 					throw new TypeCheckException();
 			}
 			
@@ -202,7 +202,7 @@ public class CubeXClass extends CubeXClassBase {
 			
 		}
 		
-		ArrayList<CubeXType> parents = CubeXType.getSuperTypes(parentType);
+		ArrayList<CubeXType> parents = CubeXType.getSuperTypes(parentType,classCon);
 		ArrayList<CubeXFunction> noChecking = new ArrayList<CubeXFunction>();
 		for(CubeXType pp : parents)
 		{
