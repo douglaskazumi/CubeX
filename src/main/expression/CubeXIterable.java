@@ -39,7 +39,7 @@ public class CubeXIterable extends CubeXExpression
 		CubeXType curType=CubeXType.getNothing();
 		for(CubeXExpression exp : entries)
 		{
-			curType = CubeXType.join(curType, exp.getType(classCon, funCon, varCon, typeVarCon));
+			curType = CubeXType.join(curType, exp.getType(classCon, funCon, varCon, typeVarCon), classCon);
 		}
 		return new CubeXTypeIterable(curType);
 	}

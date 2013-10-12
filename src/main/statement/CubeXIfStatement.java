@@ -20,6 +20,8 @@ public class CubeXIfStatement extends CubeXStatement {
 	{
 		this.condition = condition;
 		this.ifstatement = ifstatement;
+		if(elsestatement==null)
+			elsestatement=new CubeXBlock();
 		this.elsestatement = elsestatement;
 	}
 
@@ -51,7 +53,7 @@ public class CubeXIfStatement extends CubeXStatement {
 		VariableContext innerConFalse = (VariableContext)varCon.createChildContext();
 		
 		Tuple<Boolean, CubeXType> resTrue = ifstatement.typecheck(classCon, funCon, innerConTrue, typeVarCon);
-		Tuple<Boolean, CubeXType> resFalse = ifstatement.typecheck(classCon, funCon, innerConTrue, typeVarCon);
+		Tuple<Boolean, CubeXType> resFalse = elsestatement.typecheck(classCon, funCon, innerConFalse, typeVarCon);
 		
 		varCon.setMutable(mutable);
 		
@@ -62,7 +64,7 @@ public class CubeXIfStatement extends CubeXStatement {
 		if(!resFalse.first)
 			return new Tuple<Boolean, CubeXType>(false, null);
 		
-		CubeXType returnType = CubeXType.join(resTrue.second, resFalse.second);
+		CubeXType returnType = CubeXType.join(resTrue.second, resFalse.second,classCon);
 		
 		return new Tuple<Boolean, CubeXType>(true, returnType) ;
 	}

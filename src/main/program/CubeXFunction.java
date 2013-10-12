@@ -22,6 +22,14 @@ public class CubeXFunction extends CubeXProgramPiece
 	private ArrayList<CubeXTypeVariable> types;
 
 	private ArrayList<CubeXArgument> arglist;
+	public void setArglist(ArrayList<CubeXArgument> arglist) {
+		this.arglist = arglist;
+	}
+
+	public void setReturnType(CubeXType returnType) {
+		this.returnType = returnType;
+	}
+
 	private CubeXType returnType;
 	
 	private CubeXStatement statement;
@@ -119,14 +127,12 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		ArrayList<CubeXArgument> newArgs = new ArrayList<CubeXArgument>();
 		for(CubeXArgument arg : arglist)
-		{
-			
-			
+		{		
 			CubeXType newType = CubeXType.validateType(arg.type, false,  classCon, funTypeVarCon);
 			newArgs.add(new CubeXArgument(arg.variable, newType));
 			newVarCon.add(arg.variable.getName(), newType);
 		}
-		arglist=newArgs;
+		this.arglist=newArgs;
 		
 		returnType=CubeXType.validateType(returnType, false, classCon, funTypeVarCon);
 		

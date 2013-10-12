@@ -26,64 +26,63 @@ public void run(String[] args) throws FileNotFoundException, IOException
 //		System.exit(-1);
 //	}
 	
-	ANTLRInputStream input = new ANTLRInputStream("# typechecker test program 14 (stage 6)\r\n" + 
+	ANTLRInputStream input = new ANTLRInputStream("# type-checker test program 10 (stage 2)\r\n" + 
 			"\r\n" + 
-			"interface List<T>\r\n" + 
+			"fun safeModulo(l : Integer, r : Integer, d : Integer) : Integer\r\n" + 
 			"{\r\n" + 
-			"	fun getFirst() : Iterable<T>;\r\n" + 
-			"	fun getRest() : List<T>;\r\n" + 
-			"	fun getIterable() : Iterable<T>;\r\n" + 
-			"	fun append(l:List<T>) : List<T>;\r\n" + 
-			"	fun reverse() : List<T>;\r\n" + 
+			"	m := l%r;\r\n" + 
+			"	for(i in m)\r\n" + 
+			"	{\r\n" + 
+			"		return i;\r\n" + 
+			"	}\r\n" + 
+			"	return d;\r\n" + 
 			"}\r\n" + 
 			"\r\n" + 
-			"class Nil<T>() extends List<T>\r\n" + 
+			"fun safeDiv(l : Integer, r: Integer, d: Integer) : Integer\r\n" + 
 			"{\r\n" + 
-			"	super();\r\n" + 
-			"	fun getFirst() : Iterable<T> = [];\r\n" + 
-			"	fun getRest() : List<T> = Nil<T>();\r\n" + 
-			"	fun getIterable() : Iterable<T> = [];\r\n" + 
-			"	fun append(l:List<T>) : List<T> = l;\r\n" + 
-			"	fun reverse() : List<T> = Nil<T>();\r\n" + 
+			"	m := l/r;\r\n" + 
+			"	for(i in m)\r\n" + 
+			"	{\r\n" + 
+			"		return i;\r\n" + 
+			"	}\r\n" + 
+			"	return d;\r\n" + 
 			"}\r\n" + 
 			"\r\n" + 
-			"class Cons<T>(elem : T,rest : List<T>) extends List<T>\r\n" + 
+			"fun intToStr(i : Integer) : String\r\n" + 
 			"{\r\n" + 
-			"	super();\r\n" + 
-			"	fun getFirst() : Iterable<T> = [elem];\r\n" + 
-			"	fun getRest() : List<T> = rest;\r\n" + 
-			"	fun getIterable() : Iterable<T>\r\n" + 
+			"	pref := \"\";\r\n" + 
+			"	if (i<0)\r\n" + 
 			"	{\r\n" + 
-			"		return [elem] ++ rest.getIterable();\r\n" + 
+			"		pref := \"-\";\r\n" + 
+			"		i := i * -1;\r\n" + 
 			"	}\r\n" + 
-			"	fun append(l:List<T>) : List<T>\r\n" + 
+			"	ret := [character(48+safeModulo(i,10,0))];\r\n" + 
+			"	while(i>0)\r\n" + 
 			"	{\r\n" + 
-			"		return Cons<T>(elem,rest.append(l));\r\n" + 
+			"		i := safeDiv(i,10,0); # we know this always works\r\n" + 
+			"		ret := [character(48+safeModulo(i,10,0))] ++ ret;\r\n" + 
 			"	}\r\n" + 
-			"	fun reverse() : List<T>\r\n" + 
-			"	{\r\n" + 
-			"		return rest.reverse().append(Cons<T>(elem,Nil<T>()));\r\n" + 
-			"	}\r\n" + 
+			"	return string(pref ++ ret);\r\n" + 
 			"}\r\n" + 
 			"\r\n" + 
-			"fun strToCons<T>(iter : Iterable<T>) : List<T>\r\n" + 
+			"fun sum (list : Iterable<Integer>) : Integer\r\n" + 
 			"{\r\n" + 
-			"	ret := Nil<T>().reverse();\r\n" + 
-			"	for(c in iter)\r\n" + 
+			"	ret := 0;\r\n" + 
+			"	for(i in list)\r\n" + 
 			"	{\r\n" + 
-			"		ret := Cons<T>(c,ret);\r\n" + 
+			"		ret := ret + i;\r\n" + 
 			"	}\r\n" + 
-			"	return ret.reverse();\r\n" + 
+			"	return ret;\r\n" + 
 			"}\r\n" + 
 			"\r\n" + 
-			"return [string(strToCons<Character>(\"Hello World!\").getIterable())];");
+			"return [intToStr(sum(1..4))];");
 	//	ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(args[0]));
 	CubeXLexer lexer = new CubeXLexer(input);
 	lexer.removeErrorListeners();
 	lexer.addErrorListener(new LexerError());
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
 	CubeXParser parser = new CubeXParser(tokens);
-	parser.removeErrorListeners();
+	//parser.removeErrorListeners();
 	parser.addErrorListener(new ParserError());
 	
 	CubeXProgram prog = parser.testprogram().x;
