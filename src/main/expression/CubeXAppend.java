@@ -37,7 +37,7 @@ public class CubeXAppend extends CubeXExpression {
 		}
 		else
 		{
-			throw new TypeCheckException();
+			throw new TypeCheckException("Bad append types - not iterables");
 		}
 	}
 	

@@ -199,7 +199,7 @@ public class TestType {
 	/**/
 	@Test
 	public void typeCheckTests() throws IOException {
-		for (int i = 1; i <= 20; i++) {
+		for (int i = 1; i <= 26; i++) {
 			String in_filename = "tests/typeCheck/tc_test" + i + ".in";
 			String out_filename = "tests/typeCheck/tc_test" + i + ".out";
 			String in_content = new String(Files.readAllBytes(Paths

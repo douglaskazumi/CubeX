@@ -27,4 +27,9 @@ public class VariableContext extends BaseContext<CubeXType> {
 	{
 		return new VariableContext(this);
 	}
+	
+	public void lockVariables()
+	{
+		setMutable(false);
+	}
 }

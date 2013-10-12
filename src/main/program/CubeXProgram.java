@@ -291,6 +291,7 @@ public class CubeXProgram {
 		try {
 			Iterator<CubeXProgramPiece> piecesIt = pieces.iterator();
 			boolean wasFunction = false;
+			boolean wasStatement =false;
 			ArrayList<CubeXFunction> curFunSet = new ArrayList<CubeXFunction>();
 			
 			Tuple<Boolean, CubeXType> lastDidReturn = null;
@@ -307,11 +308,18 @@ public class CubeXProgram {
 				
 				if(piece.isStatement())
 				{
+					wasStatement=true;
 					CubeXStatement stat = (CubeXStatement)piece;
 					lastDidReturn=stat.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
 				}
 				else
 				{
+					if(wasStatement)
+					{
+						wasFunction=false;
+						GlobalContexts.variableContext.setMutable(false);
+						GlobalContexts.variableContext=GlobalContexts.variableContext.createChildContext();
+					}
 					piece.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
 				}
 				

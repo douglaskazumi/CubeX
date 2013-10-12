@@ -115,7 +115,7 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(name).append("CLASS < ");
+		sb.append(name).append(" < ");
 		
 		String prefix="";
 		for(CubeXType p : parameters)

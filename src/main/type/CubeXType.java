@@ -128,6 +128,10 @@ public abstract class CubeXType
 			return a;
 		if(a.isThing() || b.isThing())
 			return CubeXType.getThing();
+		
+		if(a.isString()&&b.isString())
+			return CubeXType.getString();
+			
 		if(a.isIterable() && b.isIterable())
 		{
 			return new CubeXTypeIterable(join(((CubeXTypeIterable)a).getInnerType(),((CubeXTypeIterable)b).getInnerType(), classCon));

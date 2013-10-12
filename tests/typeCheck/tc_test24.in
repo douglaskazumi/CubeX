@@ -1,0 +1,26 @@
+
+
+interface Dd
+{
+	fun spoon(x:String) : String;
+}
+
+class Aa() extends Thing
+{
+	super();
+}
+
+class Bb(x: Integer) extends Aa
+{
+	fun tastic() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+class Cc() extends Bb&Dd
+{
+	super(4);
+}
+
+return Cc().tastic();

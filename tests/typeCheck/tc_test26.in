@@ -1,0 +1,14 @@
+
+a:=[1];
+if(true)
+{
+	a:=["String"];
+}
+else
+{
+	a:=2+5*4;
+}
+
+a:="bad"++a;
+
+return ["RETURNED!!"];

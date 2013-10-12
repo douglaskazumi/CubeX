@@ -63,7 +63,7 @@ public class CubeXTypeInterface extends CubeXTypeClassBase
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(name).append("INTERFACE < ");
+		sb.append(name).append(" < ");
 		
 		String prefix="";
 		for(CubeXType p : parameters)
