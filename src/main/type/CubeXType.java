@@ -369,7 +369,7 @@ public abstract class CubeXType
 		{
 			//TODO
 			supers.add(type);
-			supers.addall(getSuperTypes(type.));
+//			supers.addall(getSuperTypes(type.));
 			return supers;
 		}
 		else if(type.isIntersection())
