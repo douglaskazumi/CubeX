@@ -808,7 +808,7 @@ public class CubeXParser extends Parser {
 						}
 						consume();
 						setState(190); ((ExprContext)_localctx).e2 = expr(4);
-						((ExprContext)_localctx).x =  (((ExprContext)_localctx).op!=null?((ExprContext)_localctx).op.getType():0)==EQUALEQUAL ? new CubeXFunctionCall(((ExprContext)_localctx).e1.x,"equal", ((ExprContext)_localctx).e2.x) : new CubeXFunctionCall(new CubeXFunctionCall(((ExprContext)_localctx).e1.x,"equal", ((ExprContext)_localctx).e2.x),"negate",null);
+						((ExprContext)_localctx).x =  (((ExprContext)_localctx).op!=null?((ExprContext)_localctx).op.getType():0)==EQUALEQUAL ? new CubeXFunctionCall(((ExprContext)_localctx).e1.x,"equals", ((ExprContext)_localctx).e2.x) : new CubeXFunctionCall(new CubeXFunctionCall(((ExprContext)_localctx).e1.x,"equals", ((ExprContext)_localctx).e2.x),"negate",null);
 						}
 						break;
 

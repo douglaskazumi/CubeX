@@ -12,6 +12,7 @@ import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
 import main.type.CubeXTypeVariable;
+import main.util.CubeXCompiler;
 import main.util.Tuple;
 
 public class CubeXProgram {
@@ -337,12 +338,14 @@ public class CubeXProgram {
 			if(!lastDidReturn.first || !lastDidReturn.second.isIterable() || !((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString())
 				throw new TypeCheckException("Final return not a Iterable<String>");
 		} catch (Exception e) {
-			//*
-			errorMsg = e.getMessage();
-			System.out.println(e.toString());
-			for(StackTraceElement el : e.getStackTrace())
+			if(CubeXCompiler.debug)
 			{
-				System.out.println(el.toString());
+				errorMsg = e.getMessage();
+				System.out.println(e.toString());
+				for(StackTraceElement el : e.getStackTrace())
+				{
+					System.out.println(el.toString());
+				}
 			}
 			/**/
 			return false;

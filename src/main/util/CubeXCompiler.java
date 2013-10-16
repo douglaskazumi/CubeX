@@ -1,4 +1,5 @@
 package main.util;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.BitSet;
@@ -11,6 +12,8 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
+	public static boolean debug=true;
+	
 public static void main(String[] args) throws IOException
 {
 	CubeXCompiler mtr = new CubeXCompiler();
@@ -20,69 +23,52 @@ public static void main(String[] args) throws IOException
 public void run(String[] args) throws FileNotFoundException, IOException
 {
 	
-//	if(args.length!=1)
-//	{
-//		System.out.println("usage: java lexer <filename>");
-//		System.exit(-1);
-//	}
+	if(!debug)
+	{
+		if(args.length!=1)
+		{
+			System.out.println("usage: java lexer <filename>");
+			System.exit(-1);
+		}
+	}
 	
-	ANTLRInputStream input = new ANTLRInputStream("# type-checker test program 10 (stage 2)\r\n" + 
-			"\r\n" + 
-			"fun safeModulo(l : Integer, r : Integer, d : Integer) : Integer\r\n" + 
-			"{\r\n" + 
-			"	m := l%r;\r\n" + 
-			"	for(i in m)\r\n" + 
-			"	{\r\n" + 
-			"		return i;\r\n" + 
-			"	}\r\n" + 
-			"	return d;\r\n" + 
-			"}\r\n" + 
-			"\r\n" + 
-			"fun safeDiv(l : Integer, r: Integer, d: Integer) : Integer\r\n" + 
-			"{\r\n" + 
-			"	m := l/r;\r\n" + 
-			"	for(i in m)\r\n" + 
-			"	{\r\n" + 
-			"		return i;\r\n" + 
-			"	}\r\n" + 
-			"	return d;\r\n" + 
-			"}\r\n" + 
-			"\r\n" + 
-			"fun intToStr(i : Integer) : String\r\n" + 
-			"{\r\n" + 
-			"	pref := \"\";\r\n" + 
-			"	if (i<0)\r\n" + 
-			"	{\r\n" + 
-			"		pref := \"-\";\r\n" + 
-			"		i := i * -1;\r\n" + 
-			"	}\r\n" + 
-			"	ret := [character(48+safeModulo(i,10,0))];\r\n" + 
-			"	while(i>0)\r\n" + 
-			"	{\r\n" + 
-			"		i := safeDiv(i,10,0); # we know this always works\r\n" + 
-			"		ret := [character(48+safeModulo(i,10,0))] ++ ret;\r\n" + 
-			"	}\r\n" + 
-			"	return string(pref ++ ret);\r\n" + 
-			"}\r\n" + 
-			"\r\n" + 
-			"fun sum (list : Iterable<Integer>) : Integer\r\n" + 
-			"{\r\n" + 
-			"	ret := 0;\r\n" + 
-			"	for(i in list)\r\n" + 
-			"	{\r\n" + 
-			"		ret := ret + i;\r\n" + 
-			"	}\r\n" + 
-			"	return ret;\r\n" + 
-			"}\r\n" + 
-			"\r\n" + 
-			"return [intToStr(sum(1..4))];");
-	//	ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(args[0]));
+	ANTLRInputStream input=null;
+	if(debug)
+	{
+		input = new ANTLRInputStream("\r\n" + 
+				"fun convert(y : Iterable<Integer>) : Integer\r\n" + 
+				"{\r\n" + 
+				"	return 3;\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"if(convert(3%7)!=4)\r\n" + 
+				"{\r\n" + 
+				"\r\n" + 
+				"x:=5;\r\n" + 
+				"for(iamawesome in 4<..)\r\n" + 
+				"{\r\n" + 
+				"	x:=iamawesome+1;\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"return [\"\"];\r\n" + 
+				"}\r\n" + 
+				"else\r\n" + 
+				"{\r\n" + 
+				"	return [\"hello\", \"world\"];\r\n" + 
+				"}");
+	}
+	else
+	{
+		input = new ANTLRInputStream(new FileInputStream(args[0]));
+	}
+	
 	CubeXLexer lexer = new CubeXLexer(input);
 	lexer.removeErrorListeners();
 	lexer.addErrorListener(new LexerError());
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
 	CubeXParser parser = new CubeXParser(tokens);
-	//parser.removeErrorListeners();
+	if(!debug)
+		parser.removeErrorListeners();
 	parser.addErrorListener(new ParserError());
 	
 	CubeXProgram prog = parser.testprogram().x;
@@ -92,7 +78,8 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	else{
 		System.out.println("reject");
 	}
-	System.out.println(prog.toString());
+	if(debug)
+		System.out.println(prog.toString());
 }
 		
 }
@@ -127,7 +114,7 @@ class LexerError  implements ANTLRErrorListener
 	
 	private void print()
 	{
-		System.out.println("lexer error");
+		System.out.println("reject");
 		System.exit(-1);
 	}
 	
@@ -139,7 +126,6 @@ class ParserError  implements ANTLRErrorListener
 	@Override
 	public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3,
 			BitSet arg4, ATNConfigSet arg5) {
-		System.out.println("parser error");
 		print();
 	}
 
@@ -156,14 +142,13 @@ class ParserError  implements ANTLRErrorListener
 	@Override
 	public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2,
 			int arg3, String arg4, RecognitionException arg5) {
-		System.out.println("parser error");
 		print();
 		
 	}
 	
 	private void print()
 	{
-		
+		System.out.println("reject");
 		System.exit(-1);
 	}
 	
