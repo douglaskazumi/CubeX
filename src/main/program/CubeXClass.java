@@ -124,7 +124,7 @@ public class CubeXClass extends CubeXClassBase {
 	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException 
 	{
 		if (classCon.lookup(name)!=null)
-			throw new ContextException();
+			throw new ContextException("Class already in context");
 	
 		TypeVariableContext classTypeVarCon = (TypeVariableContext)typeVarCon.createChildContext();
 		
@@ -188,14 +188,14 @@ public class CubeXClass extends CubeXClassBase {
 			{
 				Tuple<TypeVarSubstitution, CubeXFunction> methodTuple=parentType.methodLookup(f.getName(), classCon);
 				if(methodTuple.second==null)
-					throw new TypeCheckException();
+					throw new TypeCheckException("Function not found in parent");
 				f=methodTuple.second;
 			}
 			else
 			{
 				CubeXFunction g = funCon.lookup(f.getName());
 				if(g!=null)
-					throw new TypeCheckException();
+					throw new TypeCheckException("Function not found in global");
 				
 			}
 			innerFunCon.add(f.getName(), f);
@@ -207,7 +207,7 @@ public class CubeXClass extends CubeXClassBase {
 		for(CubeXType pp : parents)
 		{
 			if(pp.isVariable())
-				throw new TypeCheckException();
+				throw new TypeCheckException("Parent is variable");
 			CubeXTypeClassBase p = (CubeXTypeClassBase)pp;
 			
 			for(CubeXFunction pFun : p.getDeclaration(classCon).functions)
@@ -216,7 +216,7 @@ public class CubeXClass extends CubeXClassBase {
 				if(testFun==null)
 				{
 					if(pFun.isDeclaration())
-						throw new TypeCheckException();
+						throw new TypeCheckException("Parent function is declaration");
 					noChecking.add(pFun);
 					innerFunCon.add(pFun.getName(), pFun);
 				}

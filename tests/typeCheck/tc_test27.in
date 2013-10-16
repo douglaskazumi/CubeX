@@ -1,0 +1,61 @@
+
+
+interface Ff
+{
+	fun tasticf() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+interface Ee extends Ff
+{
+	fun tastice() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+interface Dd extends Ff
+{
+	fun tasticd() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+interface Aa extends Dd
+{
+	fun tastica() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+class Bb() extends Dd&Ee
+{
+	super();
+	fun tasticb() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+interface Cc extends Ee
+{	
+	fun tasticc() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+class Xx() extends Aa&Cc
+{
+	super();
+	fun tasticx() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+return ["3","hello"];

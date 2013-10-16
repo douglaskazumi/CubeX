@@ -28,7 +28,7 @@ public class CubeXVariable extends CubeXExpression
 	{
 		CubeXType varType= varCon.lookup(name);
 		if(varType==null)
-			throw new ContextException();
+			throw new ContextException("Variable not in context");
 		return varType;
 	}
 

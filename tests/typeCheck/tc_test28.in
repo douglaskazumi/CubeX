@@ -1,0 +1,19 @@
+class Bb()
+{
+	super();
+	fun tasticb() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+class Bb()
+{
+	super();
+	fun tasticb() : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+return ["3","hello"];
