@@ -1,16 +1,21 @@
 
+interface Tt
+{
+	fun spoon4(x:String) : String = x++"Hello";
+}
 
-interface Ff
+
+interface Ff extends Tt
 {
 	fun spoon(x:String) : String = x++"Hello";
 }
 
-interface Ee
+interface Ee extends Tt
 {
 	fun spoon2(x:String) : String = x++"Hello";
 }
 
-interface Pp
+interface Pp extends Tt
 {
 	fun spoon3(x:String) : String = x++"Hello";
 }
