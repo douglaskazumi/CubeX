@@ -1,7 +1,10 @@
 package main.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,89 +23,129 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 class LexerError implements ANTLRErrorListener {
 
 	@Override
-	public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3,
-			BitSet arg4, ATNConfigSet arg5) {
+	public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3, BitSet arg4, ATNConfigSet arg5) {
 		print();
 	}
 
 	@Override
-	public void reportAttemptingFullContext(Parser arg0, DFA arg1, int arg2,
-			int arg3, ATNConfigSet arg4) {
+	public void reportAttemptingFullContext(Parser arg0, DFA arg1, int arg2, int arg3, ATNConfigSet arg4) {
 		print();
 	}
 
 	@Override
-	public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2,
-			int arg3, ATNConfigSet arg4) {
+	public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2, int arg3, ATNConfigSet arg4) {
 		print();
 	}
 
 	@Override
-	public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2,
-			int arg3, String arg4, RecognitionException arg5) {
+	public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2, int arg3, String arg4, RecognitionException arg5) {
 		print();
 
 	}
 
 	private void print() {
-		TestType.thereIsLexerError = true;	}
+		TestType.thereIsLexerError = true;
+	}
 
 }
 
-class ParserError  implements ANTLRErrorListener
-{
+class ParserError implements ANTLRErrorListener {
 
 	@Override
-	public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3,
-			BitSet arg4, ATNConfigSet arg5) {
-		//System.out.println("parser error");
+	public void reportAmbiguity(Parser arg0, DFA arg1, int arg2, int arg3, BitSet arg4, ATNConfigSet arg5) {
+		// System.out.println("parser error");
 		print();
 	}
 
 	@Override
-	public void reportAttemptingFullContext(Parser arg0, DFA arg1,
-			int arg2, int arg3, ATNConfigSet arg4) {
+	public void reportAttemptingFullContext(Parser arg0, DFA arg1, int arg2, int arg3, ATNConfigSet arg4) {
 	}
 
 	@Override
-	public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2,
-			int arg3, ATNConfigSet arg4) {
+	public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2, int arg3, ATNConfigSet arg4) {
 	}
 
 	@Override
-	public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2,
-			int arg3, String arg4, RecognitionException arg5) {
-		//System.out.println("parser error");
+	public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2, int arg3, String arg4, RecognitionException arg5) {
+		// System.out.println("parser error");
 		print();
-		
+
 	}
-	
-	private void print()
-	{
+
+	private void print() {
 		TestType.thereIsParserError = true;
 	}
-	
+
 }
 
 public class TestType {
 
 	public static boolean thereIsLexerError = false;
 	public static boolean thereIsParserError = false;
-/*
+	public static BufferedWriter errorLog;
+	
+	@BeforeClass
+	public static void setUp(){
+		String fileName = "log" + System.currentTimeMillis();
+		File file = new File("tests/logs/");
+		//if dir does not exists, create
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		file = new File("tests/logs/" + fileName + ".txt");
+
+		// if file doesnt exists, then create it
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(file.getAbsoluteFile());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		errorLog = new BufferedWriter(fw);
+	}
+	
+	@AfterClass
+	public static void cleanUp(){
+		try {
+			errorLog.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	// *
+
 	@Test
 	public void lexerTests() throws IOException {
-		for (int i = 1; i <= 6; i++) {
+		File dir = new File("tests/lexer");
+		int count = dir.listFiles().length / 2 + 1;
+		for (int i = 1; i < count; i++) {
+			System.out.println("Lexer " + i + "\n");
+			thereIsLexerError = false;
+			thereIsParserError = false;
 			String in_filename = "tests/lexer/lexer_test" + i + ".in";
 			String out_filename = "tests/lexer/lexer_test" + i + ".out";
-			String in_content = new String(Files.readAllBytes(Paths
-					.get(in_filename)));
-			String out_content = new String(Files.readAllBytes(Paths
-					.get(out_filename)));
+			String in_content = new String(Files.readAllBytes(Paths.get(in_filename)));
+			String out_content = new String(Files.readAllBytes(Paths.get(out_filename)));
 
 			ANTLRInputStream input = new ANTLRInputStream(in_content);
 			CubeXLexer lexer = new CubeXLexer(input);
@@ -148,26 +191,36 @@ public class TestType {
 			if (!thereIsLexerError) {
 				outputString = sb.toString();
 			} else {
-				outputString = "error";	
+				outputString = "error";
+			}
+			if(out_content.equals(outputString)){
+				errorLog.write("--Lexer test file " + i + " succeeded\n");
+			}
+			else{
+				errorLog.write("--Lexer test file " + i + " FAILED\n");
 			}
 			assertEquals(out_content, outputString);
-			thereIsLexerError = false;
 		}
 
 	}
+
 	/**/
-/*
+
+	// *
 	@Test
 	public void parserTests() throws IOException {
-		for (int i = 1; i <= 5; i++) {
+		File dir = new File("tests/parser");
+		int count = dir.listFiles().length / 2 + 1;
+		for (int i = 1; i < count; i++) {
+			System.out.println("Parser " + i + "\n");
+			thereIsLexerError = false;
+			thereIsParserError = false;
 			String in_filename = "tests/parser/parser_test" + i + ".in";
 			String out_filename = "tests/parser/parser_test" + i + ".out";
-			String in_content = new String(Files.readAllBytes(Paths
-					.get(in_filename)));
-			String out_content = new String(Files.readAllBytes(Paths
-					.get(out_filename)));
+			String in_content = new String(Files.readAllBytes(Paths.get(in_filename)));
+			String out_content = new String(Files.readAllBytes(Paths.get(out_filename)));
 			String outputString = "";
-			
+
 			ANTLRInputStream input = new ANTLRInputStream(in_content);
 			CubeXLexer lexer = new CubeXLexer(input);
 			lexer.removeErrorListeners();
@@ -179,35 +232,39 @@ public class TestType {
 			parser.addErrorListener(new ParserError());
 
 			CubeXProgram prog = parser.testprogram().x;
-			
-			System.out.println("Parser "+i);
+
 			if (!thereIsLexerError && !thereIsParserError) {
 				outputString = prog.toString();
-			} else if  (thereIsLexerError){
+			} else if (thereIsLexerError) {
 				outputString = "lexer error";
-			}
-			else {
+			} else {
 				outputString = "parser error";
 			}
+			if(out_content.equals(outputString)){
+				errorLog.write("-----Parser test file " + i + " succeeded\n");
+			}
+			else{
+				errorLog.write("-----Parser test file " + i + " FAILED\n");
+			}
 			assertEquals(out_content, outputString);
-			
-			thereIsLexerError = false;
-			thereIsParserError = false;
 		}
 	}
 
 	/**/
 	@Test
 	public void typeCheckTests() throws IOException {
-		for (int i = 1; i <= 26; i++) {
+		File dir = new File("tests/typeCheck");
+		int count = dir.listFiles().length / 2 + 1;
+		for (int i = 1; i < count; i++) {
+			System.out.println("Type cheking " + i + "\n");
+			thereIsLexerError = false;
+			thereIsParserError = false;
 			String in_filename = "tests/typeCheck/tc_test" + i + ".in";
 			String out_filename = "tests/typeCheck/tc_test" + i + ".out";
-			String in_content = new String(Files.readAllBytes(Paths
-					.get(in_filename)));
-			String out_content = new String(Files.readAllBytes(Paths
-					.get(out_filename)));
+			String in_content = new String(Files.readAllBytes(Paths.get(in_filename)));
+			String out_content = new String(Files.readAllBytes(Paths.get(out_filename)));
 			String outputString = "";
-			
+
 			ANTLRInputStream input = new ANTLRInputStream(in_content);
 			CubeXLexer lexer = new CubeXLexer(input);
 			lexer.removeErrorListeners();
@@ -219,26 +276,20 @@ public class TestType {
 			parser.addErrorListener(new ParserError());
 
 			CubeXProgram prog = parser.testprogram().x;
-			if  (thereIsLexerError || thereIsParserError){
+			if (thereIsLexerError || thereIsParserError) {
+				outputString = "reject";
+			} else if (prog.typeCheck()) {
+				outputString = "accept";
+			} else {
 				outputString = "reject";
 			}
-			else if(prog.typeCheck()){
-				outputString = "accept";
+			if(out_content.equals(outputString)){
+				errorLog.write("-------Type checking test file " + i + " succeeded\n");
 			}
 			else{
-				outputString = "reject";
+				errorLog.write("-------Type checking test file " + i + " FAILED. Msg: " + prog.getErrorMsg() + "\n");
 			}
-			
-			System.out.println(i);
-			
-			if(!out_content.equals(outputString)){
-				System.out.println(in_content);
-			}
-			
 			assertEquals(out_content, outputString);
-			
-			thereIsLexerError = false;
-			thereIsParserError = false;
 		}
 	}
 

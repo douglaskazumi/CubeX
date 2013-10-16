@@ -12,12 +12,16 @@ import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
 import main.type.CubeXTypeVariable;
-import main.util.CubeXCompiler;
 import main.util.Tuple;
 
 public class CubeXProgram {
 
 	private ArrayList<CubeXProgramPiece> pieces;
+	private String errorMsg;
+	
+	public String getErrorMsg() {
+		return errorMsg;
+	}
 
 	public CubeXProgram() {
 		pieces = new ArrayList<CubeXProgramPiece>();
@@ -331,17 +335,16 @@ public class CubeXProgram {
 			checkFunctionBlock(wasFunction, curFunSet);
 			
 			if(!lastDidReturn.first || !lastDidReturn.second.isIterable() || !((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString())
-				throw new TypeCheckException("Bad program return");
+				throw new TypeCheckException("Final return not a Iterable<String>");
 		} catch (Exception e) {
-			
-			if(CubeXCompiler.debug)
+			//*
+			errorMsg = e.getMessage();
+			System.out.println(e.toString());
+			for(StackTraceElement el : e.getStackTrace())
 			{
-				System.out.println(e.toString());
-				for(StackTraceElement el : e.getStackTrace())
-				{
-					System.out.println(el.toString());
-				}
+				System.out.println(el.toString());
 			}
+			/**/
 			return false;
 		}
 

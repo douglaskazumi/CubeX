@@ -239,13 +239,13 @@ public abstract class CubeXType
 			return type;
 		
 		if(!type.isExtendable() && isInExtends)
-			throw new TypeCheckException();
+			throw new TypeCheckException("Trying to extend inextendable.");
 		
 		if(type.isClass()||type.isInterface())
 		{
 			CubeXClassBase base = classCon.lookup(((CubeXTypeClassBase)type).name);
 			if(base==null)
-				throw new ContextException();
+				throw new ContextException("Bad base class");
 			
 			CubeXTypeClassBase typeBase =(CubeXTypeClassBase)type;
 			
@@ -269,14 +269,14 @@ public abstract class CubeXType
 			intersection.right=validateType(intersection.right, isInExtends, classCon, typeVarCon);
 			
 			if(!intersection.right.getConstructableComponent().isThing())
-				throw new TypeCheckException();
+				throw new TypeCheckException("Class on the right side of the intersection");
 			
 			for(CubeXType superTypeLeft : getSuperTypes(intersection.left, classCon))
 			{
 				for(CubeXType superTypeRight : getSuperTypes(intersection.right, classCon))
 				{
 					if(superTypeLeft.equals(superTypeRight))
-						throw new TypeCheckException();
+						throw new TypeCheckException("Common super parent");
 				}
 			}
 			

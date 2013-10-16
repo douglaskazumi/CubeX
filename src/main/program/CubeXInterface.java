@@ -58,7 +58,7 @@ public class CubeXInterface extends CubeXClassBase {
 		parentType = CubeXType.validateType(parentType, true, classCon, typeVarCon);
 
 		if(!parentType.getConstructableComponent().isThing())
-			throw new TypeCheckException();
+			throw new TypeCheckException("Interface extending class");
 		
 		for(CubeXTypeVariable tvar : types)
 		{
