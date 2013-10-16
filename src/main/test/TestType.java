@@ -283,11 +283,23 @@ public class TestType {
 			} else {
 				outputString = "reject";
 			}
+			
 			if(out_content.equals(outputString)){
-				errorLog.write("-------Type checking test file " + i + " succeeded\n");
+				if(outputString == "accept"){
+					errorLog.write("-------Type checking test file " + i + " succeeded\n");
+				}
+				else{
+					if(!thereIsLexerError && !thereIsParserError)
+						errorLog.write("-------Type checking test file " + i + " succeeded. Msg: " + prog.getErrorMsg() + "\n");
+					else
+						errorLog.write("-------Type checking test file " + i + " succeeded. Msg: lexer/parser error\n");
+				}
 			}
 			else{
-				errorLog.write("-------Type checking test file " + i + " FAILED. Msg: " + prog.getErrorMsg() + "\n");
+				if(!thereIsLexerError && !thereIsParserError)
+					errorLog.write("-------Type checking test file " + i + " FAILED. Msg: " + prog.getErrorMsg() + "\n");
+				else
+					errorLog.write("-------Type checking test file " + i + " FAILED. Msg: lexer/parser error\n");
 			}
 			assertEquals(out_content, outputString);
 		}

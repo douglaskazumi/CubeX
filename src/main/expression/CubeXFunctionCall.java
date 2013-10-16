@@ -81,14 +81,14 @@ public class CubeXFunctionCall extends CubeXExpression
 		{
 			CubeXType pType = parent.getType(classCon, funCon, varCon, typeVarCon);
 			if(pType.isVariable())
-				throw new TypeCheckException();
+				throw new TypeCheckException("Parent type is variable");
 			
 			Tuple<TypeVarSubstitution, CubeXFunction> res = pType.methodLookup(name, classCon);
 			fun = res.second;
 			if(fun.getTypes().size()!=this.parameters.size())
-				throw new TypeCheckException();
+				throw new TypeCheckException("Bad number of parameters to function: " + name + ". Expected: " + fun.getTypes().size() + ". Given: " + this.parameters.size());
 			if(fun.getArglist().size()!=this.args.size())
-				throw new TypeCheckException();
+				throw new TypeCheckException("Bad number of arguments to function: " + name + ". Expected: " + fun.getArglist().size() + ". Given: " + this.args.size());
 			
 			TypeVarSubstitution funSub = new TypeVarSubstitution(fun.getTypes(), parameters);
 			TypeVarSubstitution classSub = res.first;
@@ -117,9 +117,9 @@ public class CubeXFunctionCall extends CubeXExpression
 				}
 
 				if(fun.getTypes().size()!=this.parameters.size())
-					throw new TypeCheckException();
+					throw new TypeCheckException("Bad number of parameters to global function: " + name + ". Expected: " + fun.getTypes().size() + ". Given: " + this.parameters.size());
 				if(fun.getArglist().size()!=this.args.size())
-					throw new TypeCheckException();
+					throw new TypeCheckException("Bad number of arguments to global function: " + name + ". Expected: " + fun.getArglist().size() + ". Given: " + this.args.size());
 				
 				TypeVarSubstitution sub = new TypeVarSubstitution(fun.getTypes(), parameters);
 				
@@ -131,7 +131,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
 					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe, classCon))
-						throw new TypeCheckException();
+						throw new TypeCheckException("BAD ARGUMENT TO GLOBAL FUNCTION CALL");
 				}
 				
 				return CubeXType.makeSubstitution(fun.getReturnType(), sub);
@@ -150,9 +150,9 @@ public class CubeXFunctionCall extends CubeXExpression
 				CubeXClass clss = (CubeXClass)base;
 				
 				if(clss.getTypes().size()!=this.parameters.size())
-					throw new TypeCheckException();
+					throw new TypeCheckException("Bad number of parameters to constructor: " + name + ". Expected: " + clss.getTypes().size() + ". Given: " + this.parameters.size());
 				if(clss.getConstructorArgs().size()!=this.args.size())
-					throw new TypeCheckException();
+					throw new TypeCheckException("Bad number of arguments to constructor: " + name + ". Expected: " + clss.getConstructorArgs().size() + ". Given: " + this.args.size());
 				
 				TypeVarSubstitution sub = new TypeVarSubstitution(clss.getTypes(), parameters);
 				
@@ -164,7 +164,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
 					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe, classCon))
-						throw new TypeCheckException();
+						throw new TypeCheckException("BAD ARGUMENT TO CONSTRUCTOR CALL");
 				}
 				
 				return CubeXTypeClass.NewCubeXTypeClass(name, parameters);
