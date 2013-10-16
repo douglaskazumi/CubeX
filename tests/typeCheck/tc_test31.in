@@ -29,6 +29,8 @@ interface Cc extends Ee
 {
 	fun tastic(cow : Iterable<Ff> & Thing, lemon : String) : Iterable<String>
 	{
+		aoeu:=[Thing, Thing]++[];
+		aoeu:=[Thing]++[8];
 		return ["helloworld"];
 	}
 }

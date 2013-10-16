@@ -1,0 +1,27 @@
+
+
+interface Ff
+{
+	fun spoon(x:String) : String = x++"Hello";
+}
+
+interface Ee extends Ff
+{
+	fun spoon2(x:String) : String = x++"Hello";
+}
+
+class Pp() extends Ee
+{
+	fun spoon3(x:String) : String = x++"Hello";
+}
+
+class Bb() extends Ee
+{
+	super();
+}
+
+j := Pp();
+v := Bb();
+k := [j,v];
+
+return ["yay"];
