@@ -1,6 +1,6 @@
 
 
-interface Ff
+class Ff()
 {
 	fun spoon(x:String) : String = x++"Hello";
 }
