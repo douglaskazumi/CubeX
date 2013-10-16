@@ -5,11 +5,11 @@
     <target name="create_run_jar">
         <jar destfile="./Parser.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="main.MyTestRig"/>
+                <attribute name="Main-Class" value="main.util.CubeXCompiler"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="./bin"/>
-			<fileset dir="./src/main"/>
+			<fileset dir="./src/"/>
             <zipfileset excludes="META-INF/*.SF" src="./antlr-4.0-complete.jar"/>
         </jar>
     </target>

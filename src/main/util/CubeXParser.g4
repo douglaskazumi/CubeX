@@ -81,7 +81,7 @@ expr returns [CubeXExpression x]
 		: $op.type==RANGLEEQUAL ? new CubeXFunctionCall($e2.x,"lessThan",null, new ArrayList<CubeXExpression>(Arrays.asList($e1.x, new CubeXBoolean(false))))
 		: new CubeXFunctionCall($e2.x,"lessThan",null, new ArrayList<CubeXExpression>(Arrays.asList($e1.x, new CubeXBoolean(true))));}
 	| e1=expr op=(EQUALEQUAL|BANGEQUAL) e2=expr
-		{$x = $op.type==EQUALEQUAL ? new CubeXFunctionCall($e1.x,"equal", $e2.x) : new CubeXFunctionCall(new CubeXFunctionCall($e1.x,"equal", $e2.x),"negate",null);}
+		{$x = $op.type==EQUALEQUAL ? new CubeXFunctionCall($e1.x,"equals", $e2.x) : new CubeXFunctionCall(new CubeXFunctionCall($e1.x,"equals", $e2.x),"negate",null);}
 	| e1=expr AMP e2=expr
 		{$x = new CubeXFunctionCall($e1.x,"and", $e2.x);}
 	| e1=expr PIPE e2=expr
