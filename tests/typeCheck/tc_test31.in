@@ -27,7 +27,7 @@ class Aa() extends Ff
 
 interface Cc extends Ee
 {
-	fun tastic(cow : Iterable<Ff> & Thing) : Iterable<String>
+	fun tastic(cow : Iterable<Ff> & Thing, lemon : String) : Iterable<String>
 	{
 		return ["helloworld"];
 	}
@@ -42,4 +42,4 @@ j := Xx();
 v := Bb();
 k := [j,v];
 
-return j.tastic(k);
+return j.tastic(k, v.spoon3());

@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
-	public static boolean debug=true;
+	public static boolean debug=false;
 	
 public static void main(String[] args) throws IOException
 {
@@ -36,26 +36,50 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	if(debug)
 	{
 		input = new ANTLRInputStream("\r\n" + 
-				"fun convert(y : Iterable<Integer>) : Integer\r\n" + 
+				"\r\n" + 
+				"class Ff()\r\n" + 
 				"{\r\n" + 
-				"	return 3;\r\n" + 
+				"	fun spoon(x:String) : String = x++\"Hello\";\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"if(convert(3%7)!=4)\r\n" + 
+				"interface Ee\r\n" + 
 				"{\r\n" + 
-				"\r\n" + 
-				"x:=5;\r\n" + 
-				"for(iamawesome in 4<..)\r\n" + 
-				"{\r\n" + 
-				"	x:=iamawesome+1;\r\n" + 
+				"	fun spoon2(x:String) : String = x++\"Hello\";\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"return [\"\"];\r\n" + 
-				"}\r\n" + 
-				"else\r\n" + 
+				"interface Pp\r\n" + 
 				"{\r\n" + 
-				"	return [\"hello\", \"world\"];\r\n" + 
-				"}");
+				"	fun spoon3(x:String) : String = x++\"Hello\";\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"class Bb() extends Ff&Ee&Pp\r\n" + 
+				"{\r\n" + 
+				"	super();\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"class Aa() extends Ff\r\n" + 
+				"{\r\n" + 
+				"	super();\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"interface Cc extends Ee\r\n" + 
+				"{\r\n" + 
+				"	fun tastic(cow : Iterable<Ff> & Thing, lemon : String) : Iterable<String>\r\n" + 
+				"	{\r\n" + 
+				"		return [\"helloworld\"];\r\n" + 
+				"	}\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"class Xx() extends Aa&Cc&Pp\r\n" + 
+				"{\r\n" + 
+				"	super();\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"j := Xx();\r\n" + 
+				"v := Bb();\r\n" + 
+				"k := [j,v];\r\n" + 
+				"\r\n" + 
+				"return j.tastic(k, k.spoon3());");
 	}
 	else
 	{
