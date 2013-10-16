@@ -2,60 +2,44 @@
 
 interface Ff
 {
-	fun tasticf() : Iterable<String>
-	{
-		return ["helloworld"];
-	}
+	fun spoon(x:String) : String = x++"Hello";
 }
 
-interface Ee extends Ff
+interface Ee
 {
-	fun tastice() : Iterable<String>
-	{
-		return ["helloworld"];
-	}
+	fun spoon2(x:String) : String = x++"Hello";
 }
 
-interface Dd extends Ff
+interface Pp
 {
-	fun tasticd() : Iterable<String>
-	{
-		return ["helloworld"];
-	}
+	fun spoon3(x:String) : String = x++"Hello";
 }
 
-interface Aa extends Dd
-{
-	fun tastica() : Iterable<String>
-	{
-		return ["helloworld"];
-	}
-}
-
-class Bb() extends Dd&Ee
+class Bb() extends Ff&Ee&Pp
 {
 	super();
-	fun tasticb() : Iterable<String>
-	{
-		return ["helloworld"];
-	}
+}
+
+class Aa() extends Ff
+{
+	super();
 }
 
 interface Cc extends Ee
-{	
-	fun tasticc() : Iterable<String>
+{
+	fun tastic() : Iterable<String>
 	{
 		return ["helloworld"];
 	}
 }
 
-class Xx() extends Aa&Cc
+class Xx() extends Aa&Cc&Pp
 {
 	super();
-	fun tasticx() : Iterable<String>
-	{
-		return ["helloworld"];
-	}
 }
 
-return ["3","hello"];
+j := Xx();
+v := Bb();
+k := [j,v];
+
+return j.tastic();
