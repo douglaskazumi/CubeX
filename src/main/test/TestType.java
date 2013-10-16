@@ -256,7 +256,7 @@ public class TestType {
 		File dir = new File("tests/typeCheck");
 		int count = dir.listFiles().length / 2 + 1;
 		for (int i = 1; i < count; i++) {
-			System.out.println("Type cheking " + i + "\n");
+			System.out.println("Type checking " + i + "\n");
 			thereIsLexerError = false;
 			thereIsParserError = false;
 			String in_filename = "tests/typeCheck/tc_test" + i + ".in";

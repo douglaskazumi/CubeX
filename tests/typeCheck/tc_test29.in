@@ -1,0 +1,17 @@
+class Bb<T>()
+{
+	super();
+	fun tasticb() : Iterable<T>
+	{
+		if(true)
+		{
+			return ["helloworld"];
+		}
+		else
+		{
+			return 7;
+		}
+	}
+}
+
+return Bb<String>().tasticb();

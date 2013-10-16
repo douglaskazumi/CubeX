@@ -1,0 +1,45 @@
+
+
+interface Ff
+{
+	fun spoon(x:String) : String = x++"Hello";
+}
+
+interface Ee
+{
+	fun spoon2(x:String) : String = x++"Hello";
+}
+
+interface Pp
+{
+	fun spoon3(x:String) : String = x++"Hello";
+}
+
+class Bb() extends Ff&Ee&Pp
+{
+	super();
+}
+
+class Aa() extends Ff
+{
+	super();
+}
+
+interface Cc extends Ee
+{
+	fun tastic(cow : Iterable<Ff> & Thing) : Iterable<String>
+	{
+		return ["helloworld"];
+	}
+}
+
+class Xx() extends Aa&Cc&Pp
+{
+	super();
+}
+
+j := Xx();
+v := Bb();
+k := [j,v];
+
+return j.tastic(k);
