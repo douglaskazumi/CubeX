@@ -1,21 +1,16 @@
 
-interface Tt
-{
-	fun spoon4(x:String) : String = x++"Hello";
-}
 
-
-interface Ff extends Tt
+class Ff()
 {
 	fun spoon(x:String) : String = x++"Hello";
 }
 
-interface Ee extends Tt
+interface Ee
 {
 	fun spoon2(x:String) : String = x++"Hello";
 }
 
-interface Pp extends Tt
+interface Pp
 {
 	fun spoon3(x:String) : String = x++"Hello";
 }
@@ -32,7 +27,7 @@ class Aa() extends Ff
 
 interface Cc extends Ee
 {
-	fun tastic() : Iterable<String>
+	fun tastic(cow : Iterable<Ff> & Thing, lemon : String) : Iterable<String>
 	{
 		return ["helloworld"];
 	}
@@ -47,4 +42,4 @@ j := Xx();
 v := Bb();
 k := [j,v];
 
-return j.tastic();
+return j.tastic(k, v.spoon3());

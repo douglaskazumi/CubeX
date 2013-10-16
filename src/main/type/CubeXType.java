@@ -124,7 +124,7 @@ public abstract class CubeXType
 	public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon) throws ContextException {
 		if(a.isNothing())
 			return b;
-		if(a.isNothing())
+		if(b.isNothing())
 			return a;
 		if(a.isThing() || b.isThing())
 			return CubeXType.getThing();
