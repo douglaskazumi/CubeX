@@ -7,7 +7,7 @@ typedef struct {
 	int numFields;
 } Object;
 
-Object newObject(struct type, void* params);
+Object newObject(struct type, void *params);
 void gc(Object target);
 
 #endif
