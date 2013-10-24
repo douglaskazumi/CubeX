@@ -7,9 +7,7 @@ typedef struct {
 	int numFields;
 } Object;
 
-//vTable number of methods
-//iTable list of offSets for each interface/class
-Object newObject(struct type, void* params, int vTable, int* iTable);
+Object newObject(struct type, void* params);
 void gc(Object target);
 
 #endif
