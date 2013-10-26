@@ -11,7 +11,7 @@ typedef struct {
 	//vTable
 	int refCount;
 	int numFields;
-} object;
+} Object;
 
 /* ITERABLE SECTION*/
 
