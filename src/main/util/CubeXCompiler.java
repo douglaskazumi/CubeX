@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
-	public static boolean debug=false;
+	public static boolean debug=true;
 	
 public static void main(String[] args) throws IOException
 {
