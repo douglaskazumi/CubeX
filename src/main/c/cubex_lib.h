@@ -2,12 +2,12 @@
 #define _CUBEX_LIB
 
 typedef struct {
-	//vTable
+	void **vTable;
 	int refCount;
 	int numFields;
 } Object;
 
-Object newObject(struct type, void *params);
-void gc(Object target);
+Object newObject(struct type, void **params);
+void gc(Object *target);
 
 #endif
