@@ -8,7 +8,7 @@
 typedef char bool;
 
 typedef struct {
-	//vTable
+	void **vTable;
 	int refCount;
 	int numFields;
 } object;
@@ -89,9 +89,14 @@ typedef struct {
 } infiniteBooleanIterable_t;
 
 
+<<<<<<< HEAD
+Object newObject(struct type, void **params);
+void gc(Object *target);
+=======
 Object * newObject(struct type, void *params);
 void gc(Object *target);
 bool iterableHasNext(Object * iter);
 Object * iterableNext(Object * iter);
+>>>>>>> 08f87aa5fbc576fc6437cda1b29b22c7a9a1c878
 
 #endif
