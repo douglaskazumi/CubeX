@@ -11,18 +11,33 @@ typedef struct {
 	//vTable
 	int refCount;
 	int numFields;
-} object;
+} object_t;
+
+/* Built in object sections */
+
+typedef struct {
+	//vTable
+	unsigned int refCount;
+	int numFields;
+	signed int value;
+} integer_t;
+
+typedef struct {
+	//vTable
+	unsigned int refCount;
+	int numFields;
+	bool value;
+} boolean_t;
 
 /* ITERABLE SECTION*/
 
-typedef enum {INTEGER, BOOLEAN, OBJECT} iterabletype_t
+typedef enum {INTEGER_F=2, INTEGER_INF=3, BOOLEAN_F=4, INTEGER_INF=5, OBJECT=6, INPUT=7} iterabletype_t
 
 typedef struct {
 	//vTable
 	unsigned int refCount;
 	int numFields;
 	iterabletype_t type;
-	bool isFinite;
 } iterable_t;
 
 typedef struct {
@@ -31,7 +46,6 @@ typedef struct {
 	int numFields;
 
 	iterabletype_t type;
-	bool isFinite;
 
 	unsigned int numEntries;
 	Object **array;
@@ -44,7 +58,6 @@ typedef struct {
 	int numFields;
 
 	iterabletype_t type;
-	bool isFinite;
 
 	signed int current;
 	signed int last;
@@ -57,7 +70,6 @@ typedef struct {
 	int numFields;
 
 	iterabletype_t type;
-	bool isFinite;
 
 	bool current;
 	bool last;
@@ -70,7 +82,6 @@ typedef struct {
 	int numFields;
 
 	iterabletype_t type;
-	bool isFinite;
 
 	signed int current;
 
@@ -82,16 +93,20 @@ typedef struct {
 	int numFields;
 
 	iterabletype_t type;
-	bool isFinite;
 
 	bool current;
 
 } infiniteBooleanIterable_t;
 
 
-Object * newObject(struct type, void *params);
-void gc(Object *target);
-bool iterableHasNext(Object * iter);
-Object * iterableNext(Object * iter);
+object_t * createObject(int type);
+void gc(object_t *target);
+
+bool iterableHasNext(object_t * iter);
+object_t * iterableNext(object_t * iter);
+
+integer_t * create_Integer(int val);
+boolean_t * create_Boolean(bool val);
+
 
 #endif
