@@ -53,8 +53,12 @@ object_t * createObject(int type)
 	return object;
 }
 
+<<<<<<< HEAD
 void gc(object_t *target){
 
+=======
+void gc(Object *target){
+>>>>>>> 90d5132b3c83af2bda53efd961f2879785d73803
 }
 
 
