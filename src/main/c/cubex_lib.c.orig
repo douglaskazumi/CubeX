@@ -43,12 +43,17 @@ object_t * createObject(int type)
 		object->numFields=-2;
 		((iterable_t *)object)->type=OBJECT
 		break;
+
 	}
 	object->refCount=1;
 	return object;
 }
 
 void gc(object_t *target){
+<<<<<<< .merge_file_a56224
+=======
+
+>>>>>>> .merge_file_a39348
 }
 
 

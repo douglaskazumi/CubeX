@@ -13,6 +13,9 @@ import main.util.TypeVarSubstitution;
 
 public abstract class CubeXType
 {
+	public String getTypedefName() {
+		return this.toString().toLowerCase() + "_t";
+	}
 	
 	public static CubeXTypeBoolean cubeXBool = new CubeXTypeBoolean();
 	public static CubeXTypeBoolean getBoolean()

@@ -2,6 +2,7 @@ package main.program;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -142,8 +143,6 @@ public class CubeXClass extends CubeXClassBase {
 		ArrayList<CubeXArgument> newArgs = new ArrayList<CubeXArgument>();
 		for(CubeXArgument arg : constructorArgs)
 		{
-			
-			
 			CubeXType newType = CubeXType.validateType(arg.type, false,  classCon, classTypeVarCon);
 			newArgs.add(new CubeXArgument(arg.variable, newType));
 			newVarCon.add(arg.variable.getName(), newType);
@@ -232,8 +231,35 @@ public class CubeXClass extends CubeXClassBase {
 		
 		functions.addAll(noChecking);
 		
-		
-		
 		return null;
 	}
+
+	@Override
+	public void toC() {
+		//define type
+		GlobalAwareness.codeAppend("typedef struct{");
+		GlobalAwareness.codeAppend("void **vTable;");
+		GlobalAwareness.codeAppend("unsigned int refCount;");
+		GlobalAwareness.codeAppend("int numFields;");
+		
+		for(CubeXArgument arg : constructorArgs){
+			if(arg.type.isIterable()){
+				//TODO generate code for iterable class argument
+			} else {
+				GlobalAwareness.codeAppend(arg.type.getTypedefName() + " *" + arg.variable.getName() + ";");
+			}
+		}
+		
+		GlobalAwareness.codeAppend("} "+ name.toLowerCase() +"_t;");
+		
+		//create method pointers
+		for(CubeXFunction fun : functions){
+			fun.toC();
+		}
+		
+		//create vtable
+		//TODO after defining function naming create pointer to vtable
+	}
+	
+	
 }

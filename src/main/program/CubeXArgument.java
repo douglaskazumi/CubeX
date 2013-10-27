@@ -1,5 +1,6 @@
 package main.program;
 
+import main.c.GlobalAwareness;
 import main.expression.CubeXVariable;
 import main.type.CubeXType;
 
@@ -20,5 +21,4 @@ public class CubeXArgument {
 		sb.append(variable.toString()).append(" : ").append(type.toString());
 		return sb.toString();
 	}
-
 }

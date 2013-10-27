@@ -107,7 +107,6 @@ public class TestType {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -116,7 +115,6 @@ public class TestType {
 		try {
 			fw = new FileWriter(file.getAbsoluteFile());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		errorLog = new BufferedWriter(fw);
@@ -127,7 +125,6 @@ public class TestType {
 		try {
 			errorLog.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

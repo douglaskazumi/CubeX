@@ -1,6 +1,7 @@
 package main.program;
 import java.util.ArrayList;
 
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -137,11 +138,23 @@ public class CubeXFunction extends CubeXProgramPiece
 	}
 
 	@Override
-	public String toC() {
-		StringBuilder cCode = new StringBuilder();
+	public void toC() {
+		StringBuilder sb = new StringBuilder();
+		//TODO figure out how to add class name
+		sb.append(returnType.getTypedefName()).append(" _").append(name).append("(");
+		String separator = "";
+		for (CubeXArgument arg : arglist) {
+			sb.append(separator);
+			separator = ", ";
+			sb.append(arg.type.getTypedefName()).append(" ").append(arg.variable.getName());
+		}
+		sb.append(")");
 		
+		GlobalAwareness.declarationAppend(sb.toString() + ";");		
+		GlobalAwareness.codeAppend(sb.toString() + "{");
 		
+		statement.toC();
 		
-		return cCode.toString();
+		GlobalAwareness.codeAppend("}");
 	}
 }
