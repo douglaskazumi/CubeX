@@ -29,9 +29,16 @@ typedef struct {
 	bool value;
 } boolean_t;
 
+typedef struct {
+	//vTable
+	unsigned int refCount;
+	int numFields;
+	char value;
+} character_t;
+
 /* ITERABLE SECTION*/
 
-typedef enum {INTEGER_F=2, INTEGER_INF=3, BOOLEAN_F=4, INTEGER_INF=5, OBJECT=6, INPUT=7} iterabletype_t
+typedef enum {INTEGER_F, INTEGER_INF, OBJECT, INPUT} iterabletype_t
 
 typedef struct {
 	//vTable
@@ -48,7 +55,7 @@ typedef struct {
 	iterabletype_t type;
 
 	unsigned int numEntries;
-	Object **array;
+	object_t **array;
 	unsigned int index;
 } finiteGeneralIterable_t;
 
@@ -64,17 +71,6 @@ typedef struct {
 
 } finiteIntegerIterable_t;
 
-typedef struct {
-	//vTable
-	unsigned int refCount;
-	int numFields;
-
-	iterabletype_t type;
-
-	bool current;
-	bool last;
-
-} finiteBooleanIterable_t;
 
 typedef struct {
 	//vTable
@@ -83,30 +79,28 @@ typedef struct {
 
 	iterabletype_t type;
 
+	int numPreEntries;
+	object_t **array;
 	signed int current;
 
 } infiniteIntegerIterable_t;
 
-typedef struct {
-	//vTable
-	unsigned int refCount;
-	int numFields;
-
-	iterabletype_t type;
-
-	bool current;
-
-} infiniteBooleanIterable_t;
-
-
+//Allocates the neccessary memory
 object_t * createObject(int type);
 void gc(object_t *target);
 
 bool iterableHasNext(object_t * iter);
 object_t * iterableNext(object_t * iter);
 
-integer_t * create_Integer(int val);
-boolean_t * create_Boolean(bool val);
 
+/*These functions create and populate the built-in types
+ * Strings are just general Iterables*/
+object_t * createInteger(int val);
+object_t * createBoolean(bool val);
+object_t * createCharacter(char val);
+
+object_t * createIterable_values(object_t **values, int numValues);
+object_t * createIterable_finiteInt(int first, int last);
+object_t * createIterable_infiniteInt(int first);
 
 #endif

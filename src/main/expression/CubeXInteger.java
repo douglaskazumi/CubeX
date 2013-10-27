@@ -26,4 +26,11 @@ public class CubeXInteger extends CubeXExpression
 	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) {
 		return CubeXType.getInteger();
 	}
+
+	@Override
+	public String toC() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("createInteger(").append(value).append(")");
+		return sb.toString();
+	}
 }

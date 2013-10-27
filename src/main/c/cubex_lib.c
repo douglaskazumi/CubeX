@@ -24,37 +24,33 @@ object_t * createObject(int type)
 		object->numFields=-1;
 		((boolean_t *)object)->value=false;
 		break;
-	case 2: //finite integer iterable
+	case 2: //Character
+		object=x3malloc(sizeof(character_t));
+		object->numFields=-1;
+		object->value=0;
+		break;
+	case 3: //finite integer iterable
 		object=x3malloc(sizeof(finiteIntegerIterable_t));
 		object->numFields=-2;
 		((iterable_t *)object)->type=INTEGER_F
 		break;
-	case 3: //infinite integer iterable
+	case 4: //infinite integer iterable
 		object=x3malloc(sizeof(infiniteIntegerIterable_t));
 		object->numFields=-2;
 		((iterable_t *)object)->type=INTEGER_INF
 		break;
-	case 4: //finite bool iterable
-		object=x3malloc(sizeof(finiteBooleanIterable_t));
-		object->numFields=-2;
-		((iterable_t *)object)->type=BOOLEAN_F
-		break;
-	case 5: //"infinite" bool iterable
-		object=x3malloc(sizeof(infiniteBooleanIterable_t));
-		object->numFields=-2;
-		((iterable_t *)object)->type=BOOLEAN_INF
-		break;
-	case 6: // general iterable
+	case 5: // general iterable
 		object=x3malloc(sizeof(finiteGeneralIterable_t));
 		object->numFields=-2;
 		((iterable_t *)object)->type=OBJECT
 		break;
+
 	}
 	object->refCount=1;
 	return object;
 }
 
-void gc(Object *target){
+void gc(object_t *target){
 }
 
 
@@ -62,7 +58,7 @@ bool iterableHasNext(object_t *obj)
 {
 	if(obj->numFields!=-2)
 	{
-		return (Object *)0xDEADBEEF; //shouldn't happen
+		return (object_t *)0xDEADBEEF; //shouldn't happen
 	}
 
 	iterable_t *iter = (iterable_t *)obj;
@@ -82,17 +78,6 @@ bool iterableHasNext(object_t *obj)
 		case INTEGER_INF:
 			return true;
 			break;
-		case BOOLEAN_F:
-			finiteBooleanIterable_t *actualIter = (finiteBooleanIterable_t *)iter;
-			if(actualIter->current > actualIter->last)
-				return false;
-			return true;
-			break;
-		case BOOLEAN_INF:
-			infiniteBooleanIterable_t *actualIter = (infiniteBooleanIterable_t *)iter;
-			if(actualIter->current > true) // >1
-				return false;
-			return true;
 		case INPUT:
 			int lineLength = next_line_length();
 			if(lineLength==0)
@@ -111,7 +96,7 @@ object_t * iterableNext(object_t * iter)
 
 	if(obj->numFields!=-2)
 	{
-		return (Object *)0xDEADBEEF; //shouldn't happen
+		return (object_t *)0xDEADBEEF; //shouldn't happen
 	}
 
 	iterable_t *iter = (iterable_t *)obj;
@@ -131,15 +116,6 @@ object_t * iterableNext(object_t * iter)
 				//return createInteger(cur);
 				return NULL;
 				break;
-		case BOOLEAN_F:
-		case BOOLEAN_INF:
-			finiteBooleanIterable_t *actualIter = (finiteBooleanIterable_t *)iter;
-			bool cur=(actualIter->current)++;
-
-			//TODO : create int object here
-			//return createInteger(cur);
-			return NULL;
-			break;
 		case INPUT:
 			int lineLength=next_line_length();
 			if (lineLength==0)
@@ -156,19 +132,48 @@ object_t * iterableNext(object_t * iter)
  * OBJECT INITIALIZER SECTION *
 \******************************/
 
-integer_t * create_Integer(int val)
+object_t * createInteger(int val)
 {
 	integer_t *integer = (integer_t *)createObject(0);
 	integer->value = val;
-	return integer;
+	return (object_t *)integer;
 }
 
-boolean_t * create_Boolean(bool val)
+object_t * createBoolean(bool val)
 {
 	boolean_t *boolean = (boolean_t *)createObject(1);
 	boolean->value = val;
-	return boolean;
+	return (object_t *)boolean;
 }
 
-iterable_t * createIterable(iterabletype_t type, )
+object_t * createCharacter(char val)
+{
+	character_t *character = (character_t *)createObject(2);
+	character->value = val;
+	return (object_t *)character;
+}
+
+object_t * createIterable_values(object_t **values, int numValues)
+{
+	finiteGeneralIterable_t * iter = (finiteGeneralIterable_t *)createObject(5);
+	iter->numEntries=numValues;
+	iter->index=0;
+	iter->array=values;
+	return (object_t *)iter;
+}
+object_t * createIterable_finiteInt(int first, int last)
+{
+	finiteIntegerIterable_t * iter = (finiteIntegerIterable_t *)createObject(3);
+	iter->current=first;
+	iter->last=last;
+
+	return (object_t *)iter;
+}
+object_t * createIterable_infiniteInt(int first)
+{
+	infiniteIntegerIterable_t * iter = (infiniteIntegerIterable_t *)createObject(4);
+	iter->current=first;
+
+	return (object_t *)iter;
+}
 
