@@ -22,19 +22,10 @@ public class CubeXFunction extends CubeXProgramPiece
 	private ArrayList<CubeXTypeVariable> types;
 
 	private ArrayList<CubeXArgument> arglist;
-	public void setArglist(ArrayList<CubeXArgument> arglist) {
-		this.arglist = arglist;
-	}
-
-	public void setReturnType(CubeXType returnType) {
-		this.returnType = returnType;
-	}
-
+	
 	private CubeXType returnType;
 	
 	private CubeXStatement statement;
-	
-	
 
 	public CubeXFunction(CubeXFunctionHeader decl, CubeXStatement stat)
 	{
@@ -46,10 +37,6 @@ public class CubeXFunction extends CubeXProgramPiece
 		statement=stat;
 	}
 	
-	public String getName() {
-		return name;
-	}
-
 	public CubeXFunction(CubeXFunctionHeader decl, CubeXExpression expr)
 	{
 		this(decl, new CubeXReturnStatement(expr));
@@ -60,6 +47,17 @@ public class CubeXFunction extends CubeXProgramPiece
 		this(decl, (CubeXStatement)null);
 	}
 	
+	public void setArglist(ArrayList<CubeXArgument> arglist) {
+		this.arglist = arglist;
+	}
+	
+	public void setReturnType(CubeXType returnType) {
+		this.returnType = returnType;
+	}
+	
+	public String getName() {
+		return name;
+	}
 	
 	public ArrayList<CubeXTypeVariable> getTypes() {
 		return types;
@@ -101,16 +99,6 @@ public class CubeXFunction extends CubeXProgramPiece
 		return sb.toString();
 	}
 
-	/*
-	private String name;
-	private ArrayList<CubeXTypeVariable> types;
-
-	private ArrayList<CubeXArgument> arglist;
-	private CubeXType returnType;
-	
-	private CubeXStatement statement;
-	*/
-	
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException {
 		
@@ -146,5 +134,14 @@ public class CubeXFunction extends CubeXProgramPiece
 	public boolean isFunction()
 	{
 		return true;
+	}
+
+	@Override
+	public String toC() {
+		StringBuilder cCode = new StringBuilder();
+		
+		
+		
+		return cCode.toString();
 	}
 }

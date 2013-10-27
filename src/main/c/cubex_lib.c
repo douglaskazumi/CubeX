@@ -1,5 +1,6 @@
 #include "cubex_lib.h"
 
+<<<<<<< HEAD
 /*
  *
  * This function can be built dynamically from java, this is just a model of the real version.
@@ -49,6 +50,9 @@ object_t * createObject(int type)
 		((iterable_t *)object)->type=OBJECT
 		break;
 
+=======
+Object newObject(struct type, void **params){
+>>>>>>> 13f62aeae6a98cf4632c82804cdbdc2c58fc9a1b
 
 	}
 
@@ -56,7 +60,11 @@ object_t * createObject(int type)
 	return object;
 }
 
+<<<<<<< HEAD
 void gc(object_t *target){
+=======
+void gc(Object *target){
+>>>>>>> 13f62aeae6a98cf4632c82804cdbdc2c58fc9a1b
 
 }
 
