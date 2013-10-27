@@ -13,6 +13,10 @@ public abstract class CubeXTypeClassBase extends CubeXType
 {
 	
 	protected String name;
+	public String getName() {
+		return name;
+	}
+
 	protected ArrayList<? extends CubeXType> parameters;
 	
 	public CubeXTypeClassBase(String name, ArrayList<? extends CubeXType> parameters)

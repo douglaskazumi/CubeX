@@ -8,22 +8,22 @@
 typedef char bool;
 
 typedef struct {
-	//vTable
-	int refCount;
+	void **vTable;
+	unsigned int refCount;
 	int numFields;
 } object_t;
 
 /* Built in object sections */
 
 typedef struct {
-	//vTable
+	void **vTable;
 	unsigned int refCount;
 	int numFields;
 	signed int value;
 } integer_t;
 
 typedef struct {
-	//vTable
+	void **vTable;
 	unsigned int refCount;
 	int numFields;
 	bool value;
@@ -34,26 +34,26 @@ typedef struct {
 typedef enum {INTEGER_F=2, INTEGER_INF=3, BOOLEAN_F=4, INTEGER_INF=5, OBJECT=6, INPUT=7} iterabletype_t
 
 typedef struct {
-	//vTable
+	void **vTable;
 	unsigned int refCount;
 	int numFields;
 	iterabletype_t type;
 } iterable_t;
 
 typedef struct {
-	//vTable
+	void **vTable;
 	unsigned int refCount;
 	int numFields;
 
 	iterabletype_t type;
 
 	unsigned int numEntries;
-	Object **array;
+	object_t **array;
 	unsigned int index;
 } finiteGeneralIterable_t;
 
 typedef struct {
-	//vTable
+	void **vTable;
 	unsigned int refCount;
 	int numFields;
 
@@ -65,7 +65,7 @@ typedef struct {
 } finiteIntegerIterable_t;
 
 typedef struct {
-	//vTable
+	void **vTable;
 	unsigned int refCount;
 	int numFields;
 
@@ -77,7 +77,7 @@ typedef struct {
 } finiteBooleanIterable_t;
 
 typedef struct {
-	//vTable
+	void **vTable;
 	unsigned int refCount;
 	int numFields;
 
@@ -88,7 +88,7 @@ typedef struct {
 } infiniteIntegerIterable_t;
 
 typedef struct {
-	//vTable
+	void **vTable;
 	unsigned int refCount;
 	int numFields;
 
@@ -107,6 +107,5 @@ object_t * iterableNext(object_t * iter);
 
 integer_t * create_Integer(int val);
 boolean_t * create_Boolean(bool val);
-
 
 #endif

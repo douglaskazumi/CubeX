@@ -126,7 +126,6 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		sb.append(">");
 		return sb.toString();
 	}
-
 }
 
 class CubeXTypeBoolean extends CubeXTypeClass

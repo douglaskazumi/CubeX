@@ -367,4 +367,9 @@ public class CubeXProgram {
 
 	}
 
+	public void toC() {
+		for(CubeXProgramPiece piece : pieces){
+			piece.toC();
+		}
+	}
 }
