@@ -79,7 +79,12 @@ bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
 
 object_t * iterableAppend(object_t * obj1, object_t * obj2)
 {
-	if(obj1==NULL || obj2==NULL)
+
+	if(obj1==NULL && obj2!=NULL)
+		return obj2;
+	if(obj1!=NULL && obj2==NULL)
+		return obj1;
+	if(obj1==NULL && obj2==NULL)
 		return NULL;
 	if(obj1->numFields!=-2 || obj2->numFields!=-2)
 		return NULL;
@@ -179,7 +184,7 @@ object_t * iterableNext(object_t * iter, iterableIndex_t *indexer)
 		int len = next_line_length();
 		char * buff = (char *)x3malloc((len+1)*sizeof(char)); //null terminated ?
 		read_line(buff);
-		iterable_t str = (iterable_t *)createIterable_string(buff, len, 0);
+		iterable_t str = (iterable_t *)createIterable_string(buff, len, 0, false);
 		return str;
 		break;
 	}
@@ -212,6 +217,16 @@ object_t * createCharacter(char val, unsigned int startingRefs)
 	return (object_t *)character;
 }
 
+createIterable_empty(unsigned int startingRefs)
+{
+	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
+
+	iter->numEntries=0;
+	iter->entries=NULL;
+
+	return (object_t *)iter;
+}
+
 object_t * createIterable_value(object_t *value, unsigned int startingRefs)
 {
 	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
@@ -227,6 +242,7 @@ object_t * createIterable_value(object_t *value, unsigned int startingRefs)
 	iter->entries=entryPtr;
 	return (object_t *)iter;
 }
+
 object_t * createIterable_finiteInt(int first, int last, unsigned int startingRefs)
 {
 	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
@@ -268,16 +284,23 @@ object_t * createIterable_infiniteInt(int first, unsigned int startingRefs)
 	return (object_t *)iter;
 }
 
-object_t * createIterable_string(char *str, int len, unsigned int startingRefs)
+object_t * createIterable_string(char *str, int len, unsigned int startingRefs, bool isConstantString)
 {
 	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
 
 	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(sizeof(iterableEntry_t*));
 
+	char * loc = str;
+	if(isConstantString)
+	{
+		loc = (char *)x3malloc(len*sizeof(char));
+		memcpy(str, loc, len);
+	}
+
 
 	stringIterableEntry_t *entry = (stringIterableEntry_t *)x3malloc(sizeof(stringIterableEntry_t));
 	entry->type=STRING;
-	entry->string=str;
+	entry->string=loc;
 	entry->length=len;
 
 	*(entryPtr) = (iterableEntry_t *)entry;
@@ -286,4 +309,9 @@ object_t * createIterable_string(char *str, int len, unsigned int startingRefs)
 
 	iter->entries=entryPtr;
 	return (object_t *)iter;
+}
+
+void memcpy(void * src, void * dest, unsigned int count)
+{
+	while (count--) *dest++ = *src++;
 }

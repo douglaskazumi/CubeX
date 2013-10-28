@@ -2,6 +2,7 @@ package main.expression;
 import java.util.ArrayList;
 
 
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -42,5 +43,29 @@ public class CubeXIterable extends CubeXExpression
 			curType = CubeXType.join(curType, exp.getType(classCon, funCon, varCon, typeVarCon), classCon);
 		}
 		return new CubeXTypeIterable(curType);
+	}
+
+	@Override
+	public String preC()
+	{
+		StringBuilder sb = new StringBuilder();
+		for(CubeXExpression entry : entries)
+		{
+			sb.append(entry.preC());
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public String toC() {
+		StringBuilder sbpre = new StringBuilder();
+		StringBuilder sbpost = new StringBuilder();
+		sbpost.append("NULL");
+		for(CubeXExpression entry : entries)
+		{
+			sbpre.append("iterableAppend(createIterable_value(").append(entry.toC()).append(", 0), ");
+			sbpost.append(")");
+		}
+		return sbpre.append(sbpost).toString();
 	}
 }

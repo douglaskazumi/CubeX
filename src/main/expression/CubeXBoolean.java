@@ -30,8 +30,14 @@ public class CubeXBoolean extends CubeXExpression
 	@Override
 	public String toC() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("createBoolean(").append(value).append(")");
+		sb.append("createBoolean(").append(value).append(", 0)");
 		return sb.toString();
+	}
+
+	@Override
+	public String preC() {
+		// TODO Auto-generated method stub
+		return "";
 	}
 	
 }
