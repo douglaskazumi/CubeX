@@ -8,7 +8,8 @@
  *
  *
  */
-object_t * createObject(int type)
+
+object_t * createObject(int type, unsigned int startingRefs)
 {
 	object_t * object;
 	switch(type)
@@ -23,136 +24,175 @@ object_t * createObject(int type)
 		object->numFields=-1;
 		((boolean_t *)object)->value=false;
 		break;
-	case 2: //finite integer iterable
-		object=x3malloc(sizeof(finiteIntegerIterable_t));
-		object->numFields=-2;
-		((iterable_t *)object)->type=INTEGER_F
+	case 2: //Character
+		object=x3malloc(sizeof(character_t));
+		object->numFields=-1;
+		object->value=0;
 		break;
-	case 3: //infinite integer iterable
-		object=x3malloc(sizeof(infiniteIntegerIterable_t));
+	case 3: //iterable
+		object=x3malloc(sizeof(iterable_t));
 		object->numFields=-2;
-		((iterable_t *)object)->type=INTEGER_INF
-		break;
-	case 4: //finite bool iterable
-		object=x3malloc(sizeof(finiteBooleanIterable_t));
-		object->numFields=-2;
-		((iterable_t *)object)->type=BOOLEAN_F
-		break;
-	case 5: //"infinite" bool iterable
-		object=x3malloc(sizeof(infiniteBooleanIterable_t));
-		object->numFields=-2;
-		((iterable_t *)object)->type=BOOLEAN_INF
-		break;
-	case 6: // general iterable
-		object=x3malloc(sizeof(finiteGeneralIterable_t));
-		object->numFields=-2;
-		((iterable_t *)object)->type=OBJECT
+		object->vTable=NULL;
 		break;
 	case 7:
 			object=x3malloc(sizeof(_A_t));
 			object->numFields = 4;
 
 	}
-	object->refCount=1;
+	object->refCount=startingRefs;
 	return object;
 }
 
 void gc(object_t *target){
-
+	if(target->refcount != 0)
+		return;
 }
 
-
-bool iterableHasNext(object_t *obj)
+iterableIndex_t * createIndexer()
 {
-	if(obj->numFields!=-2)
+	iterableIndex_t * indexer = (iterableIndex_t *)x3malloc(sizeof(iterableIndex_t));
+	indexer->index=0;
+	indexer->innerIndex=0;
+	return indexer;
+}
+
+bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
+{
+	if(obj->numFields!=-2 || indexer==NULL)
 	{
-		return (Object *)0xDEADBEEF; //shouldn't happen
+		return false;
 	}
 
 	iterable_t *iter = (iterable_t *)obj;
+	if(indexer->index >= iter->numEntries)
+		return false;
 
-	switch (iter->type)
+	iterableEntry_t *entry = (iter->entries)[indexer->index];
+	if(entry->type==INPUT )
 	{
-		case OBJECT:
-			finiteGeneralIterable_t *actualIter = (finiteGeneralIterable_t *)iter;
-			if(actualIter->index >= actualIter->numEntries)
-				return false;
-			return true;
-			break;
-		case INTEGER_F:
-			finiteIntegerIterable_t *actualIter = (finiteIntegerIterable_t *)iter;
-			if(actualIter->current > actualIter->last)
-				return false;
-		case INTEGER_INF:
-			return true;
-			break;
-		case BOOLEAN_F:
-			finiteBooleanIterable_t *actualIter = (finiteBooleanIterable_t *)iter;
-			if(actualIter->current > actualIter->last)
-				return false;
-			return true;
-			break;
-		case BOOLEAN_INF:
-			infiniteBooleanIterable_t *actualIter = (infiniteBooleanIterable_t *)iter;
-			if(actualIter->current > true) // >1
-				return false;
-			return true;
-		case INPUT:
-			int lineLength = next_line_length();
-			if(lineLength==0)
-				return false;
-			return true;
-
+		int lineLength = next_line_length();
+		if(lineLength==0)
+			return false;
 	}
+
+	return true;
+	break;
+}
+
+}
+
+object_t * iterableAppend(object_t * obj1, object_t * obj2)
+{
+
+	if(obj1==NULL && obj2!=NULL)
+		return obj2;
+	if(obj1!=NULL && obj2==NULL)
+		return obj1;
+	if(obj1==NULL && obj2==NULL)
+		return NULL;
+	if(obj1->numFields!=-2 || obj2->numFields!=-2)
+		return NULL;
+
+	iterable_t *iter1 = (iterable_t *)obj1;
+	iterable_t *iter2 = (iterable_t *)obj2;
+
+	iterable_t *newIter = (iterable_t *) createObject(3,0);
+
+	int numE1 = iter1->numEntries;
+	int numE2 = iter2->numEntries;
+	int newNumEntries = numE1+numE2;
+
+	newIter->numEntries=newNumEntries;
+	iterableEntry_t **entryTable = (iterableEntry_t **)x3malloc(newNumEntries*sizeof(iterableEntry_t*));
+
+
+	for(int i=0; i<numE1; i++)
+	{
+		entryTable[i]=(iter1->entries)[i]
+	}
+	for(int i=0; i<numE2; i++)
+	{
+		entryTable[numE1+i]=(iter2->entries)[i]
+	}
+
+	newIter->entries = entryTable;
+
+	gc(obj1);
+	gc(obj2);
+	return newIter;
 
 }
 
 
-object_t * iterableNext(object_t * iter)
+object_t * iterableNext(object_t * iter, iterableIndex_t *indexer)
 {
 
 	//Assumes iter has a next item to return
 
 	if(obj->numFields!=-2)
 	{
-		return (Object *)0xDEADBEEF; //shouldn't happen
+		return (object_t *)0xDEADBEEF; //shouldn't happen
 	}
 
 	iterable_t *iter = (iterable_t *)obj;
+	if(indexer->index >= iter->numEntries)
+	return NULL;
 
-	switch (iter->type)
+	iterableEntry_t *entry = (iter->entries)[indexer->index];
+
+	switch(entry->type)
 	{
-		case OBJECT:
-			finiteGeneralIterable_t *actualIter = (finiteGeneralIterable_t *)iter;
-			return (actualIter->array)[actualIter->index];
+	case RANGE:
+		rangeIterableEntry_t * rangeEntry = (rangeIterableEntry_t *)entry;
+		object_t *value = createInteger(rangeEntry->start + indexer->innerIndex);
+		if(indexer->innerIndex >= rangeEntry->end - rangeEntry->start)
+		{
+			indexer->innerIndex=0;
+			indexer->index+=1;
+		}
+		else
+		{
+			indexer->innerIndex+=1;
+		}
+		return value;
 		break;
-		case INTEGER_F:
-		case INTEGER_INF:
-				finiteIntegerIterable_t *actualIter = (finiteIntegerIterable_t *)iter;
-				int cur=(actualIter->current)++;
+	case INFINITE:
+		infiniteIterableEntry_t * infEntry = (infiniteIterableEntry_t *)entry;
+		object_t *value = createInteger(infEntry->start + indexer->innerIndex);
+		indexer->innerIndex+=1;
+		return value;
+		break;
+	case OBJECT:
+		objectIterableEntry_t * objEntry = (objectIterableEntry_t *)entry;
+		object_t *value = objEntry->obj;
+		indexer->innerIndex=0;
+		indexer->index+=1;
+		return value;
+		break;
+	case STRING:
+		stringIterableEntry_t * strEntry = (stringIterableEntry_t *)entry;
+		object_t *value = (object_t*)object_t * createCharacter((strEntry->string)[indexer->innerIndex], 0);
+		if(indexer->innerIndex >= len-1)
+		{
+			indexer->innerIndex=0;
+			indexer->index+=1;
+		}
+		else
+		{
+			indexer->innerIndex+=1;
+		}
+		return value;
+		break;
+	case INPUT:
 
-				//TODO : create int object here
-				//return createInteger(cur);
-				return NULL;
-				break;
-		case BOOLEAN_F:
-		case BOOLEAN_INF:
-			finiteBooleanIterable_t *actualIter = (finiteBooleanIterable_t *)iter;
-			bool cur=(actualIter->current)++;
-
-			//TODO : create int object here
-			//return createInteger(cur);
-			return NULL;
-			break;
-		case INPUT:
-			int lineLength=next_line_length();
-			if (lineLength==0)
-				return NULL; //BAD
-
-			//TODO create String object from read_line
-			return NULL;
-			break;
+		int len = next_line_length();
+		char * buff = (char *)x3malloc((len+1)*sizeof(char)); //null terminated ?
+		read_line(buff);
+		iterable_t str = (iterable_t *)createIterable_string(buff, len, 0, false);
+		return str;
+		break;
 	}
+
 	return NULL;
 }
 
@@ -160,19 +200,122 @@ object_t * iterableNext(object_t * iter)
  * OBJECT INITIALIZER SECTION *
 \******************************/
 
-integer_t * create_Integer(int val)
+object_t * createInteger(int val, unsigned int startingRefs)
 {
-	integer_t *integer = (integer_t *)createObject(0);
+	integer_t *integer = (integer_t *)createObject(0, startingRefs);
 	integer->value = val;
-	return integer;
+	return (object_t *)integer;
 }
 
-boolean_t * create_Boolean(bool val)
+object_t * createBoolean(bool val, unsigned int startingRefs)
 {
-	boolean_t *boolean = (boolean_t *)createObject(1);
+	boolean_t *boolean = (boolean_t *)createObject(1, startingRefs);
 	boolean->value = val;
-	return boolean;
+	return (object_t *)boolean;
 }
 
-iterable_t * createIterable(iterabletype_t type, )
+object_t * createCharacter(char val, unsigned int startingRefs)
+{
+	character_t *character = (character_t *)createObject(2, startingRefs);
+	character->value = val;
+	return (object_t *)character;
+}
 
+createIterable_empty(unsigned int startingRefs)
+{
+	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
+
+	iter->numEntries=0;
+	iter->entries=NULL;
+
+	return (object_t *)iter;
+}
+
+object_t * createIterable_value(object_t *value, unsigned int startingRefs)
+{
+	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
+	objectIterableEntry_t *entry = (objectIterableEntry_t *)x3malloc(sizeof(objectIterableEntry_t));
+	entry->type=OBJECT;
+	entry->obj=value;
+
+	iter->numEntries=1;
+
+	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(1*sizeof(iterableEntry_t*));
+	*(entryPtr) = (iterableEntry_t *)entry;
+
+	iter->entries=entryPtr;
+	return (object_t *)iter;
+}
+
+object_t * createIterable_finiteInt(int first, int last, unsigned int startingRefs)
+{
+	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
+
+	if(last<first)
+	{
+		iter->numEntries=0;
+		iter->entries=NULL;
+		return (object_t *)iter;
+	}
+
+	rangeIterableEntry_t *entry = (rangeIterableEntry_t *)x3malloc(sizeof(rangeIterableEntry_t));
+	entry->type=RANGE;
+	entry->start=first;
+	entry->end=last;
+
+	iter->numEntries=1;
+
+	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(1*sizeof(iterableEntry_t*));
+	*(entryPtr) = (iterableEntry_t *)entry;
+
+	iter->entries=entryPtr;
+	return (object_t *)iter;
+}
+object_t * createIterable_infiniteInt(int first, unsigned int startingRefs)
+{
+	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
+
+	rangeIterableEntry_t *entry = (rangeIterableEntry_t *)x3malloc(sizeof(rangeIterableEntry_t));
+	entry->type=INFINITE;
+	entry->start=first;
+
+	iter->numEntries=1;
+
+	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(1*sizeof(iterableEntry_t*));
+	*(entryPtr) = (iterableEntry_t *)entry;
+
+	iter->entries=entryPtr;
+	return (object_t *)iter;
+}
+
+object_t * createIterable_string(char *str, int len, unsigned int startingRefs, bool isConstantString)
+{
+	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
+
+	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(sizeof(iterableEntry_t*));
+
+	char * loc = str;
+	if(isConstantString)
+	{
+		loc = (char *)x3malloc(len*sizeof(char));
+		memcpy(str, loc, len);
+	}
+
+
+	stringIterableEntry_t *entry = (stringIterableEntry_t *)x3malloc(sizeof(stringIterableEntry_t));
+	entry->type=STRING;
+	entry->string=loc;
+	entry->length=len;
+
+	*(entryPtr) = (iterableEntry_t *)entry;
+
+	iter->numEntries=1;
+
+	iter->entries=entryPtr;
+	return (object_t *)iter;
+}
+
+void memcpy(void * src, void * dest, unsigned int count)
+{
+	while (count--) *dest++ = *src++;
+}

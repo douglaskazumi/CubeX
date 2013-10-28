@@ -40,5 +40,21 @@ public class CubeXAppend extends CubeXExpression {
 			throw new TypeCheckException("Bad append types - not iterables");
 		}
 	}
+
+	@Override
+	public String toC() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("iterableAppend(").append(a.toC()).append(", ").append(b.toC()).append(")");
+		return sb.toString();
+	}
+
+	@Override
+	public String preC() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(a.preC()).append(b.preC());
+		return sb.toString();
+	}
+	
+
 	
 }

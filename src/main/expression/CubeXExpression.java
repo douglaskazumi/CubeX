@@ -24,5 +24,7 @@ public abstract class CubeXExpression
 	
 	protected abstract CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) throws ContextException, TypeCheckException;
 	
-	public abstract void toC();
+	public abstract String preC();
+	
+	public abstract String toC();
 }

@@ -26,5 +26,18 @@ public class CubeXBoolean extends CubeXExpression
 	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) {
 		return CubeXType.getBoolean();
 	}
+
+	@Override
+	public String toC() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("createBoolean(").append(value).append(", 0)");
+		return sb.toString();
+	}
+
+	@Override
+	public String preC() {
+		// TODO Auto-generated method stub
+		return "";
+	}
 	
 }

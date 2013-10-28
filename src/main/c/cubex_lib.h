@@ -29,83 +29,84 @@ typedef struct {
 	bool value;
 } boolean_t;
 
+typedef struct {
+	void **vTable;
+	unsigned int refCount;
+	int numFields;
+	char value;
+} character_t;
+
 /* ITERABLE SECTION*/
 
-typedef enum {INTEGER_F=2, INTEGER_INF=3, BOOLEAN_F=4, INTEGER_INF=5, OBJECT=6, INPUT=7} iterabletype_t
+typedef enum {RANGE, INFINITE, OBJECT, INPUT, STRING} iterableValue_t;
 
 typedef struct {
 	void **vTable;
 	unsigned int refCount;
 	int numFields;
-	iterabletype_t type;
+	unsigned int numEntries;
+	Entry_t **entries;
 } iterable_t;
 
 typedef struct {
-	void **vTable;
-	unsigned int refCount;
-	int numFields;
+	iterableValue_t type;
+} iterableEntry_t;
 
-	iterabletype_t type;
+typedef struct {
+	iterableValue_t type;
+	object_t *obj;
+} objectIterableEntry_t;
 
-	unsigned int numEntries;
-	object_t **array;
+typedef struct {
+	iterableValue_t type;
+	int start;
+	int end;
+} rangeIterableEntry_t
+
+typedef struct {
+	iterableValue_t type;
+	int start;
+} infiniteIterableEntry_t
+
+typedef struct {
+	iterableValue_t type;
+} inputIterableEntry_t;
+
+typedef struct {
+	iterableValue_t type;
+	unsigned int length;
+	char *string;
+} stringIterableEntry_t;
+
+
+typedef struct {
 	unsigned int index;
-} finiteGeneralIterable_t;
-
-typedef struct {
-	void **vTable;
-	unsigned int refCount;
-	int numFields;
-
-	iterabletype_t type;
-
-	signed int current;
-	signed int last;
-
-} finiteIntegerIterable_t;
-
-typedef struct {
-	void **vTable;
-	unsigned int refCount;
-	int numFields;
-
-	iterabletype_t type;
-
-	bool current;
-	bool last;
-
-} finiteBooleanIterable_t;
-
-typedef struct {
-	void **vTable;
-	unsigned int refCount;
-	int numFields;
-
-	iterabletype_t type;
-
-	signed int current;
-
-} infiniteIntegerIterable_t;
-
-typedef struct {
-	void **vTable;
-	unsigned int refCount;
-	int numFields;
-
-	iterabletype_t type;
-
-	bool current;
-
-} infiniteBooleanIterable_t;
+	unsigned int innerIndex;
+} iterableIndex_t;
 
 
+
+
+
+
+
+//Allocates the neccessary memory
 object_t * createObject(int type);
 void gc(object_t *target);
 
-bool iterableHasNext(object_t * iter);
-object_t * iterableNext(object_t * iter);
+iterableIndex_t * createIndexer();
+bool iterableHasNext(object_t *obj, iterableIndex_t *indexer);
+object_t * iterableNext(object_t * iter, iterableIndex_t *indexer);
+object_t * iterableAppend(object_t *, object_t *);
 
-integer_t * create_Integer(int val);
-boolean_t * create_Boolean(bool val);
+/*These functions create and populate the built-in types
+ * Strings are just general Iterables*/
+object_t * createInteger(int val, unsigned int startingRefs);
+object_t * createBoolean(bool val, unsigned int startingRefs);
+object_t * createCharacter(char val, unsigned int startingRefs);
+
+object_t * createIterable_value(object_t *value, unsigned int startingRefs); //maybe extend this to do more then one
+object_t * createIterable_finiteInt(int first, int last, unsigned int startingRefs);
+object_t * createIterable_infiniteInt(int first, unsigned int startingRefs);
 
 #endif

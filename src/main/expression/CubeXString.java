@@ -24,4 +24,16 @@ public class CubeXString extends CubeXExpression {
 	protected CubeXType calculateType(ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon) {
 		return CubeXType.getString();
 	}
+
+	@Override
+	public String preC() {
+		return "";
+	}
+
+	@Override
+	public String toC() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("createIterable_string(\"").append(value.replace("\\","\\\\")).append("\", ").append(value.length()).append(", 0, true)");
+		return sb.toString();
+	}
 }

@@ -35,4 +35,15 @@ public class CubeXVariable extends CubeXExpression
 	public String getName() {
 		return name;
 	}
+
+	@Override
+	public String preC() {
+		return "";
+	}
+
+	@Override
+	public String toC() {
+		StringBuilder sb = new StringBuilder();
+		return sb.append("v_").append(name).toString();
+	}
 }
