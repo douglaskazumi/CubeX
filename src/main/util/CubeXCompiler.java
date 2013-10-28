@@ -1,4 +1,4 @@
-package main.util;
+glopackage main.util;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

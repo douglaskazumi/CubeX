@@ -48,6 +48,10 @@ object_t * createObject(int type)
 		object->numFields=-2;
 		((iterable_t *)object)->type=OBJECT
 		break;
+	case 7:
+			object=x3malloc(sizeof(_A_t));
+			object->numFields = 4;
+
 	}
 	object->refCount=1;
 	return object;

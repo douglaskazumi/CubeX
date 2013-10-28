@@ -246,6 +246,7 @@ public class CubeXClass extends CubeXClassBase {
 			if(arg.type.isIterable()){
 				//TODO generate code for iterable class argument
 			} else {
+				//TODO check for fields inside statments
 				GlobalAwareness.codeAppend(arg.type.getTypedefName() + " *" + arg.variable.getName() + ";");
 			}
 		}
