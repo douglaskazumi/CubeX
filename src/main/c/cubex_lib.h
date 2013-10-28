@@ -38,7 +38,7 @@ typedef struct {
 
 /* ITERABLE SECTION*/
 
-typedef enum {RANGE, INFINITE, OBJECT, INPUT} iterableValue_t;
+typedef enum {RANGE, INFINITE, OBJECT, INPUT, STRING} iterableValue_t;
 
 typedef struct {
 	void **vTable;
@@ -73,9 +73,21 @@ typedef struct {
 } inputIterableEntry_t;
 
 typedef struct {
+	iterableValue_t type;
+	unsigned int length;
+	char *string;
+} stringIterableEntry_t;
+
+
+typedef struct {
 	unsigned int index;
 	unsigned int innerIndex;
 } iterableIndex_t;
+
+
+
+
+
 
 
 //Allocates the neccessary memory

@@ -44,8 +44,6 @@ void gc(object_t *target){
 		return;
 }
 
-
-
 iterableIndex_t * createIndexer()
 {
 	iterableIndex_t * indexer = (iterableIndex_t *)x3malloc(sizeof(iterableIndex_t));
@@ -162,12 +160,27 @@ object_t * iterableNext(object_t * iter, iterableIndex_t *indexer)
 		indexer->index+=1;
 		return value;
 		break;
+	case STRING:
+		stringIterableEntry_t * strEntry = (stringIterableEntry_t *)entry;
+		object_t *value = (object_t*)object_t * createCharacter((strEntry->string)[indexer->innerIndex], 0);
+		if(indexer->innerIndex >= len-1)
+		{
+			indexer->innerIndex=0;
+			indexer->index+=1;
+		}
+		else
+		{
+			indexer->innerIndex+=1;
+		}
+		return value;
+		break;
 	case INPUT:
 
-		//TODO get string and return it;
-
-		return NULL;
-
+		int len = next_line_length();
+		char * buff = (char *)x3malloc((len+1)*sizeof(char)); //null terminated ?
+		read_line(buff);
+		iterable_t str = (iterable_t *)createIterable_string(buff, len, 0);
+		return str;
 		break;
 	}
 
@@ -253,22 +266,24 @@ object_t * createIterable_infiniteInt(int first, unsigned int startingRefs)
 
 	iter->entries=entryPtr;
 	return (object_t *)iter;
-
-
-
-	integerIterable_t * iter = (integerIterable_t *)createObject(3);
-	iter->current=first;
-
-	rangeEntry_t *range = (rangeEntry_t *)x3malloc(sizeof(rangeEntry_t));
-	range->start=first;
-	range->end=first-1;
-
-	rangeEntry_t **rangePtr = (rangeEntry_t **)x3malloc(1*sizeof(rangeEntry_t*));
-	*(rangePtr) = range;
-
-	iter->numRanges=1;
-	iter->ranges=rangePtr;
-
-	return (object_t *)iter;
 }
 
+object_t * createIterable_string(char *str, int len, unsigned int startingRefs)
+{
+	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
+
+	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(sizeof(iterableEntry_t*));
+
+
+	stringIterableEntry_t *entry = (stringIterableEntry_t *)x3malloc(sizeof(stringIterableEntry_t));
+	entry->type=STRING;
+	entry->string=str;
+	entry->length=len;
+
+	*(entryPtr) = (iterableEntry_t *)entry;
+
+	iter->numEntries=1;
+
+	iter->entries=entryPtr;
+	return (object_t *)iter;
+}
