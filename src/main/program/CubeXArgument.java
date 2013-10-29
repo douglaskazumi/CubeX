@@ -1,6 +1,5 @@
 package main.program;
 
-import main.c.GlobalAwareness;
 import main.expression.CubeXVariable;
 import main.type.CubeXType;
 

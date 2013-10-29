@@ -3,12 +3,15 @@ import java.util.ArrayList;
 
 
 
+
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.program.CubeXClassBase;
 import main.type.*;
 
 public class CubeXIterable extends CubeXExpression
@@ -35,12 +38,12 @@ public class CubeXIterable extends CubeXExpression
 	}
 
 	@Override
-	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) throws ContextException, TypeCheckException
+	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException
 	{
 		CubeXType curType=CubeXType.getNothing();
 		for(CubeXExpression exp : entries)
 		{
-			curType = CubeXType.join(curType, exp.getType(classCon, funCon, varCon, typeVarCon), classCon);
+			curType = CubeXType.join(curType, exp.getType(classCon, funCon, varCon, typeVarCon, setField, par), classCon);
 		}
 		return new CubeXTypeIterable(curType);
 	}

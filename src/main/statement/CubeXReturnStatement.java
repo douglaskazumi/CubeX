@@ -7,6 +7,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.program.CubeXClassBase;
 import main.type.CubeXType;
 import main.util.Tuple;
 
@@ -27,8 +28,8 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon, FunctionContext funCon,	VariableContext varCon, TypeVariableContext typeVarCon)	throws ContextException, TypeCheckException {
-		CubeXType type = returnValue.getType(classCon, funCon, varCon, typeVarCon);
+	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon, FunctionContext funCon,	VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par)	throws ContextException, TypeCheckException {
+		CubeXType type = returnValue.getType(classCon, funCon, varCon, typeVarCon, setField, par);
 		return new Tuple<Boolean, CubeXType>(true, type);
 	}
 

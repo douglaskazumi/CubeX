@@ -1,5 +1,7 @@
 package main.context;
 
+import java.util.HashMap;
+
 import main.exceptions.ContextException;
 import main.type.CubeXType;
 
@@ -31,5 +33,10 @@ public class VariableContext extends BaseContext<CubeXType> {
 	public void lockVariables()
 	{
 		setMutable(false);
+	}
+	
+	public HashMap<String, CubeXType> getInnerMap()
+	{
+		return this.context;
 	}
 }

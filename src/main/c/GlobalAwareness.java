@@ -32,4 +32,6 @@ public class GlobalAwareness {
 			code.append(System.getProperty("line.separator"));
 		}
 	}
+
+	
 }

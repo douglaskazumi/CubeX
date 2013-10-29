@@ -4,6 +4,7 @@ import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
+import main.program.CubeXClassBase;
 import main.type.CubeXType;
 
 public class CubeXInteger extends CubeXExpression 
@@ -23,7 +24,7 @@ public class CubeXInteger extends CubeXExpression
 	}
 
 	@Override
-	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) {
+	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) {
 		return CubeXType.getInteger();
 	}
 

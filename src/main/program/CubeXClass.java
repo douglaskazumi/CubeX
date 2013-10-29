@@ -10,6 +10,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXVariable;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClass;
@@ -26,6 +27,7 @@ public class CubeXClass extends CubeXClassBase {
 	private ArrayList<CubeXStatement> statements;
 	private ArrayList<CubeXExpression> superArgs;
 	
+	public ArrayList<String> definedFields;	
 
 	private FunctionContext myFunctionContext;
 	
@@ -65,6 +67,9 @@ public class CubeXClass extends CubeXClassBase {
 		this.constructorArgs=constructorArgs;
 		this.statements=stats;
 		this.superArgs=superArgs;
+		
+		
+		definedFields=new ArrayList<String>();
 	}
 	
 
@@ -122,7 +127,7 @@ public class CubeXClass extends CubeXClassBase {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
 	{
 		if (classCon.lookup(name)!=null)
 			throw new ContextException("Class already in context");
@@ -151,8 +156,10 @@ public class CubeXClass extends CubeXClassBase {
 		
 		for(CubeXStatement stat : statements)
 		{
-			stat.typecheck(classCon, funCon, newVarCon, classTypeVarCon);
+			stat.typecheck(classCon, funCon, newVarCon, classTypeVarCon, true, this);
 		}
+		
+		definedFields.clear();
 		
 		CubeXType pConstructor = parentType.getConstructableComponent();
 		if(pConstructor==CubeXType.getThing())
@@ -173,12 +180,18 @@ public class CubeXClass extends CubeXClassBase {
 				CubeXExpression exp = thisArgIt.next();
 				CubeXType tpe = thatArgIt.next().type;
 				
-				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, classTypeVarCon), tpe, classCon))
+				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, classTypeVarCon, true, this), tpe, classCon))
 					throw new TypeCheckException();
 			}
 			
+			definedFields.addAll(pClass.getDeclaration(classCon).definedFields);
 		}
 		
+		for (String varName : newVarCon.getInnerMap().keySet())
+		{
+			definedFields.add(varName);
+		}
+			
 		FunctionContext innerFunCon = (FunctionContext)funCon.createChildContext();
 		
 		for(CubeXFunction f : functions)
@@ -195,6 +208,7 @@ public class CubeXClass extends CubeXClassBase {
 				CubeXFunction g = funCon.lookup(f.getName());
 				if(g!=null)
 					throw new TypeCheckException("Function not found in global");
+				f.setParent(this);
 				
 			}
 			innerFunCon.add(f.getName(), f);
@@ -226,7 +240,7 @@ public class CubeXClass extends CubeXClassBase {
 		for(CubeXFunction f : functions)
 		{
 			if(!f.isDeclaration())
-				f.typecheck(classCon, innerFunCon, newVarCon, classTypeVarCon);
+				f.typecheck(classCon, innerFunCon, newVarCon, classTypeVarCon, false, this);
 		}
 		
 		functions.addAll(noChecking);

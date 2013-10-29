@@ -73,13 +73,14 @@ public class CubeXFunctionCall extends CubeXExpression
 	}
 
 	@Override
-	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon) throws ContextException, TypeCheckException 
+	protected CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException 
 	{
 		CubeXFunction fun;
+	
 		//Object function calls
 		if(parent!=null)
 		{
-			CubeXType pType = parent.getType(classCon, funCon, varCon, typeVarCon);
+			CubeXType pType = parent.getType(classCon, funCon, varCon, typeVarCon, setField, par);
 			if(pType.isVariable())
 				throw new TypeCheckException("Parent type is variable");
 			
@@ -100,7 +101,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				CubeXExpression exp = argValuesIt.next();
 				CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(argExpectedTypesIt.next().type, classSub), funSub);
 				
-				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe, classCon))
+				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon, setField, par), tpe, classCon))
 					throw new TypeCheckException("BAD ARGUMENT TO FUNCTION CALL");
 			}
 			
@@ -130,7 +131,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					CubeXExpression exp = argValuesIt.next();
 					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
-					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe, classCon))
+					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon, setField, par), tpe, classCon))
 						throw new TypeCheckException("BAD ARGUMENT TO GLOBAL FUNCTION CALL");
 				}
 				
@@ -163,13 +164,23 @@ public class CubeXFunctionCall extends CubeXExpression
 					CubeXExpression exp = argValuesIt.next();
 					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
-					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon), tpe, classCon))
+					if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, typeVarCon, setField, par), tpe, classCon))
 						throw new TypeCheckException("BAD ARGUMENT TO CONSTRUCTOR CALL");
 				}
 				
 				return CubeXTypeClass.NewCubeXTypeClass(name, parameters);
 			}
 		}
+	}
+
+	@Override
+	public String preC() {
+		return "";
+	}
+
+	@Override
+	public String toC() {
+		// TODO Auto-generated method stub
 	}
 
 }

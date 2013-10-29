@@ -1,6 +1,7 @@
 package main.program;
 import java.util.ArrayList;
 
+import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -18,8 +19,9 @@ import main.util.Tuple;
 
 public class CubeXFunction extends CubeXProgramPiece
 {
-
+	private CubeXClassBase parentHolder;
 	private String name;
+	
 	private ArrayList<CubeXTypeVariable> types;
 
 	private ArrayList<CubeXArgument> arglist;
@@ -30,12 +32,23 @@ public class CubeXFunction extends CubeXProgramPiece
 
 	public CubeXFunction(CubeXFunctionHeader decl, CubeXStatement stat)
 	{
+		
 		name=decl.name;
 		types=decl.scheme.types;
 		arglist=decl.scheme.arglist;
 		returnType=decl.scheme.returnType;
+		parentHolder=null;
 		
 		statement=stat;
+	}
+	
+	public void setParent(CubeXClassBase p)
+	{
+		parentHolder=p;
+	}
+	public CubeXClassBase getParent()
+	{
+		return parentHolder;
 	}
 	
 	public CubeXFunction(CubeXFunctionHeader decl, CubeXExpression expr)
@@ -101,7 +114,7 @@ public class CubeXFunction extends CubeXProgramPiece
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException {
 		
 		//Assumes funs are already added to funcontext
 		
@@ -125,7 +138,7 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		returnType=CubeXType.validateType(returnType, false, classCon, funTypeVarCon);
 		
-		Tuple<Boolean, CubeXType> res = statement.typecheck(classCon, funCon, newVarCon, funTypeVarCon);
+		Tuple<Boolean, CubeXType> res = statement.typecheck(classCon, funCon, newVarCon, funTypeVarCon, setField, par);
 		if(!res.first)
 			throw new TypeCheckException();
 		
@@ -138,23 +151,25 @@ public class CubeXFunction extends CubeXProgramPiece
 	}
 
 	@Override
-	public void toC() {
+	public String toC() {
 		StringBuilder sb = new StringBuilder();
 		//TODO figure out how to add class name
-		sb.append(returnType.getTypedefName()).append(" _").append(name).append("(");
+		sb.append("object_t * ").append(CUtils.canonName(this)).append("(");
 		String separator = "";
 		for (CubeXArgument arg : arglist) {
-			sb.append(separator);
+			sb.append(separator).append(" object_t * ").append(" ").append(CUtils.canonName(arg.variable));
 			separator = ", ";
-			sb.append(arg.type.getTypedefName()).append(" ").append(arg.variable.getName());
 		}
 		sb.append(")");
 		
-		GlobalAwareness.declarationAppend(sb.toString() + ";");		
-		GlobalAwareness.codeAppend(sb.toString() + "{");
+		GlobalAwareness.declarationAppend(sb.toString() + ";");	
 		
-		statement.toC();
-		
-		GlobalAwareness.codeAppend("}");
+		sb.append("\n{\n").append(statement.preC()).append(";\n").append(statement.toC()).append("\n}\n");
+		return sb.toString();
+	}
+
+	@Override
+	public String preC() {
+		return "";
 	}
 }

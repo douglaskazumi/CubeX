@@ -316,7 +316,7 @@ public class CubeXProgram {
 				{
 					wasStatement=true;
 					CubeXStatement stat = (CubeXStatement)piece;
-					lastDidReturn=stat.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
+					lastDidReturn=stat.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null);
 				}
 				else
 				{
@@ -326,7 +326,7 @@ public class CubeXProgram {
 						GlobalContexts.variableContext.setMutable(false);
 						GlobalContexts.variableContext=GlobalContexts.variableContext.createChildContext();
 					}
-					piece.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
+					piece.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null);
 				}
 				
 				wasFunction = false;
@@ -360,7 +360,7 @@ public class CubeXProgram {
 				GlobalContexts.functionContext.add(f.getName(), f);
 			}
 			for (CubeXFunction f : curFunSet) {
-				f.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null));
+				f.typecheck(GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null);
 			}
 			curFunSet.clear();
 		}

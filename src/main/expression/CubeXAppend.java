@@ -6,6 +6,7 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.program.CubeXClassBase;
 import main.type.*;
 
 
@@ -27,9 +28,9 @@ public class CubeXAppend extends CubeXExpression {
 	}
 
 	@Override
-	protected CubeXType calculateType(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException, TypeCheckException {
-		CubeXType typeA=a.getType(classCon,funCon,varCon,typeVarCon);
-		CubeXType typeB=b.getType(classCon,funCon,varCon,typeVarCon);
+	protected CubeXType calculateType(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException {
+		CubeXType typeA=a.getType(classCon,funCon,varCon,typeVarCon, setField, par);
+		CubeXType typeB=b.getType(classCon,funCon,varCon,typeVarCon, setField, par);
 		CubeXType joinedType=CubeXType.join(typeA, typeB, classCon);
 		if (joinedType.isIterable())
 		{
@@ -55,6 +56,5 @@ public class CubeXAppend extends CubeXExpression {
 		return sb.toString();
 	}
 	
-
-	
 }
+	

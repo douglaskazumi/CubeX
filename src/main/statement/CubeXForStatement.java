@@ -7,6 +7,8 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXVariable;
+import main.program.CubeXClassBase;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
 import main.util.Tuple;
@@ -14,12 +16,14 @@ import main.util.Tuple;
 public class CubeXForStatement extends CubeXStatement {
 
 	private String variable;
+	private CubeXVariable actualVariable;
 	private CubeXExpression forexpression;
 	private CubeXStatement forbody;
 	
 	public CubeXForStatement(String variable, CubeXExpression forexpression, CubeXStatement forbody)
 	{
 		this.variable = variable;
+		this.actualVariable=new CubeXVariable(variable);
 		this.forbody = forbody;
 		this.forexpression = forexpression;
 	}
@@ -32,21 +36,35 @@ public class CubeXForStatement extends CubeXStatement {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
 	{
-		CubeXType forExprType = forexpression.getType(classCon, funCon, varCon, typeVarCon);
+		CubeXType forExprType = forexpression.getType(classCon, funCon, varCon, typeVarCon, setField, par);
 		if(!forExprType.isIterable())
 			throw new TypeCheckException();
 		CubeXTypeIterable forIterable = (CubeXTypeIterable)forExprType;
-		CubeXType innerType=forIterable.getInnerType();
-		
+		CubeXType innerType=forIterable.getInnerType();		
 		boolean mutable = varCon.isMutable();
 		VariableContext innerCon = (VariableContext)varCon.createChildContext();
 		innerCon.add(variable, innerType);
-		forbody.typecheck(classCon, funCon, innerCon, typeVarCon);
+		forbody.typecheck(classCon, funCon, innerCon, typeVarCon, false, par);
 		varCon.setMutable(mutable);
 		
 		return new Tuple<Boolean, CubeXType>(false, null);
+	}
+
+	@Override
+	public String preC() {
+		// TODO Auto-generated method stub
+		return forexpression.preC()+";\n";
+	}
+
+	@Override
+	public String toC() {
+		StringBuilder sb=new StringBuilder();
+		
+		sb.append("object_t value");
+		
+		return sb.toString();
 	}
 	
 }
