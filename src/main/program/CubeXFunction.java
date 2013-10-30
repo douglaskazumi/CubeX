@@ -154,7 +154,7 @@ public class CubeXFunction extends CubeXProgramPiece
 	public String toC() {
 		StringBuilder sb = new StringBuilder();
 		//TODO figure out how to add class name
-		sb.append("object_t * ").append(CUtils.canonName(this)).append("(");
+		sb.append("object_t * ").append(CUtils.canonName(this, false)).append("(");
 		String separator = "";
 		for (CubeXArgument arg : arglist) {
 			sb.append(separator).append(" object_t * ").append(" ").append(CUtils.canonName(arg.variable));

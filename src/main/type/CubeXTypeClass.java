@@ -88,7 +88,7 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		return classDeclaration;
 	}
 	
-	public TypeVarSubstitution geTypeVarSub(ClassContext classCon) throws ContextException
+	public TypeVarSubstitution getTypeVarSub(ClassContext classCon) throws ContextException
 	{
 		return new TypeVarSubstitution(getDeclaration(classCon).getTypes(),parameters);
 	}
@@ -109,7 +109,7 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		CubeXFunction fun = getDeclaration(classCon).getFunctionContext().lookup(name);
 		if(fun==null)
 			throw new ContextException();
-		return new Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase>(geTypeVarSub(classCon),fun, this);
+		return new Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase>(getTypeVarSub(classCon),fun, this);
 	}
 	
 	public String toString()

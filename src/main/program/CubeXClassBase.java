@@ -2,8 +2,12 @@ package main.program;
 
 import java.util.ArrayList;
 
+import main.c.VTable;
 import main.context.FunctionContext;
+import main.context.GlobalContexts;
+import main.exceptions.ContextException;
 import main.type.CubeXType;
+import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
 
 public abstract class CubeXClassBase extends CubeXProgramPiece {
@@ -81,6 +85,24 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 	{
 		return myFunctionContext;
 	}
+	
+	public void populateVTable(VTable vTable, CubeXClass startingClass, boolean ignoreParents) throws ContextException
+	{
 
+		if(!ignoreParents)
+		{
+			ArrayList<CubeXType> supers = CubeXType.getSuperTypes(parentType, GlobalContexts.classContext);
+			for(CubeXType supType : supers)
+			{
+				((CubeXClassBase)((CubeXTypeClassBase)supType).getDeclaration(GlobalContexts.classContext)).populateVTable(vTable, startingClass, true);
+			}
+		}
 
+		for(CubeXFunction fun : startingClass.functions)
+		{
+			vTable.addEntry(fun);
+		}
+		vTable.finishBase(this);
+
+	}
 }
