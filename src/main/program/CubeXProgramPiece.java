@@ -1,5 +1,7 @@
 package main.program;
 
+import java.util.HashSet;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -11,9 +13,14 @@ import main.util.Tuple;
 
 public abstract class CubeXProgramPiece 
 {
-	public abstract Tuple<Boolean, CubeXType> typecheck(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
+	protected HashSet<String>  locals = new HashSet<String>();
 
-	public abstract String preC();
+	public void addLocal(String name)
+	{
+		locals.add(name);
+	}
+	
+	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
 	
 	public abstract String toC();
 	
@@ -26,4 +33,6 @@ public abstract class CubeXProgramPiece
 	{
 		return false;
 	}
+
+	public abstract String preC();
 }

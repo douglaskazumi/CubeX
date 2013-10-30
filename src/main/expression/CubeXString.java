@@ -22,7 +22,7 @@ public class CubeXString extends CubeXExpression {
 	}
 
 	@Override
-	protected CubeXType calculateType(ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) {
+	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) {
 		return CubeXType.getString();
 	}
 

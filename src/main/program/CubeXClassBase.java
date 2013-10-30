@@ -8,6 +8,10 @@ import main.type.CubeXTypeVariable;
 
 public abstract class CubeXClassBase extends CubeXProgramPiece {
 
+	private static int curTypeID=5;
+	
+	protected int myTypeID;
+	
 	protected String name;
 	protected ArrayList<CubeXTypeVariable> types;
 	protected CubeXType parentType;
@@ -16,7 +20,10 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 
 	protected FunctionContext myFunctionContext;
 	
-	
+	public int getID()
+	{
+		return myTypeID;
+	}
 	
 	public CubeXClassBase(String name, ArrayList<CubeXTypeVariable> types, CubeXType parentType, ArrayList<CubeXFunction> functions)
 	{
@@ -31,6 +38,8 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		this.types = types;
 		this.parentType = parentType;
 		this.functions = functions;
+		this.myTypeID=curTypeID;
+		curTypeID+=1;
 	}
 
 	public ArrayList<CubeXFunction> getFunctions() {

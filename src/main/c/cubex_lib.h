@@ -8,7 +8,20 @@
 typedef char bool;
 
 typedef struct {
-	void **vTable;
+	void *iTable
+} vTable_t;
+
+typedef struct {
+	unsigned int numEntries
+} iTable_t;
+
+typedef struct {
+	unsigned int typeId;
+	unsigned int functionIndex;
+} iTableEntry_t;
+
+typedef struct {
+	void *vTable;
 	unsigned int refCount;
 	int numFields;
 } object_t;
@@ -16,21 +29,21 @@ typedef struct {
 /* Built in object sections */
 
 typedef struct {
-	void **vTable;
+	void *vTable;
 	unsigned int refCount;
 	int numFields;
 	signed int value;
 } integer_t;
 
 typedef struct {
-	void **vTable;
+	void *vTable;
 	unsigned int refCount;
 	int numFields;
 	bool value;
 } boolean_t;
 
 typedef struct {
-	void **vTable;
+	void *vTable;
 	unsigned int refCount;
 	int numFields;
 	char value;
@@ -41,7 +54,7 @@ typedef struct {
 typedef enum {RANGE, INFINITE, OBJECT, INPUT, STRING} iterableValue_t;
 
 typedef struct {
-	void **vTable;
+	void *vTable;
 	unsigned int refCount;
 	int numFields;
 	unsigned int numEntries;
@@ -109,4 +122,6 @@ object_t * createIterable_value(object_t *value, unsigned int startingRefs); //m
 object_t * createIterable_finiteInt(int first, int last, unsigned int startingRefs);
 object_t * createIterable_infiniteInt(int first, unsigned int startingRefs);
 
+
+void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionIndex);
 #endif

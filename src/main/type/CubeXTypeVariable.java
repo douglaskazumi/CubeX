@@ -2,12 +2,10 @@ package main.type;
 
 import java.util.ArrayList;
 
-import main.context.ClassContext;
-import main.exceptions.ContextException;
-import main.exceptions.TypeCheckException;
-import main.program.CubeXFunction;
-import main.util.Tuple;
-import main.util.TypeVarSubstitution;
+import main.context.*;
+import main.exceptions.*;
+import main.program.*;
+import main.util.*;
 
 public class CubeXTypeVariable extends CubeXType {
 
@@ -40,7 +38,7 @@ public class CubeXTypeVariable extends CubeXType {
 	}
 
 	@Override
-	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException
+	public Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException
 	{
 		throw new TypeCheckException();
 	}

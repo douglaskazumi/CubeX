@@ -7,7 +7,7 @@ import main.exceptions.TypeCheckException;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
-import main.util.Tuple;
+import main.util.Triple;
 import main.util.TypeVarSubstitution;
 
 
@@ -104,12 +104,12 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 	}
 
 	@Override
-	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException
+	public Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException
 	{
 		CubeXFunction fun = getDeclaration(classCon).getFunctionContext().lookup(name);
 		if(fun==null)
 			throw new ContextException();
-		return new Tuple<TypeVarSubstitution, CubeXFunction>(geTypeVarSub(classCon),fun);
+		return new Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase>(geTypeVarSub(classCon),fun, this);
 	}
 	
 	public String toString()

@@ -49,7 +49,7 @@ public class CubeXInterface extends CubeXClassBase {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
 	{
 		if (classCon.lookup(name)!=null)
 			throw new ContextException("Interface extends constructable");
@@ -86,7 +86,7 @@ public class CubeXInterface extends CubeXClassBase {
 		{
 			if(!f.isDeclaration())
 			{
-				f.typecheck(classCon, innerFunCon, newVarCon, classTypeVarCon, setField, this);
+				f.typecheck(force, classCon, innerFunCon, newVarCon, classTypeVarCon, setField, this);
 			}
 			else
 			{
@@ -106,6 +106,20 @@ public class CubeXInterface extends CubeXClassBase {
 		
 
 		
+		return null;
+	}
+
+
+	@Override
+	public String toC() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String preC() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

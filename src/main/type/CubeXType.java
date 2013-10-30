@@ -8,7 +8,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
-import main.util.Tuple;
+import main.util.Triple;
 import main.util.TypeVarSubstitution;
 
 public abstract class CubeXType
@@ -53,7 +53,7 @@ public abstract class CubeXType
 		return cubeXString;
 	}	
 	
-	public abstract Tuple<TypeVarSubstitution,CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException;
+	public abstract Triple<TypeVarSubstitution,CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException;
 	
 	public boolean isBool()
 	{

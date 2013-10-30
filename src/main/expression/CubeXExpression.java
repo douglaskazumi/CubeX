@@ -14,12 +14,21 @@ public abstract class CubeXExpression
 {
 	private CubeXType myType=null;
 	
-	public CubeXType getType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon, boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException
+	public CubeXType getType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon, boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException
 	{
-		return calculateType(classCon, funCon, varCon, typeVarCon, setField, par);
+		if(myType==null || force)
+		{
+			myType = calculateType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+		}
+		return myType;
 	}
 	
-	protected abstract CubeXType calculateType(ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
+	public CubeXType getType()
+	{
+		return myType;
+	}
+	
+	protected abstract CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
 	
 	public abstract String preC();
 	

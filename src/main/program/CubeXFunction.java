@@ -114,7 +114,7 @@ public class CubeXFunction extends CubeXProgramPiece
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException {
 		
 		//Assumes funs are already added to funcontext
 		
@@ -138,7 +138,7 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		returnType=CubeXType.validateType(returnType, false, classCon, funTypeVarCon);
 		
-		Tuple<Boolean, CubeXType> res = statement.typecheck(classCon, funCon, newVarCon, funTypeVarCon, setField, par);
+		Tuple<Boolean, CubeXType> res = statement.typecheck(force, classCon, funCon, newVarCon, funTypeVarCon, setField, par);
 		if(!res.first)
 			throw new TypeCheckException();
 		

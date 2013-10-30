@@ -5,10 +5,9 @@ public class Tuple<P,Q> {
 	public P first;
 	public Q second;
 	
-	public Tuple(P f, Q s)
+	public Tuple(P p, Q q)
 	{
-		first=f;
-		second=s;
+		first=p;
+		second=q;
 	}
-
 }

@@ -1,24 +1,15 @@
 package main.program;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
-import main.c.GlobalAwareness;
-import main.context.ClassContext;
-import main.context.FunctionContext;
-import main.context.TypeVariableContext;
-import main.context.VariableContext;
-import main.exceptions.ContextException;
-import main.exceptions.TypeCheckException;
-import main.expression.CubeXExpression;
-import main.expression.CubeXVariable;
-import main.statement.CubeXStatement;
-import main.type.CubeXType;
-import main.type.CubeXTypeClass;
-import main.type.CubeXTypeClassBase;
-import main.type.CubeXTypeVariable;
-import main.util.Tuple;
-import main.util.TypeVarSubstitution;
-
+import main.c.*;
+import main.context.*;
+import main.exceptions.*;
+import main.expression.*;
+import main.statement.*;
+import main.type.*;
+import main.util.*;
 
 public class CubeXClass extends CubeXClassBase {
 
@@ -30,6 +21,8 @@ public class CubeXClass extends CubeXClassBase {
 	public ArrayList<String> definedFields;	
 
 	private FunctionContext myFunctionContext;
+	
+	public HashSet<String> localVariables;
 	
 	public FunctionContext getFunctionContext()
 	{
@@ -127,7 +120,7 @@ public class CubeXClass extends CubeXClassBase {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
 	{
 		if (classCon.lookup(name)!=null)
 			throw new ContextException("Class already in context");
@@ -156,7 +149,7 @@ public class CubeXClass extends CubeXClassBase {
 		
 		for(CubeXStatement stat : statements)
 		{
-			stat.typecheck(classCon, funCon, newVarCon, classTypeVarCon, true, this);
+			stat.typecheck(force, classCon, funCon, newVarCon, classTypeVarCon, true, this);
 		}
 		
 		definedFields.clear();
@@ -180,7 +173,7 @@ public class CubeXClass extends CubeXClassBase {
 				CubeXExpression exp = thisArgIt.next();
 				CubeXType tpe = thatArgIt.next().type;
 				
-				if(!CubeXType.isSubType(exp.getType(classCon, funCon, varCon, classTypeVarCon, true, this), tpe, classCon))
+				if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, classTypeVarCon, true, this), tpe, classCon))
 					throw new TypeCheckException();
 			}
 			
@@ -198,7 +191,7 @@ public class CubeXClass extends CubeXClassBase {
 		{
 			if(f.isDeclaration())
 			{
-				Tuple<TypeVarSubstitution, CubeXFunction> methodTuple=parentType.methodLookup(f.getName(), classCon);
+				Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodTuple=parentType.methodLookup(f.getName(), classCon);
 				if(methodTuple.second==null)
 					throw new TypeCheckException("Function not found in parent");
 				f=methodTuple.second;
@@ -240,7 +233,7 @@ public class CubeXClass extends CubeXClassBase {
 		for(CubeXFunction f : functions)
 		{
 			if(!f.isDeclaration())
-				f.typecheck(classCon, innerFunCon, newVarCon, classTypeVarCon, false, this);
+				f.typecheck(force, classCon, innerFunCon, newVarCon, classTypeVarCon, false, this);
 		}
 		
 		functions.addAll(noChecking);
@@ -249,7 +242,7 @@ public class CubeXClass extends CubeXClassBase {
 	}
 
 	@Override
-	public void toC() {
+	public String toC() {
 		//define type
 		GlobalAwareness.codeAppend("typedef struct{");
 		GlobalAwareness.codeAppend("void **vTable;");
@@ -271,10 +264,20 @@ public class CubeXClass extends CubeXClassBase {
 		for(CubeXFunction fun : functions){
 			fun.toC();
 		}
+		return null;
 		
 		//create vtable
 		//TODO after defining function naming create pointer to vtable
 	}
 	
-	
+	public void generateVTable()
+	{
+		
+	}
+
+	@Override
+	public String preC() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

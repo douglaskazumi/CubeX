@@ -319,3 +319,25 @@ void memcpy(void * src, void * dest, unsigned int count)
 {
 	while (count--) *dest++ = *src++;
 }
+
+void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionIndex)
+{
+	void *vTablePtr = object_t->vTable;
+	void *iTablePtr = ((vTable_t *)(vTablePtr))->iTable;
+	unsigned int len = ((iTable_t *)iTablePtr)->numEntries;
+	iTableEntry_t *curPtr = (iTableEntry_t *)(((unsigned int *)iTablePtr)+1);
+
+	unsigned int funOffset=0;
+	for(int i=0; i<len; i++)
+	{
+		if(curPtr->typeId==myTypeId)
+		{
+			funOffset=curPtr->functionIndex;
+		}
+	}
+
+	if(funOffset==0)
+		return NULL;
+	else
+		return (vTablePtr+funOffset);
+}

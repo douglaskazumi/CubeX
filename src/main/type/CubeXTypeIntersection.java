@@ -6,7 +6,7 @@ import main.context.ClassContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXFunction;
-import main.util.Tuple;
+import main.util.Triple;
 import main.util.TypeVarSubstitution;
 
 public class CubeXTypeIntersection extends CubeXType {
@@ -35,9 +35,9 @@ public class CubeXTypeIntersection extends CubeXType {
 	}
 
 	@Override
-	public Tuple<TypeVarSubstitution, CubeXFunction> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException 
+	public Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException 
 	{
-		Tuple<TypeVarSubstitution, CubeXFunction> res = left.methodLookup(name, classCon);
+		Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res = left.methodLookup(name, classCon);
 		if(res.second==null)
 		{
 			res=right.methodLookup(name, classCon);

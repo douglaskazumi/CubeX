@@ -11,7 +11,6 @@ import main.program.CubeXFunction;
 
 public abstract class CubeXTypeClassBase extends CubeXType 
 {
-	
 	protected String name;
 	public String getName() {
 		return name;

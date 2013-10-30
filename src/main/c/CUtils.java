@@ -28,10 +28,12 @@ public class CUtils {
 	
 	
 	
-	public static String canonName(CubeXFunction fun)
+	public static String canonName(CubeXFunction fun, boolean constructor)
 	{
 		CubeXClassBase cb = fun.getParent();
 		StringBuilder sb = new StringBuilder();
+		if(constructor)
+			sb.append("c");
 		sb.append(canonName(cb)).append("_").append(fun.getName());
 		return sb.toString();
 	}

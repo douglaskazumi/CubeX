@@ -28,9 +28,9 @@ public class CubeXAppend extends CubeXExpression {
 	}
 
 	@Override
-	protected CubeXType calculateType(ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException {
-		CubeXType typeA=a.getType(classCon,funCon,varCon,typeVarCon, setField, par);
-		CubeXType typeB=b.getType(classCon,funCon,varCon,typeVarCon, setField, par);
+	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException {
+		CubeXType typeA=a.getType(force, classCon,funCon,varCon,typeVarCon, setField, par);
+		CubeXType typeB=b.getType(force, classCon,funCon,varCon,typeVarCon, setField, par);
 		CubeXType joinedType=CubeXType.join(typeA, typeB, classCon);
 		if (joinedType.isIterable())
 		{
