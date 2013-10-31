@@ -1,0 +1,4 @@
+if (false) {
+ return 5;
+}
+return ["hello"];

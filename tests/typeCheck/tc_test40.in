@@ -1,0 +1,19 @@
+# typechecker test program NUMBER (stage 6)
+
+interface Parent<T>
+{
+	fun getStr() : String;
+	fun idk(t : T) : Boolean;
+}
+
+class Child<A>() extends Parent<B>
+{
+	super();
+	fun getStr() : String
+	{
+		return "Howdy";
+	}
+	fun idk(a : A) : Boolean = true == true;
+}
+
+return ["hello"];

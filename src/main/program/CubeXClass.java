@@ -46,6 +46,8 @@ public class CubeXClass extends CubeXClassBase {
 		myFunctionContext=innerCon;
 	}
 	
+	
+	
 	public CubeXClass(String name, ArrayList<CubeXTypeVariable> types, ArrayList<CubeXArgument> constructorArgs, CubeXType parentType, ArrayList<CubeXStatement> stats, ArrayList<CubeXExpression> superArgs, ArrayList<CubeXFunction> functions)
 	{
 		super(name, types, parentType, functions);
@@ -132,8 +134,8 @@ public class CubeXClass extends CubeXClassBase {
 			classTypeVarCon.add(tvar.getName(), tvar);
 		}
 		
-		parentType=CubeXType.validateType(parentType, true, classCon, typeVarCon);
-
+		parentType=CubeXType.validateType(parentType, true, classCon, classTypeVarCon);
+		
 		classCon.add(name, this);
 		VariableContext newVarCon = (VariableContext)varCon.createChildContext();
 		
@@ -170,10 +172,11 @@ public class CubeXClass extends CubeXClassBase {
 			Iterator<? extends CubeXArgument> thatArgIt = expectedSuperArgs.iterator();
 			while(thisArgIt.hasNext())
 			{
-				CubeXExpression exp = thisArgIt.next();
-				CubeXType tpe = thatArgIt.next().type;
+				CubeXExpression exp = thisArgIt.next();			
+				TypeVarSubstitution clSub = ((CubeXTypeClass)this.getParentType().getConstructableComponent()).getTypeVarSub(classCon);
+				CubeXType tpe = CubeXType.makeSubstitution(thatArgIt.next().type, clSub);
 				
-				if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, classTypeVarCon, true, this), tpe, classCon))
+				if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, newVarCon, classTypeVarCon, true, this), tpe, classCon))
 					throw new TypeCheckException();
 			}
 			
@@ -202,6 +205,48 @@ public class CubeXClass extends CubeXClassBase {
 				if(g!=null)
 					throw new TypeCheckException("Function not found in global");
 				f.setParent(this);
+				
+				try
+				{
+					if(!parentType.isThing() && !parentType.isVariable())
+					{
+					
+						Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodTuple=parentType.methodLookup(f.getName(), classCon);
+						CubeXFunction overLoadedFunction = methodTuple.second;
+						TypeVarSubstitution cbSub = null;
+
+						ArrayList<CubeXType> parentParents = CubeXType.getSuperTypes(parentType, classCon);
+						CubeXClassBase funParent = overLoadedFunction.getParent();
+						for(CubeXType p : parentParents)
+						{
+							if(((CubeXTypeClassBase)p).getName().equals(funParent.getName()))	
+							{
+								cbSub=((CubeXTypeClassBase)p).getTypeVarSub(classCon);
+								break;
+							}
+						}
+						
+						CubeXType substitutedType = CubeXType.makeSubstitution(overLoadedFunction.getReturnType(), cbSub);
+						if(!CubeXType.isSubType(substitutedType, f.getReturnType(), classCon) && !CubeXType.isSubType(f.getReturnType(),substitutedType, classCon))
+							throw new TypeCheckException("Overloading function");
+						
+						if(overLoadedFunction.getArglist().size()!=f.getArglist().size())
+							throw new TypeCheckException("Overloading function");
+						
+						for(int i=0; i<overLoadedFunction.getArglist().size(); i++)
+						{
+							CubeXType overArgType = overLoadedFunction.getArglist().get(i).type;
+							CubeXType argType = f.getArglist().get(i).type;
+							substitutedType = CubeXType.makeSubstitution(overArgType, cbSub);
+							if(!CubeXType.isSubType(argType, substitutedType, classCon) && !CubeXType.isSubType(substitutedType, argType, classCon))
+								throw new TypeCheckException("Overloading function");
+							
+						}
+					}
+				}
+				catch(ContextException e)
+				{					
+				}
 				
 			}
 			innerFunCon.add(f.getName(), f);
@@ -243,6 +288,8 @@ public class CubeXClass extends CubeXClassBase {
 
 	@Override
 	public String toC() {
+		//DONT REALL NEED THIS ANYWMORE
+		
 		//define type
 		GlobalAwareness.codeAppend("typedef struct{");
 		GlobalAwareness.codeAppend("void **vTable;");
@@ -254,7 +301,7 @@ public class CubeXClass extends CubeXClassBase {
 				//TODO generate code for iterable class argument
 			} else {
 				//TODO check for fields inside statments
-				GlobalAwareness.codeAppend(arg.type.getTypedefName() + " *" + arg.variable.getName() + ";");
+				GlobalAwareness.codeAppend(/*arg.type.getTypedefName() + */" *" + arg.variable.getName() + ";");
 			}
 		}
 		

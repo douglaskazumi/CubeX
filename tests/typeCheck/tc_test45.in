@@ -1,0 +1,11 @@
+class Singleton<A>(a : A) {
+  fun get() : A { return a; }
+}
+
+class SettableSingleton<B>(b : B) extends Singleton<B> {
+  super(b);
+
+  fun set(b : B) : SettableSingleton<B> = SettableSingleton<B>(b);
+}
+x := SettableSingleton<String>("hello").set("foo").get();
+return [x];

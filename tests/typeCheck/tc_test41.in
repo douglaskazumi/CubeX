@@ -1,0 +1,14 @@
+# typechecker test program NUMBER (stage 6)
+
+interface ToTheMax<T>
+{
+	fun id(t : T) : T;
+}
+
+class ToTheMin<T>() extends ToTheMax
+{
+	super();
+	fun id(t : T) : T = t;
+}
+
+return ["hello hello"];

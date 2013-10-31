@@ -31,6 +31,10 @@ public class CubeXAppend extends CubeXExpression {
 	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException {
 		CubeXType typeA=a.getType(force, classCon,funCon,varCon,typeVarCon, setField, par);
 		CubeXType typeB=b.getType(force, classCon,funCon,varCon,typeVarCon, setField, par);
+		if (typeA.equals(CubeXType.getString()))
+			typeA=new CubeXTypeIterable(CubeXType.getCharacter());
+		if (typeB.equals(CubeXType.getString()))
+			typeB=new CubeXTypeIterable(CubeXType.getCharacter());
 		CubeXType joinedType=CubeXType.join(typeA, typeB, classCon);
 		if (joinedType.isIterable())
 		{

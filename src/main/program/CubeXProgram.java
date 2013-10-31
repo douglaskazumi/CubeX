@@ -61,26 +61,30 @@ public class CubeXProgram {
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 
 		// Boolean
-		funs = defineBooleanFunctions();
-		newClass = new CubeXClass("Boolean", null, null, CubeXType.getThing(), null, null, funs);
+		newClass = new CubeXClass("Boolean", null, null, CubeXType.getThing(), null, null, null);
+		funs = defineBooleanFunctions(newClass);
+		newClass.setFunctions(funs);
 		newClass.setFunctionContextManual(funs, GlobalContexts.functionContext);
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 		
 		// Integer
-		funs = defineIntegerFunctions();
-		newClass = new CubeXClass("Integer", null, null, CubeXType.getThing(), null, null, funs);
+		newClass = new CubeXClass("Integer", null, null, CubeXType.getThing(), null, null, null);
+		funs = defineIntegerFunctions(newClass);
+		newClass.setFunctions(funs);
 		newClass.setFunctionContextManual(funs, GlobalContexts.functionContext);
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 		
 		//Character
-		funs = defineCharFunctions();
-		newClass = new CubeXClass("Character", null, null, CubeXType.getThing(), null, null, funs);
+		newClass = new CubeXClass("Character", null, null, CubeXType.getThing(), null, null, null);
+		funs = defineCharFunctions(newClass);
+		newClass.setFunctions(funs);
 		newClass.setFunctionContextManual(funs, GlobalContexts.functionContext);
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 		
 		//String
-		funs = defineStringFunctions();
-		newClass = new CubeXClass("String", null, null, new CubeXTypeIterable(CubeXType.getCharacter()), null, null, funs);
+		newClass = new CubeXClass("String", null, null, new CubeXTypeIterable(CubeXType.getCharacter()), null, null, null);
+		funs = defineStringFunctions(newClass);
+		newClass.setFunctions(funs);
 		newClass.setFunctionContextManual(funs, GlobalContexts.functionContext);
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 		
@@ -114,7 +118,7 @@ public class CubeXProgram {
 		GlobalContexts.functionContext.add(newFunction.getName(), newFunction);
 	}
 	
-	private ArrayList<CubeXFunction> defineStringFunctions() {
+	private ArrayList<CubeXFunction> defineStringFunctions(CubeXClass clss) {
 		ArrayList<CubeXFunction> functions = new ArrayList<CubeXFunction>();
 		CubeXFunction newFunction;
 		CubeXScheme newScheme;
@@ -126,18 +130,21 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("equals", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
+		
 		
 		return functions;
 	}
 	
-	private ArrayList<CubeXFunction> defineCharFunctions() {
+	private ArrayList<CubeXFunction> defineCharFunctions(CubeXClass clss) {
 		ArrayList<CubeXFunction> functions = new ArrayList<CubeXFunction>();
 		CubeXFunction newFunction;
 		CubeXScheme newScheme;
 		
 		newScheme = new CubeXScheme(null, null, CubeXType.getInteger());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("unicode", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -147,18 +154,20 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("equals", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 		
 		return functions;
 	}
 	
-	private ArrayList<CubeXFunction> defineIntegerFunctions() {
+	private ArrayList<CubeXFunction> defineIntegerFunctions(CubeXClass clss) {
 		ArrayList<CubeXFunction> functions = new ArrayList<CubeXFunction>();
 		CubeXFunction newFunction;
 		CubeXScheme newScheme;
 		
 		newScheme = new CubeXScheme(null, null, CubeXType.getInteger());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("negative", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -168,6 +177,7 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getInteger());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("times", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -177,6 +187,7 @@ public class CubeXProgram {
 											)), 
 									new CubeXTypeIterable(CubeXType.getInteger()));
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("divide", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -186,6 +197,7 @@ public class CubeXProgram {
 											)), 
 									new CubeXTypeIterable(CubeXType.getInteger()));
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("modulo", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -195,6 +207,7 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getInteger());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("plus", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -204,20 +217,22 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getInteger());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("minus", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 		
-		commonMethods(functions,CubeXType.getInteger());
+		commonMethods(functions,CubeXType.getInteger(),clss);
 
 		return functions;
 	}
 
-	private ArrayList<CubeXFunction> defineBooleanFunctions() {
+	private ArrayList<CubeXFunction> defineBooleanFunctions(CubeXClass clss) {
 		ArrayList<CubeXFunction> functions = new ArrayList<CubeXFunction>();
 		CubeXFunction newFunction;
 		CubeXScheme newScheme;
 		
 		newScheme = new CubeXScheme(null, null, CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("negate", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -227,6 +242,7 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("and", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -236,14 +252,15 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("or", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
-		commonMethods(functions,CubeXType.getBoolean());
+		commonMethods(functions,CubeXType.getBoolean(), clss);
 		
 		return functions;
 	}
 
-	public void commonMethods(ArrayList<CubeXFunction> functions, CubeXType T) {
+	public void commonMethods(ArrayList<CubeXFunction> functions, CubeXType T, CubeXClass clss) {
 		CubeXFunction newFunction;
 		CubeXScheme newScheme;
 		newScheme = new CubeXScheme(null, 
@@ -255,6 +272,7 @@ public class CubeXProgram {
 											)), 
 									new CubeXTypeIterable(T));
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("through", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -264,6 +282,7 @@ public class CubeXProgram {
 											)), 
 									new CubeXTypeIterable(T));
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("onwards", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -274,6 +293,7 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("lessThan", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
 
 		newScheme = new CubeXScheme(null, 
@@ -283,7 +303,9 @@ public class CubeXProgram {
 											)), 
 									CubeXType.getBoolean());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("equals", newScheme));
+		newFunction.setParent(clss);
 		functions.add(newFunction);
+		
 	}
 
 	public boolean typeCheck(){
@@ -317,6 +339,8 @@ public class CubeXProgram {
 					wasStatement=true;
 					CubeXStatement stat = (CubeXStatement)piece;
 					lastDidReturn=stat.typecheck(false, GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null);
+					if(lastDidReturn.first && (!lastDidReturn.second.isIterable() || !((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString()))
+						throw new TypeCheckException("Final return not a Iterable<String>");
 				}
 				else
 				{

@@ -8,6 +8,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
+import main.util.TypeVarSubstitution;
 
 public abstract class CubeXTypeClassBase extends CubeXType 
 {
@@ -26,6 +27,7 @@ public abstract class CubeXTypeClassBase extends CubeXType
 		this.parameters = parameters;
 	}
 	
+	
 	public static CubeXTypeClassBase NewCubeXTypeClassBase(String name, ArrayList<? extends CubeXType> parameters) throws TypeCheckException
 	{
 		return null;
@@ -42,6 +44,16 @@ public abstract class CubeXTypeClassBase extends CubeXType
 	
 	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
 		return getDeclaration(classCon).getFunctions();
+	}
+	
+	public TypeVarSubstitution getTypeVarSub(ClassContext classCon) throws ContextException
+	{
+		return new TypeVarSubstitution(getDeclaration(classCon).getTypes(),parameters);
+	}
+	
+	public CubeXType getParent(ClassContext classCon) throws TypeCheckException, ContextException
+	{
+		return CubeXType.makeSubstitution(getDeclaration(classCon).getParentType(), getTypeVarSub(classCon));
 	}
 	
 	public boolean equals(CubeXType other)

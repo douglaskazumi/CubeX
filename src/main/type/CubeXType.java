@@ -13,10 +13,7 @@ import main.util.TypeVarSubstitution;
 
 public abstract class CubeXType
 {
-	public String getTypedefName() {
-		return this.toString().toLowerCase() + "_t";
-	}
-	
+
 	public static CubeXTypeBoolean cubeXBool = new CubeXTypeBoolean();
 	public static CubeXTypeBoolean getBoolean()
 	{
@@ -124,7 +121,7 @@ public abstract class CubeXType
 	
 	
 	
-	public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon) throws ContextException {
+	public static CubeXType join(CubeXType a, CubeXType b, ClassContext classCon) throws ContextException, TypeCheckException {
 		if(a.isNothing())
 			return b;
 		if(b.isNothing())
@@ -188,6 +185,9 @@ public abstract class CubeXType
 	
 	public static CubeXType makeSubstitution(CubeXType type,TypeVarSubstitution sub) throws TypeCheckException
 	{
+		if (sub==null)
+			return type;
+		
 		if(type.isVariable())
 		{
 			CubeXType res = sub.get((CubeXTypeVariable)type);
@@ -261,6 +261,9 @@ public abstract class CubeXType
 				newParameters.add(validateType(t, false, classCon, typeVarCon));
 			}
 			typeBase.parameters=newParameters;
+			if(typeBase.getDeclaration(classCon).getRequiredNumParameters()!=typeBase.parameters.size())
+				throw new TypeCheckException("Wrong number of parametrs");
+				
 			return typeBase;
 		}
 
@@ -295,6 +298,14 @@ public abstract class CubeXType
 				}
 			}
 		}
+		
+		if(type.isVariable())
+		{
+			CubeXTypeVariable varType = (CubeXTypeVariable)type;
+			if(typeVarCon.lookup(varType.getName())==null)
+				throw new TypeCheckException();
+		}
+		
 		return type;
 	}
 	
@@ -306,8 +317,9 @@ public abstract class CubeXType
 	 * @param parent
 	 * @return True if it is.
 	 * @throws ContextException 
+	 * @throws TypeCheckException 
 	 */
-	public static boolean isSubType(CubeXType child, CubeXType parent, ClassContext classCon) throws ContextException
+	public static boolean isSubType(CubeXType child, CubeXType parent, ClassContext classCon) throws ContextException, TypeCheckException
 	{
 		if(child.isNothing())
 			return true;
@@ -370,9 +382,9 @@ public abstract class CubeXType
 	}
 
 
-	public static ArrayList<CubeXType> getSuperTypes(CubeXType type, ClassContext classCon) throws ContextException {
+	public static ArrayList<CubeXType> getSuperTypes(CubeXType type, ClassContext classCon) throws ContextException, TypeCheckException {
 		
-		ArrayList<CubeXType> supers =new ArrayList<CubeXType>();
+ 		ArrayList<CubeXType> supers =new ArrayList<CubeXType>();
 	
 		if(type.isVariable())
 		{
@@ -381,7 +393,8 @@ public abstract class CubeXType
 		if(type.isClass()||type.isInterface())
 		{
 			supers.add(type);
-			supers.addAll(getSuperTypes(((CubeXTypeClassBase)type).getDeclaration(classCon).getParentType(),classCon));
+			
+			supers.addAll(getSuperTypes(((CubeXTypeClassBase)type).getParent(classCon),classCon));
 		}
 		else if(type.isIntersection())
 		{

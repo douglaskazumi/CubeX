@@ -1,17 +1,22 @@
-class Bb<T>()
+class Bb<T>(x : T)
 {
 	super();
+	
+	fun getT (t : T) : Iterable<T> = [t];
+	
 	fun tasticb() : Iterable<T>
 	{
+		
+	
 		if(true)
 		{
-			return ["helloworld"];
+			return getT(x);
 		}
 		else
 		{
-			return 7;
+			return getT(x);
 		}
 	}
 }
 
-return Bb<String>().tasticb();
+return Bb<String>("hi").tasticb();

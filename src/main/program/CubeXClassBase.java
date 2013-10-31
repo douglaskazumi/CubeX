@@ -6,6 +6,7 @@ import main.c.VTable;
 import main.context.FunctionContext;
 import main.context.GlobalContexts;
 import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.type.CubeXType;
 import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
@@ -29,6 +30,16 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		return myTypeID;
 	}
 	
+	public void setFunctions(ArrayList<CubeXFunction> funs)
+	{
+		this.functions=funs; 
+	}
+	
+	public int getRequiredNumParameters()
+	{
+		return types.size();
+	}
+	
 	public CubeXClassBase(String name, ArrayList<CubeXTypeVariable> types, CubeXType parentType, ArrayList<CubeXFunction> functions)
 	{
 		if(parentType==null)
@@ -40,6 +51,7 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		
 		this.name = name;
 		this.types = types;
+		
 		this.parentType = parentType;
 		this.functions = functions;
 		this.myTypeID=curTypeID;
@@ -70,6 +82,7 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		return types;
 	}
 
+	
 
 	public CubeXType getParentType() {
 		return parentType;
@@ -86,7 +99,7 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		return myFunctionContext;
 	}
 	
-	public void populateVTable(VTable vTable, CubeXClass startingClass, boolean ignoreParents) throws ContextException
+	public void populateVTable(VTable vTable, CubeXClass startingClass, boolean ignoreParents) throws ContextException, TypeCheckException
 	{
 
 		if(!ignoreParents)

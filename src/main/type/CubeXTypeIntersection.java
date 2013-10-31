@@ -37,16 +37,23 @@ public class CubeXTypeIntersection extends CubeXType {
 	@Override
 	public Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException 
 	{
-		Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res = left.methodLookup(name, classCon);
-		if(res.second==null)
+		try
 		{
-			res=right.methodLookup(name, classCon);
-			if(res.second==null)
+			Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res = left.methodLookup(name, classCon);
+			return res;
+		}
+		catch(ContextException e)
+		{
+			try
 			{
-				throw new TypeCheckException();
+				Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res = right.methodLookup(name, classCon);
+				return res;
 			}
-		}		
-		return res;
+			catch(ContextException ee)
+			{
+			}
+		}
+		throw new ContextException("Not found in either intersection");
 	}
 	
 	public CubeXType getConstructableComponent()

@@ -8,6 +8,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.type.CubeXType;
+import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
 import main.util.Tuple;
 
@@ -79,7 +80,28 @@ public class CubeXInterface extends CubeXClassBase {
 			innerFunCon.add(f.getName(), f);
 			
 		}
-				
+		
+		ArrayList<CubeXType> parents = CubeXType.getSuperTypes(parentType,classCon);
+		ArrayList<CubeXFunction> noChecking = new ArrayList<CubeXFunction>();
+		for(CubeXType pp : parents)
+		{
+			if(pp.isVariable())
+				throw new TypeCheckException("Parent is variable");
+			CubeXTypeClassBase p = (CubeXTypeClassBase)pp;
+			
+			p.getTypeVarSub(classCon);
+			
+			for(CubeXFunction pFun : p.getDeclaration(classCon).functions)
+			{
+				CubeXFunction testFun = innerFunCon.lookup(pFun.getName());
+				if(testFun==null)
+				{
+					noChecking.add(pFun);
+					innerFunCon.add(pFun.getName(), pFun);
+				}
+			}
+			
+		}
 		this.myFunctionContext=innerFunCon;
 		
 		for(CubeXFunction f : functions)
