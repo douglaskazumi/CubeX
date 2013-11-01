@@ -28,22 +28,6 @@ public class CubeXIfStatement extends CubeXStatement {
 		this.elsestatement = elsestatement;
 	}
 
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("if ( ").append(condition.toString()).append(" ) ").append(ifstatement.toString()).append(" else ");
-		if(elsestatement!=null)
-		{
-			sb.append(elsestatement.toString());
-		}
-		else
-		{
-			sb.append("{ }");
-		}
-		
-		return sb.toString();
-	}
-
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException {
 		
@@ -97,14 +81,30 @@ public class CubeXIfStatement extends CubeXStatement {
 	}
 
 	@Override
-	public String toC(CubeXProgramPiece par) {
+	public String preC() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String preC() {
+	public String toC(CubeXProgramPiece par) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("if ( ").append(condition.toString()).append(" ) ").append(ifstatement.toString()).append(" else ");
+		if(elsestatement!=null)
+		{
+			sb.append(elsestatement.toString());
+		}
+		else
+		{
+			sb.append("{ }");
+		}
+		
+		return sb.toString();
 	}
 }

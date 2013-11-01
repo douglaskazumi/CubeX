@@ -41,31 +41,6 @@ public class CubeXFunctionCall extends CubeXExpression
 		this(parent, name, null, new ArrayList<CubeXExpression>(Arrays.asList(arg)));
 	}
 	
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		if(parent!=null)
-			sb.append(parent.toString()).append(" . ");
-		
-		sb.append(name).append(" < ");
-		String prefix ="";
-		for(CubeXType t : parameters)
-		{
-			sb.append(prefix).append(t.toString()).append(" ");
-			prefix=", ";
-		}
-		sb.append("> ( ");
-		
-		prefix ="";
-		for(CubeXExpression expr : args)
-		{
-			sb.append(prefix).append(expr.toString()).append(" ");
-			prefix=", ";
-		}
-		sb.append(")");
-		return sb.toString();
-	}
-
 	@Override
 	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException 
 	{
@@ -223,7 +198,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			if(parent!=null) //e.fun();
 			{
 	
-					Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res =  parent.getType().methodLookup(name, GlobalContexts.classContext);
+					Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res =  parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext);
 					CubeXClassBase cb = (CubeXClassBase)res.third.getDeclaration(GlobalContexts.classContext);
 					
 					ArrayList<CubeXFunction> funs = cb.getFunctions();
@@ -288,6 +263,31 @@ public class CubeXFunctionCall extends CubeXExpression
 		{
 			e.printStackTrace();
 		}
+		return sb.toString();
+	}
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		if(parent!=null)
+			sb.append(parent.toString()).append(" . ");
+		
+		sb.append(name).append(" < ");
+		String prefix ="";
+		for(CubeXType t : parameters)
+		{
+			sb.append(prefix).append(t.toString()).append(" ");
+			prefix=", ";
+		}
+		sb.append("> ( ");
+		
+		prefix ="";
+		for(CubeXExpression expr : args)
+		{
+			sb.append(prefix).append(expr.toString()).append(" ");
+			prefix=", ";
+		}
+		sb.append(")");
 		return sb.toString();
 	}
 

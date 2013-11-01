@@ -15,14 +15,7 @@ public abstract class CubeXProgramPiece
 {
 	protected HashSet<String>  locals = new HashSet<String>();
 
-	public void addLocal(String name)
-	{
-		locals.add(name);
-	}
-	
 	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
-	
-	public abstract String toC();
 	
 	public boolean isFunction()
 	{
@@ -34,5 +27,12 @@ public abstract class CubeXProgramPiece
 		return false;
 	}
 
+	public void addLocal(String name)
+	{
+		locals.add(name);
+	}
+
 	public abstract String preC();
+
+	public abstract String toC();
 }

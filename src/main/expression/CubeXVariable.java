@@ -25,21 +25,6 @@ public class CubeXVariable extends CubeXExpression
 		parent=null;
 	}
 		
-	public String toString()
-	{
-		return name;
-	}
-	
-	public boolean isField() {
-		return isField;
-	}
-	
-	private void setIsField(CubeXClassBase p)
-	{
-		parent=(CubeXClass) p;
-		isField=true;
-	}
-
 	@Override
 	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException
 	{
@@ -50,6 +35,20 @@ public class CubeXVariable extends CubeXExpression
 		return varType;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public boolean isField() {
+		return isField;
+	}
+
+	private void setIsField(CubeXClassBase p)
+	{
+		parent=(CubeXClass) p;
+		isField=true;
+	}
+
 	public void trySetField(boolean setField, CubeXClassBase par)
 	{
 		if(setField)
@@ -64,10 +63,6 @@ public class CubeXVariable extends CubeXExpression
 					this.setIsField(par);
 			}
 		}
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	@Override
@@ -87,5 +82,10 @@ public class CubeXVariable extends CubeXExpression
 			sb.append(CUtils.canonName(name));
 		}
 		return sb.toString();
+	}
+
+	public String toString()
+	{
+		return name;
 	}
 }

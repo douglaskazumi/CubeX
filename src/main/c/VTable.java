@@ -10,20 +10,20 @@ import main.program.CubeXFunction;
 
 public class VTable {
 	
-	InterfaceTable iTable;
-	ArrayList<VTableEntry> entries;
-	
-	int numSinceLastAdd=0;
+	private InterfaceTable iTable;
+	private ArrayList<CubeXFunction> entries;
+	private CubeXClass host;	
+	private int numSinceLastAdd=0;
 
-	private VTable()
+	private VTable(CubeXClass clss)
 	{
 		iTable= new InterfaceTable();
-
+		host = clss;
 	}
 	
 	public static VTable getVTable(CubeXClass clss) throws TypeCheckException
 	{
-		VTable vTable = new VTable();
+		VTable vTable = new VTable(clss);
 		try
 		{
 			clss.populateVTable(vTable, clss, false);
@@ -43,22 +43,49 @@ public class VTable {
 	
 	public void addEntry(CubeXFunction fun)
 	{
-		entries.add(new VTableEntry(fun));
+		entries.add(fun);
 		numSinceLastAdd+=1;
 	}
 	
-	
-	
-}
-
-class VTableEntry {
-	
-	private CubeXFunction func;
-
-	public VTableEntry(CubeXFunction fun)
+	/*
+	 * variable to be declared before this block
+	 * vTable_t * vtable;
+	 * iTable_t * itable;
+	 * iTableEntry_t *curEntry;
+	 * func * curVEntry;
+	 * 
+	 * GLOBALS VARIABLE vTable_t * vt_CLASSNAME; for each class
+	 * 
+	 */
+	public String toC()
 	{
-		func=fun;
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("vtable = x3malloc(sizeof(vTable_t) + ").append(entries.size()).append("*sizeof(void *) + ").append(host.definedFields.size()).append("*sizeof(object_t *));\n");
+		sb.append("itable = x3malloc(sizeof(iTable_t) + ").append(iTable.getSize()).append("*sizeof(iTableEntry_t));\n");
+		sb.append("itable->numEntries = ").append(iTable.getSize()).append(";\n");
+		sb.append("curEntry = (iTableEntry_t *)(itable+1);\n");
+		
+		for(InterfaceTableEntry entry : iTable.entries)
+		{
+			sb.append("curEntry->typeID = ").append(entry.classBase.getID()).append(";\n");
+			sb.append("curEntry->functionIndex = ").append(entry.offset).append(";\n");
+			sb.append("curEntry++;\n");
+		}
+		
+		sb.append("vtable->iTable = itable;\n");
+		sb.append("curVEntry = (func *)(vtable+1);\n");
+		
+		for(CubeXFunction fun : entries)
+		{
+			sb.append("*(curVEntry)=(func)(").append(CUtils.canonName(fun, false)).append(");\n");
+			sb.append("curVEntry++;\n");
+		}
+		
+		sb.append("vt_").append(host.getName()).append(" = vtable;\n");
+		return sb.toString();
 	}
 	
-
+	
+	
 }

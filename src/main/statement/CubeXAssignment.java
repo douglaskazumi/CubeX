@@ -28,13 +28,6 @@ public class CubeXAssignment extends CubeXStatement {
 		this.variable=new CubeXVariable(name);
 	}
 
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(name).append(" := ").append(expr.toString()).append(" ;");
-		return sb.toString();
-	}
-
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException {
 		
@@ -52,6 +45,12 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
+	public String preC() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public String toC(CubeXProgramPiece par) 
 	{
 		if(!variable.isField())
@@ -59,10 +58,11 @@ public class CubeXAssignment extends CubeXStatement {
 		return null;
 	}
 
-	@Override
-	public String preC() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(name).append(" := ").append(expr.toString()).append(" ;");
+		return sb.toString();
 	}
 
 	

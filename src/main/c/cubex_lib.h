@@ -5,14 +5,17 @@
 #define false 0
 #define NULL 0
 
+typedef int* func;
+
 typedef char bool;
 
 typedef struct {
-	void *iTable
+	void *iTable;
+	object_t * fields;
 } vTable_t;
 
 typedef struct {
-	unsigned int numEntries
+	unsigned int numEntries;
 } iTable_t;
 
 typedef struct {

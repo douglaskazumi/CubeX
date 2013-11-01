@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 
 
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -25,20 +26,6 @@ public class CubeXIterable extends CubeXExpression
 		this.entries = entries;
 	}
 	
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("[ ");
-		String prefix="";
-		for (CubeXExpression expr : entries)
-		{
-			sb.append(prefix).append(expr.toString()).append(" ");
-			prefix=", ";
-		}
-		sb.append("]");
-		return sb.toString();
-	}
-
 	@Override
 	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException
 	{
@@ -72,5 +59,19 @@ public class CubeXIterable extends CubeXExpression
 			sbpost.append(")");
 		}
 		return sbpre.append(sbpost).toString();
+	}
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("[ ");
+		String prefix="";
+		for (CubeXExpression expr : entries)
+		{
+			sb.append(prefix).append(expr.toString()).append(" ");
+			prefix=", ";
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }

@@ -33,6 +33,20 @@ public abstract class CubeXTypeClassBase extends CubeXType
 		return null;
 	}
 	
+	public CubeXType getParent(ClassContext classCon) throws TypeCheckException, ContextException
+	{
+		return CubeXType.makeSubstitution(getDeclaration(classCon).getParentType(), getTypeVarSub(classCon));
+	}
+
+
+	public abstract CubeXClassBase getDeclaration(ClassContext classCon) throws ContextException;
+
+
+	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
+		return getDeclaration(classCon).getFunctions();
+	}
+
+
 	public CubeXTypeClassBase getActualType(ClassContext classCon) throws ContextException
 	{
 		if(!isClass())
@@ -40,20 +54,9 @@ public abstract class CubeXTypeClassBase extends CubeXType
 		return ((CubeXTypeClass)this).getActualType(classCon);
 	}
 	
-	public abstract CubeXClassBase getDeclaration(ClassContext classCon) throws ContextException;
-	
-	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
-		return getDeclaration(classCon).getFunctions();
-	}
-	
 	public TypeVarSubstitution getTypeVarSub(ClassContext classCon) throws ContextException
 	{
 		return new TypeVarSubstitution(getDeclaration(classCon).getTypes(),parameters);
-	}
-	
-	public CubeXType getParent(ClassContext classCon) throws TypeCheckException, ContextException
-	{
-		return CubeXType.makeSubstitution(getDeclaration(classCon).getParentType(), getTypeVarSub(classCon));
 	}
 	
 	public boolean equals(CubeXType other)

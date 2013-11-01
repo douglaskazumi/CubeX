@@ -25,21 +25,6 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 
 	protected FunctionContext myFunctionContext;
 	
-	public int getID()
-	{
-		return myTypeID;
-	}
-	
-	public void setFunctions(ArrayList<CubeXFunction> funs)
-	{
-		this.functions=funs; 
-	}
-	
-	public int getRequiredNumParameters()
-	{
-		return types.size();
-	}
-	
 	public CubeXClassBase(String name, ArrayList<CubeXTypeVariable> types, CubeXType parentType, ArrayList<CubeXFunction> functions)
 	{
 		if(parentType==null)
@@ -58,20 +43,35 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		curTypeID+=1;
 	}
 
-	public ArrayList<CubeXFunction> getFunctions() {
-		return functions;
-	}
-
-	
 	public boolean isClass()
 	{
 		return false;
 	}
-	
+
 	public boolean isInterface()
 	{
 		return false;
 	}
+
+	public int getID()
+	{
+		return myTypeID;
+	}
+	
+	public void setFunctions(ArrayList<CubeXFunction> funs)
+	{
+		this.functions=funs; 
+	}
+	
+	public int getRequiredNumParameters()
+	{
+		return types.size();
+	}
+	
+	public ArrayList<CubeXFunction> getFunctions() {
+		return functions;
+	}
+
 	
 	public String getName() {
 		return name;

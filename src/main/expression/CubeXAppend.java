@@ -20,13 +20,6 @@ public class CubeXAppend extends CubeXExpression {
 		this.b=b;
 	}
 
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(a.toString()).append(" ++ ").append(b.toString());
-		return sb.toString();
-	}
-
 	@Override
 	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException {
 		CubeXType typeA=a.getType(force, classCon,funCon,varCon,typeVarCon, setField, par);
@@ -57,6 +50,13 @@ public class CubeXAppend extends CubeXExpression {
 	public String preC() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(a.preC()).append(b.preC());
+		return sb.toString();
+	}
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(a.toString()).append(" ++ ").append(b.toString());
 		return sb.toString();
 	}
 	

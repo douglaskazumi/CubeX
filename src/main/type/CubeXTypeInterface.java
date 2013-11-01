@@ -19,13 +19,9 @@ public class CubeXTypeInterface extends CubeXTypeClassBase
 		super(name, parameters);
 	}
 	
-	@Override
-	public Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException
+	public boolean isInterface()
 	{
-		CubeXFunction fun = getDeclaration(classCon).getFunctionContext().lookup(name);
-		if(fun==null)
-			throw new ContextException();
-		return new Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase>(geTypeVarSub(classCon),fun, this);
+		return true;
 	}
 
 	@Override
@@ -34,11 +30,6 @@ public class CubeXTypeInterface extends CubeXTypeClassBase
 		return CubeXType.getThing();
 	}
 
-	public boolean isInterface()
-	{
-		return true;
-	}
-	
 	public CubeXInterface getDeclaration(ClassContext classCon) throws ContextException
 	{
 		if (interfaceDeclaration==null)
@@ -55,11 +46,16 @@ public class CubeXTypeInterface extends CubeXTypeClassBase
 		return interfaceDeclaration;
 		
 	}
-	public TypeVarSubstitution geTypeVarSub(ClassContext classCon) throws ContextException
+
+	@Override
+	public Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException
 	{
-		return new TypeVarSubstitution(getDeclaration(classCon).getTypes(),parameters);
+		CubeXFunction fun = getDeclaration(classCon).getFunctionContext().lookup(name);
+		if(fun==null)
+			throw new ContextException();
+		return new Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase>(getTypeVarSub(classCon),fun, this);
 	}
-	
+
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();

@@ -16,6 +16,25 @@ public class BaseContext<T> {
 		this.parent=parent;
 	}
 	
+	public T lookup(String id) throws ContextException
+	{
+		if(context.containsKey(id))
+		{
+			return context.get(id);
+		}
+		else
+		{
+			if(parent!=null)
+			{
+				return parent.lookup(id);
+			}
+			else
+			{
+				return null;
+			}
+		}
+	}
+
 	public void add(String id, T item) throws ContextException
 	{
 		if(id==null)
@@ -47,6 +66,11 @@ public class BaseContext<T> {
 		
 	}
 	
+	public BaseContext<T> createChildContext()
+	{
+		return new BaseContext<T>(this);
+	}
+
 	public boolean isMutable() {
 		return isMutable;
 	}
@@ -54,30 +78,6 @@ public class BaseContext<T> {
 	public void setMutable(boolean isMut)
 	{
 		isMutable=isMut;
-	}
-	
-	public BaseContext<T> createChildContext()
-	{
-		return new BaseContext<T>(this);
-	}
-	
-	public T lookup(String id) throws ContextException
-	{
-		if(context.containsKey(id))
-		{
-			return context.get(id);
-		}
-		else
-		{
-			if(parent!=null)
-			{
-				return parent.lookup(id);
-			}
-			else
-			{
-				return null;
-			}
-		}
 	}
 
 }
