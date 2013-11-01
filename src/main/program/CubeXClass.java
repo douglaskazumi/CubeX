@@ -1,6 +1,5 @@
 package main.program;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import main.c.*;
@@ -17,7 +16,7 @@ public class CubeXClass extends CubeXClassBase {
 	private ArrayList<CubeXArgument> constructorArgs;
 	private ArrayList<CubeXStatement> statements;
 	private ArrayList<CubeXExpression> superArgs;
-	
+
 	private FunctionContext myFunctionContext;
 	
 	public ArrayList<String> definedFields;

@@ -38,6 +38,21 @@ public class GlobalAwareness {
 		}
 	}
 	
+	public static String getDeclarations()
+	{
+		return declarations.toString();
+	}
+	
+	public static String getCreateObj()
+	{
+		return createObj.toC();
+	}
+	
+	public static String getConstructors()
+	{
+		return cons.toC();
+	}
+	
 	public static void addClass(CubeXClass clss) throws ContextException
 	{
 		createObj.addClass(clss);

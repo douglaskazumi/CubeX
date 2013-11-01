@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import main.c.Initializer;
 import main.context.*;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
@@ -379,10 +380,47 @@ public class CubeXProgram {
 	
 	}
 
-	public void toC() {
+	public String toC() throws TypeCheckException 
+	{
+		StringBuilder sb = new StringBuilder();		
+		Initializer init = new Initializer();
+		sb.append(init.init());
+		sb.append(getRunFunction());
+		return sb.toString();
+	}
+	
+	public String getRunFunction()
+	{
+		StringBuilder sb = new StringBuilder();
+		
 		for(CubeXProgramPiece piece : pieces){
-			piece.toC();
+			if(piece.isFunction())
+			{
+				sb.append(piece.preC());
+				sb.append(piece.toC());
+			}
 		}
+		
+		for(CubeXProgramPiece piece : pieces){
+			if(piece.isClass()||piece.isInterface())
+			{
+				sb.append(piece.preC());
+				sb.append(piece.toC());
+			}
+		}
+		
+		
+		sb.append("\n");
+		sb.append("object_t * cubex_main()\n{\n");
+		for(CubeXProgramPiece piece : pieces){
+			if(piece.isStatement())
+			{
+				sb.append("\t").append(piece.preC());
+				sb.append("\t").append(piece.toC());
+			}
+		}
+		sb.append("\n}\n");
+		return sb.toString();
 	}
 
 	public String toString() {

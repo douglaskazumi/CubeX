@@ -2,6 +2,8 @@ package main.c;
 
 import java.util.ArrayList;
 
+import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
+
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClass;
@@ -18,6 +20,7 @@ public class VTable {
 	private VTable(CubeXClass clss)
 	{
 		iTable= new InterfaceTable();
+		entries = new ArrayList<CubeXFunction>();
 		host = clss;
 	}
 	
@@ -60,28 +63,28 @@ public class VTable {
 	public String toC()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("vtable = x3malloc(sizeof(vTable_t) + ").append(entries.size()).append("*sizeof(func));\n");
-		sb.append("itable = x3malloc(sizeof(iTable_t) + ").append(iTable.getSize()).append("*sizeof(iTableEntry_t));\n");
-		sb.append("itable->numEntries = ").append(iTable.getSize()).append(";\n");
-		sb.append("curEntry = (iTableEntry_t *)(itable+1);\n");
+		sb.append("\t").append("vtable = x3malloc(sizeof(vTable_t) + ").append(entries.size()).append("*sizeof(func));\n");
+		sb.append("\t").append("itable = x3malloc(sizeof(iTable_t) + ").append(iTable.getSize()).append("*sizeof(iTableEntry_t));\n");
+		sb.append("\t").append("itable->numEntries = ").append(iTable.getSize()).append(";\n");
+		sb.append("\t").append("curEntry = (iTableEntry_t *)(itable+1);\n");
 		
 		for(InterfaceTableEntry entry : iTable.entries)
 		{
-			sb.append("curEntry->typeID = ").append(entry.classBase.getID()).append(";\n");
-			sb.append("curEntry->functionIndex = ").append(entry.offset).append(";\n");
-			sb.append("curEntry++;\n");
+			sb.append("\t\t").append("curEntry->typeID = ").append(entry.classBase.getID()).append(";\n");
+			sb.append("\t\t").append("curEntry->functionIndex = ").append(entry.offset).append(";\n");
+			sb.append("\t\t").append("curEntry++;\n");
 		}
 		
-		sb.append("vtable->iTable = itable;\n");
-		sb.append("curVEntry = (func *)(vtable+1);\n");
+		sb.append("\n\t").append("vtable->iTable = itable;\n");
+		sb.append("\t").append("curVEntry = (func *)(vtable+1);\n");
 		
 		for(CubeXFunction fun : entries)
 		{
-			sb.append("*(curVEntry)=(func)(").append(CUtils.canonName(fun, false)).append(");\n");
-			sb.append("curVEntry++;\n");
+			sb.append("\t").append("*(curVEntry)=(func)(").append(CUtils.canonName(fun, false)).append(");\n");
+			sb.append("\t").append("curVEntry++;\n");
 		}
 		
-		sb.append("vt_").append(host.getName()).append(" = vtable;\n");
+		sb.append("\t").append("vt_").append(host.getName()).append(" = vtable;\n");
 		return sb.toString();
 	}
 	
