@@ -43,16 +43,6 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		curTypeID+=1;
 	}
 
-	public boolean isClass()
-	{
-		return false;
-	}
-
-	public boolean isInterface()
-	{
-		return false;
-	}
-
 	public int getID()
 	{
 		return myTypeID;

@@ -57,7 +57,7 @@ public class CreateObject
 				"	}\r\n" + 
 				"	object->refCount=startingRefs;\r\n" + 
 				"	return object;\r\n" + 
-				"}";
+				"}\n\n";
 		
 		return res;
 		

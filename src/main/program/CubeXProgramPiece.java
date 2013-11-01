@@ -26,6 +26,18 @@ public abstract class CubeXProgramPiece
 	{
 		return false;
 	}
+	
+	public boolean isClass()
+	{
+		return false;
+	}
+
+	public boolean isInterface()
+	{
+		return false;
+	}
+	
+	
 
 	public void addLocal(String name)
 	{

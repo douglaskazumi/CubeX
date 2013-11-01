@@ -3,8 +3,10 @@ package main.util;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.BitSet;
 
+import main.exceptions.TypeCheckException;
 import main.program.CubeXProgram;
 
 import org.antlr.v4.runtime.*;
@@ -13,7 +15,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
-	public static boolean debug=false;
+	public static boolean debug=true;
 	
 public static void main(String[] args) throws IOException
 {
@@ -36,27 +38,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("# should accept\r\n" + 
-				"class Aa() {\r\n" + 
-				"    fun lol() : Aa {\r\n" + 
-				"        a := Aa();\r\n" + 
-				"        return a;\r\n" + 
-				"    }\r\n" + 
-				"\r\n" + 
-				"    fun toString() : String {\r\n" + 
-				"        return \"\";\r\n" + 
-				"    }\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"interface Bb {\r\n" + 
-				"    fun lmao() : Aa;\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"fun lol(ab : Aa&Bb) : String  {\r\n" + 
-				"    return string(ab.lmao().toString() ++ ab.lol().toString());\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"return [\"\"];");
+		input = new ANTLRInputStream("return [\"\"];");
 	}
 	else
 	{
@@ -81,9 +63,22 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	}
 	if(debug)
 		System.out.println(prog.toString());
-}
+	
+	try
+	{
+		PrintWriter writer = new PrintWriter("out.c");
+		writer.println(prog.toC());
+		writer.close();
 		
+	} catch (TypeCheckException e)
+	{
+		e.printStackTrace();
+	}
+	
 }
+
+}
+
 
 class LexerError  implements ANTLRErrorListener
 {
