@@ -223,7 +223,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					{
 						sb.append(", ").append("object_t *");
 					}
-					sb.append("))").append("(getMethod((").append(parent.toC()).append("), ").append(cb.getID()).append(", ").append(fIndex).append("))");
+					sb.append("))").append("(getMethod((").append(tempVar).append("), ").append(cb.getID()).append(", ").append(fIndex).append("))");
 					sb.append("(").append(tempVar);
 					for(CubeXExpression exp : args)
 					{

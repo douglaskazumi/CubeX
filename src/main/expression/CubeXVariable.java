@@ -75,8 +75,6 @@ public class CubeXVariable extends CubeXExpression
 		return "";
 	}
 
-	
-	
 	@Override
 	public String toC() {
 		StringBuilder sb = new StringBuilder();
