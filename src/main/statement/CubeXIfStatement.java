@@ -82,14 +82,24 @@ public class CubeXIfStatement extends CubeXStatement {
 
 	@Override
 	public String preC() {
-		// TODO Auto-generated method stub
-		return null;
+		return condition.preC();
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("if(").append(condition.toC()).append("){\n");
+		sb.append("\t\t").append(ifstatement.preC());
+		sb.append("\t\t").append(ifstatement.toC());
+		sb.append("\t}\n"); 
+		//When it does not have else, it's an empty block. If it is only one statment, is not a block
+		if((elsestatement.isBlock() && !((CubeXBlock)elsestatement).isEmpty()) || !elsestatement.isBlock()){
+			sb.append("\telse {\n");
+			sb.append("\t\t").append(elsestatement.preC());
+			sb.append("\t\t").append(elsestatement.toC());
+			sb.append("\t}\n");
+		}
+		return sb.toString();
 	}
 
 	public String toString()
