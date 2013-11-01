@@ -14,29 +14,26 @@ object_t * createObject(int type, unsigned int startingRefs)
 	object_t * object;
 	switch(type)
 	{
-	case 0: //Integer
+	case 0:
 		object=x3malloc(sizeof(integer_t));
 		object->numFields=-1;
 		((integer_t *)object)->value=0;
 		break;
-	case 1: //Boolean
+	case 1:
 		object=x3malloc(sizeof(boolean_t));
 		object->numFields=-1;
 		((boolean_t *)object)->value=false;
 		break;
-	case 2: //Character
+	case 2:
 		object=x3malloc(sizeof(character_t));
 		object->numFields=-1;
 		object->value=0;
 		break;
-	case 3: //iterable
+	case 3:
 		object=x3malloc(sizeof(iterable_t));
 		object->numFields=-2;
 		object->vTable=NULL;
 		break;
-	case 7:
-			object=x3malloc(sizeof(_A_t));
-			object->numFields = 4;
 
 	}
 	object->refCount=startingRefs;

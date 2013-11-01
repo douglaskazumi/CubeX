@@ -21,8 +21,7 @@ public class CubeXClass extends CubeXClassBase {
 	private FunctionContext myFunctionContext;
 	
 	public ArrayList<String> definedFields;
-	public HashSet<String> localVariables;
-	
+
 	public CubeXClass(String name, ArrayList<CubeXTypeVariable> types, ArrayList<CubeXArgument> constructorArgs, CubeXType parentType, ArrayList<CubeXStatement> stats, ArrayList<CubeXExpression> superArgs, ArrayList<CubeXFunction> functions)
 	{
 		super(name, types, parentType, functions);
@@ -102,6 +101,7 @@ public class CubeXClass extends CubeXClassBase {
 		{
 			CubeXType newType = CubeXType.validateType(arg.type, false,  classCon, classTypeVarCon);
 			newArgs.add(new CubeXArgument(arg.variable, newType));
+			arg.variable.trySetField(true, this);
 			newVarCon.add(arg.variable.getName(), newType);
 		}
 		constructorArgs=newArgs;
@@ -251,6 +251,7 @@ public class CubeXClass extends CubeXClassBase {
 
 	@Override
 	public String toC() {
+		
 		//DONT REALL NEED THIS ANYWMORE
 		
 		//define type
@@ -278,11 +279,12 @@ public class CubeXClass extends CubeXClassBase {
 		
 		//create vtable
 		//TODO after defining function naming create pointer to vtable
+		
 	}
 	
-	public void generateVTable()
+	public VTable generateVTable() throws TypeCheckException
 	{
-		
+		return VTable.getVTable(this);
 	}
 
 	public String toString()

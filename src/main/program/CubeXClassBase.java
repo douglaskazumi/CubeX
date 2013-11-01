@@ -15,7 +15,7 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 
 	private static int curTypeID=5;
 	
-	protected int myTypeID;
+	protected int myTypeID=4;
 	
 	protected String name;
 	protected ArrayList<CubeXTypeVariable> types;

@@ -60,8 +60,7 @@ public class VTable {
 	public String toC()
 	{
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append("vtable = x3malloc(sizeof(vTable_t) + ").append(entries.size()).append("*sizeof(void *) + ").append(host.definedFields.size()).append("*sizeof(object_t *));\n");
+		sb.append("vtable = x3malloc(sizeof(vTable_t) + ").append(entries.size()).append("*sizeof(func));\n");
 		sb.append("itable = x3malloc(sizeof(iTable_t) + ").append(iTable.getSize()).append("*sizeof(iTableEntry_t));\n");
 		sb.append("itable->numEntries = ").append(iTable.getSize()).append(";\n");
 		sb.append("curEntry = (iTableEntry_t *)(itable+1);\n");
