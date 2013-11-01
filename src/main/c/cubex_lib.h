@@ -11,7 +11,6 @@ typedef char bool;
 
 typedef struct {
 	void *iTable;
-	object_t * fields;
 } vTable_t;
 
 typedef struct {

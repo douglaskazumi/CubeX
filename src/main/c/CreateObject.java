@@ -51,7 +51,7 @@ public class CreateObject
 		
 	}
 	
-	public String toString()
+	public String toC()
 	{
 		String res = createObjectFun.toString() + 
 				"	}\r\n" + 
