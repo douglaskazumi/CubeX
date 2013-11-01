@@ -141,6 +141,8 @@ public class CubeXFunction extends CubeXProgramPiece
 		Tuple<Boolean, CubeXType> res = statement.typecheck(force, classCon, funCon, newVarCon, funTypeVarCon, setField, par);
 		if(!res.first)
 			throw new TypeCheckException();
+		if(!CubeXType.isSubType(res.second, returnType, classCon))
+			throw new TypeCheckException("Incorrect function return type");
 		
 		return res;
 	}

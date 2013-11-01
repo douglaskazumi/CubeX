@@ -13,7 +13,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
-	public static boolean debug=true;
+	public static boolean debug=false;
 	
 public static void main(String[] args) throws IOException
 {
@@ -36,51 +36,27 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("\r\n" + 
+		input = new ANTLRInputStream("# should accept\r\n" + 
+				"class Aa() {\r\n" + 
+				"    fun lol() : Aa {\r\n" + 
+				"        a := Aa();\r\n" + 
+				"        return a;\r\n" + 
+				"    }\r\n" + 
 				"\r\n" + 
-				"class Ff()\r\n" + 
-				"{\r\n" + 
-				"	fun spoon(x:String) : String = x++\"Hello\";\r\n" + 
+				"    fun toString() : String {\r\n" + 
+				"        return \"\";\r\n" + 
+				"    }\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"interface Ee\r\n" + 
-				"{\r\n" + 
-				"	fun spoon2(x:String) : String = x++\"Hello\";\r\n" + 
+				"interface Bb {\r\n" + 
+				"    fun lmao() : Aa;\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"interface Pp\r\n" + 
-				"{\r\n" + 
-				"	fun spoon3(x:String) : String = x++\"Hello\";\r\n" + 
+				"fun lol(ab : Aa&Bb) : String  {\r\n" + 
+				"    return string(ab.lmao().toString() ++ ab.lol().toString());\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"class Bb() extends Ff&Ee&Pp\r\n" + 
-				"{\r\n" + 
-				"	super();\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"class Aa() extends Ff\r\n" + 
-				"{\r\n" + 
-				"	super();\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"interface Cc extends Ee\r\n" + 
-				"{\r\n" + 
-				"	fun tastic(cow : Iterable<Ff> & Thing, lemon : String) : Iterable<String>\r\n" + 
-				"	{\r\n" + 
-				"		return [\"helloworld\"];\r\n" + 
-				"	}\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"class Xx() extends Aa&Cc&Pp\r\n" + 
-				"{\r\n" + 
-				"	super();\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"j := Xx();\r\n" + 
-				"v := Bb();\r\n" + 
-				"k := [j,v];\r\n" + 
-				"\r\n" + 
-				"return j.tastic(k, k.spoon3());");
+				"return [\"\"];");
 	}
 	else
 	{

@@ -3,6 +3,7 @@ package main.context;
 import java.util.HashMap;
 
 import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.type.CubeXType;
 
 public class VariableContext extends BaseContext<CubeXType> {
@@ -12,7 +13,7 @@ public class VariableContext extends BaseContext<CubeXType> {
 		super(p);
 	}
 	
-	public static void merge(VariableContext varCon, VariableContext innerConTrue, VariableContext innerConFalse, ClassContext classCon, TypeVariableContext typeVarCon) throws ContextException
+	public static void merge(VariableContext varCon, VariableContext innerConTrue, VariableContext innerConFalse, ClassContext classCon, TypeVariableContext typeVarCon) throws ContextException, TypeCheckException
 	{
 		for(String id : innerConTrue.context.keySet())
 		{

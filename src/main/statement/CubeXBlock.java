@@ -36,6 +36,11 @@ public class CubeXBlock extends CubeXStatement
 		return true;
 	}
 	
+	public boolean isEmpty()
+	{
+		return innerStatements.isEmpty();
+	}
+	
 	
 	public CubeXStatement reduceBlock()
 	{
@@ -68,7 +73,7 @@ public class CubeXBlock extends CubeXStatement
 			if(res.first)
 			{
 				willReturn=true;
-				CubeXType.join(res.second, returnType,classCon);
+				returnType=CubeXType.join(res.second, returnType,classCon);
 			}
 		}
 		

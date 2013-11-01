@@ -3,6 +3,7 @@ package main.c;
 import java.util.ArrayList;
 
 import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
@@ -20,7 +21,7 @@ public class VTable {
 
 	}
 	
-	public static VTable getVTable(CubeXClass clss)
+	public static VTable getVTable(CubeXClass clss) throws TypeCheckException
 	{
 		VTable vTable = new VTable();
 		try

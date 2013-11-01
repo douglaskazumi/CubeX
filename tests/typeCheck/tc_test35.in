@@ -1,0 +1,8 @@
+x := "hello";
+{
+  s := x ++ "world";
+  z := [string(s)];
+  {
+    return z;
+  }
+}

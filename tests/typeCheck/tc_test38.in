@@ -1,0 +1,7 @@
+# typechecker test program NUMBER (stage 3)
+
+fun first<T> () : Boolean = false;
+
+fun second (t : T) : T = t;
+
+return [""];

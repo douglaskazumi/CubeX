@@ -2,7 +2,7 @@
 
 interface Dd
 {
-	fun spoon(x:String) : String = x++"Hello";
+	fun spoon(x:String) : String = string(x++"Hello");
 }
 
 class Aa() extends Thing
@@ -22,7 +22,7 @@ class Cc() extends Bb&Dd
 {
 	super(4);
 	
-	fun tastic() : Iterable<String>
+	fun tastic() : Iterable<Thing>
 	{
 		a:=[1];
 		if(true)
@@ -38,4 +38,4 @@ class Cc() extends Bb&Dd
 	}
 }
 
-return Cc().tastic();
+return ["test"];

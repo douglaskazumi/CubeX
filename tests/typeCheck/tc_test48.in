@@ -1,0 +1,20 @@
+class TreeNode<T>(t : T) {
+  fun getVal() : T = t;
+  fun getChildren() : Iterable<TreeNode<T>> = [];
+}
+
+class BinaryTreeNode<T>(t : T, l : Iterable<BinaryTreeNode<T>> , r : Iterable<BinaryTreeNode<T>>) extends TreeNode<T> {
+  super(t);
+  fun getChildren() : Iterable<TreeNode<T>> = l ++ r;
+  fun getLeft() : Iterable<BinaryTreeNode<T>> = l;
+  fun getRight() : Iterable<BinaryTreeNode<T>> = r;
+}
+
+class LeafNode<T>(t : T) extends BinaryTreeNode<T> {
+  super(t, [], []);
+  fun getChildren() : Iterable<TreeNode<T>> = [];
+  fun getLeft() : Iterable<BinaryTreeNode<T>> = [];
+  fun getRight() : Iterable<BinaryTreeNode<T>> = [];
+}
+
+return ["foo"];

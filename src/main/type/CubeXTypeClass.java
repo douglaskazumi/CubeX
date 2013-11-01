@@ -88,11 +88,6 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		return classDeclaration;
 	}
 	
-	public TypeVarSubstitution getTypeVarSub(ClassContext classCon) throws ContextException
-	{
-		return new TypeVarSubstitution(getDeclaration(classCon).getTypes(),parameters);
-	}
-	
 	public CubeXType getConstructableComponent()
 	{
 		return this;

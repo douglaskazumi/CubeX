@@ -40,7 +40,7 @@ public class CubeXTypeVariable extends CubeXType {
 	@Override
 	public Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException
 	{
-		throw new TypeCheckException();
+		throw new ContextException("Method lookup on variable");
 	}
 	
 	@Override
