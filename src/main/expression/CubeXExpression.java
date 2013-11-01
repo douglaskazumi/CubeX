@@ -23,11 +23,11 @@ public abstract class CubeXExpression
 		return myType;
 	}
 	
-	public CubeXType getType()
+	public CubeXType getTypeUnsafe()
 	{
 		return myType;
 	}
-	
+
 	protected abstract CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
 	
 	public abstract String preC();

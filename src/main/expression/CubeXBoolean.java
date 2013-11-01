@@ -16,16 +16,15 @@ public class CubeXBoolean extends CubeXExpression
 		this.value = value;
 	}
 	
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(value);
-		return sb.toString();
-	}
-
 	@Override
 	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) {
 		return CubeXType.getBoolean();
+	}
+
+	@Override
+	public String preC() {
+		// TODO Auto-generated method stub
+		return "";
 	}
 
 	@Override
@@ -35,10 +34,11 @@ public class CubeXBoolean extends CubeXExpression
 		return sb.toString();
 	}
 
-	@Override
-	public String preC() {
-		// TODO Auto-generated method stub
-		return "";
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(value);
+		return sb.toString();
 	}
 	
 }

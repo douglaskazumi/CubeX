@@ -28,24 +28,12 @@ public class CubeXProgram {
 		pieces = new ArrayList<CubeXProgramPiece>();
 	}
 
-	public void addPiece(CubeXProgramPiece piece) {
-		pieces.add(piece);
-	}
-
 	public void addPieces(CubeXProgram program) {
 		pieces.addAll(program.pieces);
 	}
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-
-		String prefix = "";
-		for (CubeXProgramPiece piece : pieces) {
-			sb.append(prefix).append(piece.toString());
-			prefix = " ";
-		}
-
-		return sb.toString();
+	public void addPiece(CubeXProgramPiece piece) {
+		pieces.add(piece);
 	}
 
 	private void initializeContexts() throws ContextException {
@@ -54,12 +42,12 @@ public class CubeXProgram {
 		GlobalContexts.variableContext = new VariableContext(null);
 		ArrayList<CubeXFunction> funs;
 		CubeXClass newClass;
-
+	
 		// Iterable
 		newClass = new CubeXClass("Iterable", new ArrayList<CubeXTypeVariable>(Arrays.asList(new CubeXTypeVariable("E"))), null, CubeXType.getThing(), null, null, null);
 		newClass.setFunctionContextManual(new ArrayList<CubeXFunction>(), GlobalContexts.functionContext);
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
-
+	
 		// Boolean
 		newClass = new CubeXClass("Boolean", null, null, CubeXType.getThing(), null, null, null);
 		funs = defineBooleanFunctions(newClass);
@@ -98,7 +86,7 @@ public class CubeXProgram {
 	public void defineGlobalFunctions() throws ContextException {
 		CubeXFunction newFunction;
 		CubeXScheme newScheme;
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -107,7 +95,7 @@ public class CubeXProgram {
 									CubeXType.getCharacter());
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("character", newScheme));
 		GlobalContexts.functionContext.add(newFunction.getName(), newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -117,12 +105,12 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("string", newScheme));
 		GlobalContexts.functionContext.add(newFunction.getName(), newFunction);
 	}
-	
+
 	private ArrayList<CubeXFunction> defineStringFunctions(CubeXClass clss) {
 		ArrayList<CubeXFunction> functions = new ArrayList<CubeXFunction>();
 		CubeXFunction newFunction;
 		CubeXScheme newScheme;
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -136,7 +124,7 @@ public class CubeXProgram {
 		
 		return functions;
 	}
-	
+
 	private ArrayList<CubeXFunction> defineCharFunctions(CubeXClass clss) {
 		ArrayList<CubeXFunction> functions = new ArrayList<CubeXFunction>();
 		CubeXFunction newFunction;
@@ -146,7 +134,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("unicode", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -159,7 +147,7 @@ public class CubeXProgram {
 		
 		return functions;
 	}
-	
+
 	private ArrayList<CubeXFunction> defineIntegerFunctions(CubeXClass clss) {
 		ArrayList<CubeXFunction> functions = new ArrayList<CubeXFunction>();
 		CubeXFunction newFunction;
@@ -169,7 +157,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("negative", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -179,7 +167,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("times", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -189,7 +177,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("divide", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -199,7 +187,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("modulo", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -209,7 +197,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("plus", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -221,7 +209,7 @@ public class CubeXProgram {
 		functions.add(newFunction);
 		
 		commonMethods(functions,CubeXType.getInteger(),clss);
-
+	
 		return functions;
 	}
 
@@ -234,7 +222,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("negate", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -244,7 +232,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("and", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -254,7 +242,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("or", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		commonMethods(functions,CubeXType.getBoolean(), clss);
 		
 		return functions;
@@ -274,7 +262,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("through", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -284,7 +272,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("onwards", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -295,7 +283,7 @@ public class CubeXProgram {
 		newFunction = new CubeXFunction(new CubeXFunctionHeader("lessThan", newScheme));
 		newFunction.setParent(clss);
 		functions.add(newFunction);
-
+	
 		newScheme = new CubeXScheme(null, 
 									new ArrayList<CubeXArgument>(
 											Arrays.asList(
@@ -315,7 +303,7 @@ public class CubeXProgram {
 			// Should never fall here
 			e1.printStackTrace();
 		}
-
+	
 		try {
 			Iterator<CubeXProgramPiece> piecesIt = pieces.iterator();
 			boolean wasFunction = false;
@@ -355,7 +343,7 @@ public class CubeXProgram {
 				
 				wasFunction = false;
 			}
-
+	
 			// shouldn't need this
 			checkFunctionBlock(wasFunction, curFunSet);
 			
@@ -374,7 +362,7 @@ public class CubeXProgram {
 			/**/
 			return false;
 		}
-
+	
 		return true;
 	}
 
@@ -388,12 +376,24 @@ public class CubeXProgram {
 			}
 			curFunSet.clear();
 		}
-
+	
 	}
 
 	public void toC() {
 		for(CubeXProgramPiece piece : pieces){
 			piece.toC();
 		}
+	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+	
+		String prefix = "";
+		for (CubeXProgramPiece piece : pieces) {
+			sb.append(prefix).append(piece.toString());
+			prefix = " ";
+		}
+	
+		return sb.toString();
 	}
 }

@@ -16,11 +16,6 @@ public class CubeXString extends CubeXExpression {
 		this.value=value;
 	}
 	
-	public String toString()
-	{
-		return value;
-	}
-
 	@Override
 	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) {
 		return CubeXType.getString();
@@ -36,5 +31,10 @@ public class CubeXString extends CubeXExpression {
 		StringBuilder sb = new StringBuilder();
 		sb.append("createIterable_string(\"").append(value.replace("\\","\\\\")).append("\", ").append(value.length()).append(", 0, true)");
 		return sb.toString();
+	}
+
+	public String toString()
+	{
+		return value;
 	}
 }

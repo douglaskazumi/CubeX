@@ -21,17 +21,16 @@ public class CubeXReturnStatement extends CubeXStatement {
 		this.returnValue = returnValue;
 	}
 	
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("return ").append(returnValue.toString()).append(" ;");
-		return sb.toString();
-	}
-
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon,	VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par)	throws ContextException, TypeCheckException {
 		CubeXType type = returnValue.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		return new Tuple<Boolean, CubeXType>(true, type);
+	}
+
+	@Override
+	public String preC() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -40,10 +39,11 @@ public class CubeXReturnStatement extends CubeXStatement {
 		return null;
 	}
 
-	@Override
-	public String preC() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("return ").append(returnValue.toString()).append(" ;");
+		return sb.toString();
 	}
 
 }

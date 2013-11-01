@@ -24,14 +24,6 @@ public class CubeXWhileStatement extends CubeXStatement
 	}
 	
 	
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("while ( ").append(condition.toString()).append(" ) ").append(whilestatement.toString());
-		return sb.toString();
-	}
-
-
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
 	{
@@ -47,16 +39,24 @@ public class CubeXWhileStatement extends CubeXStatement
 
 
 	@Override
-	public String toC(CubeXProgramPiece par) {
+	public String preC() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public String preC() {
+	public String toC(CubeXProgramPiece par) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("while ( ").append(condition.toString()).append(" ) ").append(whilestatement.toString());
+		return sb.toString();
 	}
 	
 }

@@ -21,20 +21,9 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		super(name, parameters);
 	}
 	
-	public CubeXTypeClassBase getActualType(ClassContext classCon) throws ContextException
-	{
-		CubeXClassBase base = classCon.lookup(name);
-		if(base==null)
-			throw new ContextException("Probably bad");
-		if(base.isClass())
-			return this;
-		else
-			return new CubeXTypeInterface(name, parameters);
-	}
-	
 	public static CubeXTypeClass NewCubeXTypeClass(String name, ArrayList<? extends CubeXType> parameters) throws TypeCheckException
 	{
-
+	
 		if(name.equals("Iterable"))
 		{
 			if(parameters==null || parameters.size()!=1)
@@ -71,7 +60,12 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		}
 		
 	}
-	
+
+	public boolean isClass()
+	{
+		return true;
+	}
+
 	public CubeXClass getDeclaration(ClassContext classCon) throws ContextException
 	{
 		if (classDeclaration==null)
@@ -93,9 +87,15 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 		return this;
 	}
 	
-	public boolean isClass()
+	public CubeXTypeClassBase getActualType(ClassContext classCon) throws ContextException
 	{
-		return true;
+		CubeXClassBase base = classCon.lookup(name);
+		if(base==null)
+			throw new ContextException("Probably bad");
+		if(base.isClass())
+			return this;
+		else
+			return new CubeXTypeInterface(name, parameters);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 			throw new ContextException();
 		return new Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase>(getTypeVarSub(classCon),fun, this);
 	}
-	
+
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();

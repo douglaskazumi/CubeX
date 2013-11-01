@@ -21,6 +21,11 @@ public class InterfaceTable {
 		entries.add(new InterfaceTableEntry(cb, currOffset));
 		currOffset+=numEntries;
 	}
+	
+	public int getSize()
+	{
+		return entries.size();
+	}
 
 }
 

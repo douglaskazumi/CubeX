@@ -16,39 +16,18 @@ import main.util.Tuple;
 public class CubeXInterface extends CubeXClassBase {
 
 	
-	public boolean isInterface()
-	{
-		return true;
-	}
-	
-	
 	public CubeXInterface(String name, ArrayList<CubeXTypeVariable> types, CubeXType parentType, ArrayList<CubeXFunction> functions)
 	{
 		super(name, types,parentType,functions);
 	}
 
 	
-	public String toString()
+	public boolean isInterface()
 	{
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("interface ").append(name).append(" < ");
-		String prefix ="";
-		for(CubeXTypeVariable t : types)
-		{
-			sb.append(prefix).append(t.toString()).append(" ");
-			prefix=", ";
-		}
-		sb.append("> extends ").append(parentType.toString()).append(" {");
-		
-		for(CubeXFunction a : functions)
-		{
-			sb.append(" ").append(a.toString());
-		}	
-		sb.append(" }");
-		return sb.toString();
+		return true;
 	}
-	
+
+
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
 	{
@@ -133,16 +112,38 @@ public class CubeXInterface extends CubeXClassBase {
 
 
 	@Override
-	public String toC() {
+	public String preC() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public String preC() {
+	public String toC() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("interface ").append(name).append(" < ");
+		String prefix ="";
+		for(CubeXTypeVariable t : types)
+		{
+			sb.append(prefix).append(t.toString()).append(" ");
+			prefix=", ";
+		}
+		sb.append("> extends ").append(parentType.toString()).append(" {");
+		
+		for(CubeXFunction a : functions)
+		{
+			sb.append(" ").append(a.toString());
+		}	
+		sb.append(" }");
+		return sb.toString();
 	}
 
 }

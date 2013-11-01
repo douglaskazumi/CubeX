@@ -42,29 +42,42 @@ public class CubeXFunction extends CubeXProgramPiece
 		statement=stat;
 	}
 	
+	public CubeXFunction(CubeXFunctionHeader decl, CubeXExpression expr)
+	{
+		this(decl, new CubeXReturnStatement(expr));
+	}
+
 	public void setParent(CubeXClassBase p)
 	{
 		parentHolder=p;
 	}
+	public CubeXFunction(CubeXFunctionHeader decl)
+	{
+		this(decl, (CubeXStatement)null);
+	}
+
+	public boolean isFunction()
+	{
+		return true;
+	}
+
 	public CubeXClassBase getParent()
 	{
 		return parentHolder;
 	}
 	
-	public CubeXFunction(CubeXFunctionHeader decl, CubeXExpression expr)
-	{
-		this(decl, new CubeXReturnStatement(expr));
+	public ArrayList<CubeXArgument> getArglist() {
+		return arglist;
 	}
-	
-	public CubeXFunction(CubeXFunctionHeader decl)
-	{
-		this(decl, (CubeXStatement)null);
-	}
-	
+
 	public void setArglist(ArrayList<CubeXArgument> arglist) {
 		this.arglist = arglist;
 	}
 	
+	public CubeXType getReturnType() {
+		return returnType;
+	}
+
 	public void setReturnType(CubeXType returnType) {
 		this.returnType = returnType;
 	}
@@ -77,42 +90,11 @@ public class CubeXFunction extends CubeXProgramPiece
 		return types;
 	}
 
-	public ArrayList<CubeXArgument> getArglist() {
-		return arglist;
-	}
-
-	public CubeXType getReturnType() {
-		return returnType;
-	}
-	
 	public boolean isDeclaration()
 	{
 		return statement==null;
 	}
 	
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("fun ").append(name).append(" < ");
-		
-		String prefix="";
-		for(CubeXType t : types)
-		{
-			sb.append(prefix).append(t.toString()).append(" ");
-			prefix=", ";
-		}
-		sb.append("> ( ");
-		
-		prefix="";
-		for(CubeXArgument a : arglist)
-		{
-			sb.append(prefix).append(a.toString()).append(" ");
-			prefix=", ";
-		}
-		sb.append(") : ").append(returnType.toString()).append(" ").append(statement==null?";":statement.toString());
-		return sb.toString();
-	}
-
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException {
 		
@@ -147,9 +129,9 @@ public class CubeXFunction extends CubeXProgramPiece
 		return res;
 	}
 	
-	public boolean isFunction()
-	{
-		return true;
+	@Override
+	public String preC() {
+		return "";
 	}
 
 	@Override
@@ -170,8 +152,26 @@ public class CubeXFunction extends CubeXProgramPiece
 		return sb.toString();
 	}
 
-	@Override
-	public String preC() {
-		return "";
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("fun ").append(name).append(" < ");
+		
+		String prefix="";
+		for(CubeXType t : types)
+		{
+			sb.append(prefix).append(t.toString()).append(" ");
+			prefix=", ";
+		}
+		sb.append("> ( ");
+		
+		prefix="";
+		for(CubeXArgument a : arglist)
+		{
+			sb.append(prefix).append(a.toString()).append(" ");
+			prefix=", ";
+		}
+		sb.append(") : ").append(returnType.toString()).append(" ").append(statement==null?";":statement.toString());
+		return sb.toString();
 	}
 }

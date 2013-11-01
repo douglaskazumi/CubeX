@@ -29,13 +29,6 @@ public class CubeXForStatement extends CubeXStatement {
 		this.forexpression = forexpression;
 	}
 
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("for ( ").append(variable).append(" in ").append(forexpression.toString()).append(" ) ").append(forbody.toString());
-		return sb.toString();
-	}
-	
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
 	{
@@ -63,6 +56,13 @@ public class CubeXForStatement extends CubeXStatement {
 	public String toC(CubeXProgramPiece par) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("for ( ").append(variable).append(" in ").append(forexpression.toString()).append(" ) ").append(forbody.toString());
+		return sb.toString();
 	}
 
 	

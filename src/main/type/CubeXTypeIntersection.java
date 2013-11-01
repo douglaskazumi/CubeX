@@ -27,11 +27,18 @@ public class CubeXTypeIntersection extends CubeXType {
 		return true;
 	}
 	
-	public String toString()
+	public CubeXType getConstructableComponent()
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(left.toString()).append(" & ").append(right.toString());
-		return sb.toString();
+		if (constructableType==null)
+			constructableType=left.getConstructableComponent();
+		return constructableType;
+	}
+
+	@Override
+	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
+		ArrayList<CubeXFunction> funs = left.getAllFunctions(classCon);
+		funs.addAll(right.getAllFunctions(classCon));
+		return funs;
 	}
 
 	@Override
@@ -55,13 +62,6 @@ public class CubeXTypeIntersection extends CubeXType {
 		}
 		throw new ContextException("Not found in either intersection");
 	}
-	
-	public CubeXType getConstructableComponent()
-	{
-		if (constructableType==null)
-			constructableType=left.getConstructableComponent();
-		return constructableType;
-	}
 
 	@Override
 	public boolean equals(CubeXType other)
@@ -70,7 +70,7 @@ public class CubeXTypeIntersection extends CubeXType {
 			return false;
 		if(!other.isIntersection())
 			return false;
-
+	
 		CubeXTypeIntersection otherIntersection = (CubeXTypeIntersection)other;
 		
 		if((left.equals(otherIntersection.left)&&right.equals(otherIntersection.right)) || (left.equals(otherIntersection.right)&&right.equals(otherIntersection.left)))
@@ -78,11 +78,11 @@ public class CubeXTypeIntersection extends CubeXType {
 		return false;
 	}
 
-	@Override
-	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
-		ArrayList<CubeXFunction> funs = left.getAllFunctions(classCon);
-		funs.addAll(right.getAllFunctions(classCon));
-		return funs;
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(left.toString()).append(" & ").append(right.toString());
+		return sb.toString();
 	}
 
 }

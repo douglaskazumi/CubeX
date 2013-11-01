@@ -13,6 +13,11 @@ public class VariableContext extends BaseContext<CubeXType> {
 		super(p);
 	}
 	
+	public VariableContext createChildContext()
+	{
+		return new VariableContext(this);
+	}
+
 	public static void merge(VariableContext varCon, VariableContext innerConTrue, VariableContext innerConFalse, ClassContext classCon, TypeVariableContext typeVarCon) throws ContextException, TypeCheckException
 	{
 		for(String id : innerConTrue.context.keySet())
@@ -26,18 +31,13 @@ public class VariableContext extends BaseContext<CubeXType> {
 			varCon.add(id, mergedType);
 		}
 	}
-	public VariableContext createChildContext()
-	{
-		return new VariableContext(this);
-	}
-	
-	public void lockVariables()
-	{
-		setMutable(false);
-	}
-	
 	public HashMap<String, CubeXType> getInnerMap()
 	{
 		return this.context;
+	}
+
+	public void lockVariables()
+	{
+		setMutable(false);
 	}
 }

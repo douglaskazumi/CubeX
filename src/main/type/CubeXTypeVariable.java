@@ -32,9 +32,9 @@ public class CubeXTypeVariable extends CubeXType {
 		return name;
 	}
 	
-	public String toString()
-	{
-		return name;
+	@Override
+	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
+		return new ArrayList<CubeXFunction>();
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class CubeXTypeVariable extends CubeXType {
 	{
 		throw new ContextException("Method lookup on variable");
 	}
-	
+
 	@Override
 	public boolean equals(Object other)
 	{
@@ -52,7 +52,7 @@ public class CubeXTypeVariable extends CubeXType {
 			return equals((CubeXType)other);
 		return false;
 	}
-	
+
 	@Override
 	public boolean equals(CubeXType other)
 	{
@@ -62,15 +62,15 @@ public class CubeXTypeVariable extends CubeXType {
 			return false;
 		return ((CubeXTypeVariable)other).name.equals(name);
 	}
-	
+
+	public String toString()
+	{
+		return name;
+	}
+
 	@Override
 	public int hashCode()
 	{
 		return name.hashCode();
-	}
-
-	@Override
-	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
-		return new ArrayList<CubeXFunction>();
 	}
 }

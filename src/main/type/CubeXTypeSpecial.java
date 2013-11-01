@@ -41,6 +41,11 @@ public class CubeXTypeSpecial extends CubeXType
 	}
 
 	@Override
+	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
+		return new ArrayList<CubeXFunction>();
+	}
+
+	@Override
 	public Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> methodLookup(String name, ClassContext classCon) throws ContextException, TypeCheckException
 	{
 		throw new ContextException("Method lookup on Special Types");
@@ -57,11 +62,6 @@ public class CubeXTypeSpecial extends CubeXType
 			return true;
 		
 		return false;
-	}
-
-	@Override
-	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
-		return new ArrayList<CubeXFunction>();
 	}
 	
 	

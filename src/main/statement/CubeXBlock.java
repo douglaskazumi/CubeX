@@ -23,6 +23,16 @@ public class CubeXBlock extends CubeXStatement
 		innerStatements = new ArrayList<CubeXStatement>();
 	}
 	
+	public boolean isBlock()
+	{
+		return true;
+	}
+
+	public boolean isEmpty()
+	{
+		return innerStatements.isEmpty();
+	}
+
 	public void add(CubeXStatement stat)
 	{
 		if(stat.isBlock())
@@ -31,35 +41,12 @@ public class CubeXBlock extends CubeXStatement
 			innerStatements.add(stat);
 	}
 	
-	public boolean isBlock()
-	{
-		return true;
-	}
-	
-	public boolean isEmpty()
-	{
-		return innerStatements.isEmpty();
-	}
-	
-	
 	public CubeXStatement reduceBlock()
 	{
 		if(innerStatements.size()==0 || innerStatements.size()>1)
 			return this;
 		else
 			return innerStatements.get(0);
-	}
-	
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		for(CubeXStatement stat : innerStatements)
-		{
-			sb.append(" ").append(stat.toString());
-		}
-		sb.append(" }");
-		return sb.toString();
 	}
 
 	@Override
@@ -83,14 +70,26 @@ public class CubeXBlock extends CubeXStatement
 	}
 
 	@Override
-	public String toC(CubeXProgramPiece par) {
+	public String preC() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String preC() {
+	public String toC(CubeXProgramPiece par) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		for(CubeXStatement stat : innerStatements)
+		{
+			sb.append(" ").append(stat.toString());
+		}
+		sb.append(" }");
+		return sb.toString();
 	}
 }
