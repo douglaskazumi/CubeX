@@ -1,5 +1,6 @@
 package main.statement;
 
+import main.c.CUtils;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -21,6 +22,8 @@ public class CubeXForStatement extends CubeXStatement {
 	private CubeXVariable actualVariable;
 	private CubeXExpression forexpression;
 	private CubeXStatement forbody;
+	private String indexer;
+	private String iterable;
 	
 	public CubeXForStatement(String variable, CubeXExpression forexpression, CubeXStatement forbody)
 	{
@@ -50,14 +53,25 @@ public class CubeXForStatement extends CubeXStatement {
 	@Override
 	public String preC() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("int ").append(variable).append(";\n");
-		sb.append(forexpression.preC()).append(";\n");
+		sb.append(forexpression.preC());
+		indexer = CUtils.getTempName();
+		sb.append("iterableIndex_t *").append(indexer).append(";\n");
+		iterable = CUtils.getTempName();
+		sb.append("object_t *").append(iterable).append(";\n");
 		return sb.toString();
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
+		sb.append("\t").append(indexer).append(" = createIndexer();\n");
+		sb.append("\t").append(iterable).append(" = ").append(forexpression.toC()).append(";\n");
+		sb.append("\twhile(iterableHasNext(").append(iterable).append(", ").append(indexer).append(")){\n");
+		sb.append("\t\t").append("object *").append(CUtils.canonName(variable)).append(";\n");
+		sb.append("\t\t").append(forbody.preC());
+		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = iterableNext(").append(iterable).append(", ").append(indexer).append(");\n");
+		sb.append("\t\t").append(forbody.toC());
+		sb.append("\t}\n");
 		return sb.toString();
 	}
 
