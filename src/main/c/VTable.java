@@ -2,8 +2,6 @@ package main.c;
 
 import java.util.ArrayList;
 
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
-
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClass;

@@ -29,14 +29,12 @@ public class CubeXReturnStatement extends CubeXStatement {
 
 	@Override
 	public String preC() {
-		// TODO Auto-generated method stub
-		return null;
+		return returnValue.preC();
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
-		// TODO Auto-generated method stub
-		return null;
+		return "return " + returnValue.toC() + ";\n";
 	}
 
 	public String toString()

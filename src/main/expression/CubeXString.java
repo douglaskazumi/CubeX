@@ -13,7 +13,7 @@ public class CubeXString extends CubeXExpression {
 	
 	public CubeXString(String value)
 	{
-		this.value=value;
+		this.value=value.replace("\"", "");
 	}
 	
 	@Override
@@ -35,6 +35,6 @@ public class CubeXString extends CubeXExpression {
 
 	public String toString()
 	{
-		return value;
+		return "\"" + value + "\"";
 	}
 }
