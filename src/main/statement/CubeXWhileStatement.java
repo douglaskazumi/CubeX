@@ -40,15 +40,18 @@ public class CubeXWhileStatement extends CubeXStatement
 
 	@Override
 	public String preC() {
-		// TODO Auto-generated method stub
-		return null;
+		return condition.preC();
 	}
 
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("while(").append(condition.toC()).append("){\n");
+		sb.append("\t\t").append(whilestatement.preC());
+		sb.append("\t\t").append(whilestatement.toC());
+		sb.append("\t}\n");
+		return sb.toString();
 	}
 
 
