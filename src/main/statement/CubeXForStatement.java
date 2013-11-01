@@ -7,6 +7,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXIterable;
 import main.expression.CubeXVariable;
 import main.program.CubeXClassBase;
 import main.program.CubeXProgramPiece;
@@ -48,14 +49,16 @@ public class CubeXForStatement extends CubeXStatement {
 
 	@Override
 	public String preC() {
-		// TODO Auto-generated method stub
-		return forexpression.preC()+";\n";
+		StringBuilder sb = new StringBuilder();
+		sb.append("int ").append(variable).append(";\n");
+		sb.append(forexpression.preC()).append(";\n");
+		return sb.toString();
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		return sb.toString();
 	}
 
 	public String toString()

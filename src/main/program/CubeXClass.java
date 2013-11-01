@@ -245,41 +245,12 @@ public class CubeXClass extends CubeXClassBase {
 
 	@Override
 	public String preC() {
-		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 	@Override
 	public String toC() {
-		
-		//DONT REALL NEED THIS ANYWMORE
-		
-		//define type
-		GlobalAwareness.codeAppend("typedef struct{");
-		GlobalAwareness.codeAppend("void **vTable;");
-		GlobalAwareness.codeAppend("unsigned int refCount;");
-		GlobalAwareness.codeAppend("int numFields;");
-		
-		for(CubeXArgument arg : constructorArgs){
-			if(arg.type.isIterable()){
-				//TODO generate code for iterable class argument
-			} else {
-				//TODO check for fields inside statments
-				GlobalAwareness.codeAppend(/*arg.type.getTypedefName() + */" *" + arg.variable.getName() + ";");
-			}
-		}
-		
-		GlobalAwareness.codeAppend("} "+ name.toLowerCase() +"_t;");
-		
-		//create method pointers
-		for(CubeXFunction fun : functions){
-			fun.toC();
-		}
-		return null;
-		
-		//create vtable
-		//TODO after defining function naming create pointer to vtable
-		
+		return "";
 	}
 	
 	public VTable generateVTable() throws TypeCheckException

@@ -77,8 +77,11 @@ public class CubeXBlock extends CubeXStatement
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		for(CubeXStatement stat: innerStatements){
+			sb.append("\t\t").append(stat.toC());
+		}
+		return sb.toString();
 	}
 
 	public String toString()
