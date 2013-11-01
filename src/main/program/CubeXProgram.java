@@ -415,7 +415,10 @@ public class CubeXProgram {
 		for(CubeXProgramPiece piece : pieces){
 			if(piece.isStatement())
 			{
-				sb.append("\t").append(piece.preC());
+				String pre = piece.preC();
+				if(!pre.isEmpty())
+					sb.append("\t").append(pre);
+				
 				sb.append("\t").append(piece.toC());
 			}
 		}

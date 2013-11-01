@@ -37,8 +37,6 @@ public class Constructor {
 		GlobalAwareness.declarationAppend(sbdecl.append(";").toString());
 		
 		
-		
-		
 		sb.append("object_t * __this__ = createObject(").append(clss.getID()).append(", 0)");
 		
 		sb.append("cint_").append(clss.getName()).append("(__this__");
