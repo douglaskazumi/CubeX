@@ -55,17 +55,19 @@ typedef struct {
 
 typedef enum {RANGE, INFINITE, OBJECT, INPUT, STRING} iterableValue_t;
 
+
+typedef struct {
+	iterableValue_t type;
+} iterableEntry_t;
+
 typedef struct {
 	void *vTable;
 	unsigned int refCount;
 	int numFields;
 	unsigned int numEntries;
-	Entry_t **entries;
+	iterableEntry_t **entries;
 } iterable_t;
 
-typedef struct {
-	iterableValue_t type;
-} iterableEntry_t;
 
 typedef struct {
 	iterableValue_t type;
@@ -76,12 +78,12 @@ typedef struct {
 	iterableValue_t type;
 	int start;
 	int end;
-} rangeIterableEntry_t
+} rangeIterableEntry_t;
 
 typedef struct {
 	iterableValue_t type;
 	int start;
-} infiniteIterableEntry_t
+} infiniteIterableEntry_t;
 
 typedef struct {
 	iterableValue_t type;
@@ -105,8 +107,8 @@ typedef struct {
 
 
 
-//Allocates the neccessary memory
-object_t * createObject(int type);
+/* Allocates the neccessary memory */
+object_t * createObject(int type, unsigned int startingRefs);
 void gc(object_t *target);
 
 iterableIndex_t * createIndexer();
@@ -120,24 +122,25 @@ object_t * createInteger(int val, unsigned int startingRefs);
 object_t * createBoolean(bool val, unsigned int startingRefs);
 object_t * createCharacter(char val, unsigned int startingRefs);
 
-object_t * createIterable_value(object_t *value, unsigned int startingRefs); //maybe extend this to do more then one
+object_t * createIterable_value(object_t *value, unsigned int startingRefs); /*maybe extend this to do more then one*/
 object_t * createIterable_finiteInt(int first, int last, unsigned int startingRefs);
 object_t * createIterable_infiniteInt(int first, unsigned int startingRefs);
-
+object_t * createIterable_string(char *str, int len, unsigned int startingRefs, bool isConstantString);
 
 void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionIndex);
 
 object_t *__character(object_t *unicode);
 object_t *__string(object_t *chars);
-object_t *_Boolean_equals(object_t *__this__, object_t *that);
+object_t *_Character_equals(object_t *__this__, object_t *that);
 object_t *_Character_unicode(object_t *__this__);
 object_t *_Boolean_equals(object_t *__this__, object_t *that);
 object_t *_Boolean_lessThan(object_t *__this__, object_t *that, object_t *strict);
-object_t *_Boolean_onward(object_t *__this__, object_t *inclusive);
+object_t *_Boolean_onwards(object_t *__this__, object_t *inclusive);
 object_t *_Boolean_through(object_t *__this__, object_t *that, object_t *includeLower, object_t *includeUpper);
 object_t *_Boolean_or(object_t *__this__, object_t *that);
 object_t *_Boolean_and(object_t *__this__, object_t *that);
 object_t *_Boolean_negate(object_t *__this__);
+object_t *_Integer_equals(object_t *__this__, object_t *that);
 object_t *_Integer_lessThan(object_t *__this__, object_t *that, object_t *strict);
 object_t *_Integer_onwards(object_t *__this__, object_t *inclusive);
 object_t *_Integer_through(object_t *__this__, object_t *that, object_t *includeLower, object_t *includeUpper);
@@ -148,4 +151,8 @@ object_t *_Integer_divide(object_t *__this__, object_t *that);
 object_t *_Integer_times(object_t *__this__, object_t *that);
 object_t *_Integer_negative(object_t *__this__);
 object_t *_String_equals(object_t *__this__, object_t *that);
+
+void init_VTables();
+object_t * cubex_main_int();
+
 #endif

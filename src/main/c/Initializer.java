@@ -1,8 +1,12 @@
 package main.c;
 
 
-import main.context.GlobalContexts;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
+import main.context.GlobalContexts;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
@@ -10,24 +14,6 @@ import main.program.CubeXClassBase;
 
 public class Initializer 
 {
-	
-	
-	private String getMain()
-	{
-		StringBuilder main = new StringBuilder();
-		
-		main.append("int main(int argc, char* argv[])");
-		main.append("{\n");
-		main.append("\tvoid initialize(argc, argv);\n");
-		main.append("\tvoid init_VTables();\n\n");
-
-		
-		main.append("\tcubex_main();\n");
-		main.append("\treturn 0;");
-		main.append("}\n");
-		
-		return main.toString();
-	}
 	
 	
 	private String initVTables() throws TypeCheckException
@@ -54,15 +40,23 @@ public class Initializer
 		return sb.toString();
 	}
 	
-	public String init() throws TypeCheckException
+	public String init() throws TypeCheckException, IOException
 	{
 		StringBuilder sb = new StringBuilder();
 	
 		sb.append(GlobalAwareness.getConstructors());
 		sb.append(GlobalAwareness.getCreateObj());
 		sb.append(initVTables());
-		sb.append(getMain());
 		
+		BufferedReader bf = new BufferedReader(new FileReader("cubex_lib.c"));
+		
+		String line = bf.readLine();
+		while(line!=null)
+		{
+			sb.append(line).append("\n");
+			line=bf.readLine();
+		}
+		bf.close();
 		return sb.toString();
 	}
 }

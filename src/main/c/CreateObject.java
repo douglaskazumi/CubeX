@@ -29,7 +29,7 @@ public class CreateObject
 				"	case 2:\r\n" + 
 				"		object=x3malloc(sizeof(character_t));\r\n" + 
 				"		object->numFields=-1;\r\n" + 
-				"		object->value=0;\r\n" + 
+				"		((character_t *)object)->value=0;\r\n" + 
 				"		break;\r\n" + 
 				"	case 3:\r\n" + 
 				"		object=x3malloc(sizeof(iterable_t));\r\n" + 

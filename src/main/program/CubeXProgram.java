@@ -1,5 +1,6 @@
 package main.program;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -49,6 +50,7 @@ public class CubeXProgram {
 		// Iterable
 		newClass = new CubeXClass("Iterable", new ArrayList<CubeXTypeVariable>(Arrays.asList(new CubeXTypeVariable("E"))), null, CubeXType.getThing(), null, null, null);
 		newClass.setFunctionContextManual(new ArrayList<CubeXFunction>(), GlobalContexts.functionContext);
+		newClass.myTypeID=3;
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 	
 		// Boolean
@@ -56,6 +58,7 @@ public class CubeXProgram {
 		funs = defineBooleanFunctions(newClass);
 		newClass.setFunctions(funs);
 		newClass.setFunctionContextManual(funs, GlobalContexts.functionContext);
+		newClass.myTypeID=1;
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 		
 		// Integer
@@ -63,6 +66,7 @@ public class CubeXProgram {
 		funs = defineIntegerFunctions(newClass);
 		newClass.setFunctions(funs);
 		newClass.setFunctionContextManual(funs, GlobalContexts.functionContext);
+		newClass.myTypeID=0;
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 		
 		//Character
@@ -70,6 +74,7 @@ public class CubeXProgram {
 		funs = defineCharFunctions(newClass);
 		newClass.setFunctions(funs);
 		newClass.setFunctionContextManual(funs, GlobalContexts.functionContext);
+		newClass.myTypeID=2;
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
 		
 		//String
@@ -77,7 +82,10 @@ public class CubeXProgram {
 		funs = defineStringFunctions(newClass);
 		newClass.setFunctions(funs);
 		newClass.setFunctionContextManual(funs, GlobalContexts.functionContext);
+		newClass.myTypeID=3;
 		GlobalContexts.classContext.add(newClass.getName(),newClass);
+		
+		CubeXClassBase.curTypeID=4;
 		
 		//Functions
 		defineGlobalFunctions();
@@ -382,7 +390,7 @@ public class CubeXProgram {
 	
 	}
 
-	public String toC() throws TypeCheckException 
+	public String toC() throws TypeCheckException, IOException 
 	{
 		StringBuilder sb = new StringBuilder();		
 		Initializer init = new Initializer();
@@ -420,8 +428,8 @@ public class CubeXProgram {
 		
 		
 		sb.append("\n");
-		sb.append("object_t * cubex_main()\n{\n");
-		
+		sb.append("object_t * cubex_main_int()\n{\n");
+
 
 		StringBuilder sbafter = new StringBuilder();
 		

@@ -62,7 +62,7 @@ public class VTable {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("\\*").append(host.getName()).append("*\\\n");
+		sb.append("/*").append(host.getName()).append("*/\n");
 		sb.append("\t").append("vtable = x3malloc(sizeof(vTable_t) + ").append(entries.size()).append("*sizeof(func));\n");
 		sb.append("\t").append("itable = x3malloc(sizeof(iTable_t) + ").append(iTable.getSize()).append("*sizeof(iTableEntry_t));\n");
 		sb.append("\t").append("itable->numEntries = ").append(iTable.getSize()).append(";\n");
@@ -70,7 +70,7 @@ public class VTable {
 		
 		for(InterfaceTableEntry entry : iTable.entries)
 		{
-			sb.append("\t\t").append("curEntry->typeID = ").append(entry.classBase.getID()).append(";\n");
+			sb.append("\t\t").append("curEntry->typeId = ").append(entry.classBase.getID()).append(";\n");
 			sb.append("\t\t").append("curEntry->functionIndex = ").append(entry.offset).append(";\n");
 			sb.append("\t\t").append("curEntry++;\n");
 		}
