@@ -451,7 +451,7 @@ public class CubeXProgram {
 			String var = iter.next();
 			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(";\n");
 		}
-		
+		sb.append("\tinit_VTables();\n\n");
 		sb.append(sbafter.toString());
 		
 		return sb.toString();

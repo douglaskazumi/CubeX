@@ -10,7 +10,7 @@ public class CUtils {
 	
 	public static String getTempName()
 	{
-		return "vt_"+ tempVarIndex++;
+		return "_"+ tempVarIndex++;
 	}
 	
 	public static String canonName(CubeXClassBase cb)
@@ -40,11 +40,13 @@ public class CUtils {
 	
 	public static String canonName(CubeXVariable var)
 	{
-		return "v_"+var.getName();
+		return canonName(var.getName());
 	}
 	
 	public static String canonName(String var)
 	{
+		if(var.startsWith("_"))
+			return "vtemp"+var;
 		return "v_"+var;
 	}
 	

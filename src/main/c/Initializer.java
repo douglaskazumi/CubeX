@@ -48,7 +48,7 @@ public class Initializer
 		sb.append(GlobalAwareness.getCreateObj());
 		sb.append(initVTables());
 		
-		BufferedReader bf = new BufferedReader(new FileReader("cubex_lib.c"));
+		BufferedReader bf = new BufferedReader(new FileReader("src/main/c/cubex_lib.c"));
 		
 		String line = bf.readLine();
 		while(line!=null)

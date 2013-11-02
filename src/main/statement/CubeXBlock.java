@@ -72,7 +72,7 @@ public class CubeXBlock extends CubeXStatement
 	@Override
 	public String preC(CubeXProgramPiece par) {
 		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 	@Override

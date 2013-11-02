@@ -18,3 +18,4 @@ bin
 logs
 *.jar
 out.c
+a.out
