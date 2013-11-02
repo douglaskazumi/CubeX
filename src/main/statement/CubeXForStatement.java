@@ -1,6 +1,7 @@
 package main.statement;
 
 import main.c.CUtils;
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -19,7 +20,6 @@ import main.util.Tuple;
 public class CubeXForStatement extends CubeXStatement {
 
 	private String variable;
-	private CubeXVariable actualVariable;
 	private CubeXExpression forexpression;
 	private CubeXStatement forbody;
 	private String indexer;
@@ -28,7 +28,6 @@ public class CubeXForStatement extends CubeXStatement {
 	public CubeXForStatement(String variable, CubeXExpression forexpression, CubeXStatement forbody)
 	{
 		this.variable = variable;
-		this.actualVariable=new CubeXVariable(variable);
 		this.forbody = forbody;
 		this.forexpression = forexpression;
 	}
@@ -51,26 +50,37 @@ public class CubeXForStatement extends CubeXStatement {
 	}
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(forexpression.preC());
 		indexer = CUtils.getTempName();
-		sb.append("iterableIndex_t *").append(indexer).append(";\n");
 		iterable = CUtils.getTempName();
-		sb.append("object_t *").append(iterable).append(";\n");
 		return sb.toString();
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("\t").append(indexer).append(" = createIndexer();\n");
+		if(par!=null)
+		{
+			par.addLocal(indexer);
+			par.addLocal(iterable);
+			par.addLocal(variable);
+		}
+		else
+		{
+			GlobalAwareness.addLocal(indexer);
+			GlobalAwareness.addLocal(iterable);
+			GlobalAwareness.addLocal(variable);
+		}
+		sb.append(indexer).append(" = (object_t *)createIndexer();\n");
 		sb.append("\t").append(iterable).append(" = ").append(forexpression.toC()).append(";\n");
-		sb.append("\twhile(iterableHasNext(").append(iterable).append(", ").append(indexer).append(")){\n");
-		sb.append("\t\t").append("object *").append(CUtils.canonName(variable)).append(";\n");
-		sb.append("\t\t").append(forbody.preC());
-		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = iterableNext(").append(iterable).append(", ").append(indexer).append(");\n");
-		sb.append("\t\t").append(forbody.toC());
+		sb.append("\twhile(iterableHasNext(").append(iterable).append(", (iterableIndex_t *)").append(indexer).append("))\n\t{\n");
+		String pre = forbody.preC(par);
+		if(!pre.isEmpty())
+			sb.append("\t\t").append(pre);
+		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = iterableNext(").append(iterable).append(", (iterableIndex_t *)").append(indexer).append(");\n");
+		sb.append("\t\t").append(forbody.toC(par));
 		sb.append("\t}\n");
 		return sb.toString();
 	}

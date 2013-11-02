@@ -28,7 +28,7 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		return returnValue.preC();
 	}
 

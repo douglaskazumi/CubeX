@@ -1,5 +1,7 @@
 package main.c;
 
+import java.util.HashSet;
+
 import main.exceptions.ContextException;
 import main.program.CubeXClass;
 
@@ -8,6 +10,12 @@ public class GlobalAwareness {
 	private static StringBuilder declarations = new StringBuilder();
 	private static Constructor cons = new Constructor();
 	private static CreateObject createObj = new CreateObject();
+	public static HashSet<String>  locals = new HashSet<String>();
+	
+	public static  void addLocal(String name)
+	{
+		locals.add(name);
+	}
 	
 	public static void declarationAppend(String newLine){
 		declarations.append(newLine);

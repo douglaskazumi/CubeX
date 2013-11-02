@@ -13,9 +13,9 @@ import main.type.CubeXTypeVariable;
 
 public abstract class CubeXClassBase extends CubeXProgramPiece {
 
-	private static int curTypeID=5;
+	private static int curTypeID=4;
 	
-	protected int myTypeID=4;
+	protected int myTypeID;
 	
 	protected String name;
 	protected ArrayList<CubeXTypeVariable> types;
@@ -101,11 +101,11 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 			}
 		}
 
-		for(CubeXFunction fun : startingClass.functions)
+		for(CubeXFunction fun : this.functions)
 		{
-			vTable.addEntry(fun);
+			vTable.addEntry(startingClass.getFunctionContext().lookup(fun.getName()));
 		}
 		vTable.finishBase(this);
-
+		return;
 	}
 }

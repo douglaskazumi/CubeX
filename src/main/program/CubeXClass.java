@@ -248,8 +248,20 @@ public class CubeXClass extends CubeXClassBase {
 	}
 
 	@Override
-	public String toC() {
-		return "";
+	public String toC() 
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		for(CubeXFunction fun : functions)
+		{
+			if(fun.getParent().name.equals(this.getName()))
+			{
+				fun.preC();
+				fun.toC();
+			}
+		}
+		
+		return sb.toString();
 	}
 	
 	public VTable generateVTable() throws TypeCheckException

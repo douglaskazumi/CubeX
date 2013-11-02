@@ -61,6 +61,8 @@ public class VTable {
 	public String toC()
 	{
 		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\\*").append(host.getName()).append("*\\\n");
 		sb.append("\t").append("vtable = x3malloc(sizeof(vTable_t) + ").append(entries.size()).append("*sizeof(func));\n");
 		sb.append("\t").append("itable = x3malloc(sizeof(iTable_t) + ").append(iTable.getSize()).append("*sizeof(iTableEntry_t));\n");
 		sb.append("\t").append("itable->numEntries = ").append(iTable.getSize()).append(";\n");

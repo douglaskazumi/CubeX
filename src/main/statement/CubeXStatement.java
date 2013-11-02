@@ -22,4 +22,13 @@ public abstract class CubeXStatement extends CubeXProgramPiece
 
 	public abstract String toC(CubeXProgramPiece par);
 	
+	@Override
+	public final String preC()
+	{
+		return preC(null);
+	}
+
+	public abstract String preC(CubeXProgramPiece par);
+	
+	
 }

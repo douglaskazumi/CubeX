@@ -39,7 +39,7 @@ public class CubeXWhileStatement extends CubeXStatement
 
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		return condition.preC();
 	}
 
@@ -47,7 +47,7 @@ public class CubeXWhileStatement extends CubeXStatement
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("while(").append(condition.toC()).append("){\n");
+		sb.append("while(").append(condition.toC()).append(")\n\t{\n");
 		sb.append("\t\t").append(whilestatement.preC());
 		sb.append("\t\t").append(whilestatement.toC());
 		sb.append("\t}\n");

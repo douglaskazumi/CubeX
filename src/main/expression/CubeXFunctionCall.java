@@ -179,7 +179,6 @@ public class CubeXFunctionCall extends CubeXExpression
 		{
 			 sb.append(parent.preC());
 			 tempVar = CUtils.getTempName();
-			 Why this?
 			 sb.append("object_t *").append(tempVar).append(" = ").append(parent.toC()).append(";\n");
 		}
 		

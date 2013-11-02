@@ -55,6 +55,8 @@ iterableIndex_t * createIndexer()
 
 bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
 {
+	if(obj == NULL)
+		return false;
 	if(obj->numFields!=-2 || indexer==NULL)
 	{
 		return false;
@@ -125,7 +127,8 @@ object_t * iterableNext(object_t * iter, iterableIndex_t *indexer)
 {
 
 	//Assumes iter has a next item to return
-
+	if(iter==NULL)
+		return NULL;
 	if(obj->numFields!=-2)
 	{
 		return (object_t *)0xDEADBEEF; //shouldn't happen
@@ -192,6 +195,217 @@ object_t * iterableNext(object_t * iter, iterableIndex_t *indexer)
 
 	return NULL;
 }
+
+object_t *_String_equals(object_t *__this__, object_t *that)
+{
+	stringIterableEntry_t *str1 = (stringIterableEntry_t *)(*(((iterable_t *)__this__)->entries));
+	stringIterableEntry_t *str2 = (stringIterableEntry_t *)(*(((iterable_t *)that)->entries));
+	unsigned int len=str1->length;
+	unsigned int i;
+
+	if(len!=str2->length)
+		return createBoolean(false, 0);
+
+	for(i=0; i<len; i++)
+	{
+		if(str1->string[i]!=str2.string[i])
+			return createBoolean(false, 0);
+	}
+	return createBoolean(true, 0);
+}
+
+typedef struct {
+	void *vTable;
+	unsigned int refCount;
+	int numFields;
+	signed int value;
+} integer_t;
+
+object_t *_Integer_negative(object_t *__this__)
+{
+	return createInteger(-(create-(((integer_t *)__this__)->value)), 0);
+}
+
+object_t *_Integer_times(object_t *__this__, object_t *that)
+{
+	int val = (((integer_t *)__this__)->value) * (((integer_t *)that)->value);
+	return createInteger(val, 0);
+}
+
+object_t *_Integer_divide(object_t *__this__, object_t *that)
+{
+	int val1 = (((integer_t *)__this__)->value);
+	int val2 = (((integer_t *)that)->value);
+
+	if(val2==0)
+		return NULL;
+	return createIterable_value(createInteger(val1/val2, 0), 0);
+}
+
+object_t *_Integer_modulo(object_t *__this__, object_t *that)
+{
+	int val1 = (((integer_t *)__this__)->value);
+	int val2 = (((integer_t *)that)->value);
+
+	if(val2==0)
+		return NULL;
+
+	return createIterable_value(createInteger(val1%val2, 0), 0);
+}
+
+object_t *_Integer_plus(object_t *__this__, object_t *that)
+{
+	int val = (((integer_t *)__this__)->value) + (((integer_t *)that)->value);
+	return createInteger(val, 0);
+}
+
+object_t *_Integer_minus(object_t *__this__, object_t *that)
+{
+	int val = (((integer_t *)__this__)->value) - (((integer_t *)that)->value);
+	return createInteger(val, 0);
+}
+
+object_t *_Integer_through(object_t *__this__, object_t *that, object_t *includeLower, object_t *includeUpper)
+{
+	int val1 = ((integer_t *)__this__)->value;
+	int val2 = ((integer_t *)that)->value;
+	bool low = ((boolean_t *)includeLower)->value;
+	bool high = ((boolean_t *)includeUpper)->value;
+	if(!low)
+		val1+=1;
+	if(!high)
+		val2-=1;
+
+	if(val1>val2)
+		return NULL;
+	if(val1==val2)
+		return createIterable_value(createInteger(val1, 0), 0);
+
+	return createIterable_finiteInt(val1, val2, 0);
+}
+
+object_t *_Integer_onwards(object_t *__this__, object_t *inclusive)
+{
+	int val = ((integer_t *)__this__)->value;
+	bool inc = ((boolean_t *)inclusive)->value;
+
+	if(!inc)
+		val+=1;
+
+	return createIterable_infiniteInt(val, 0);
+}
+
+object_t *_Integer_lessThan(object_t *__this__, object_t *that, object_t *strict)
+{
+	int val = (((integer_t *)__this__)->value) - (((integer_t *)that)->value);
+	if(strict)
+		return createBoolean(val<0, 0);
+	if(strict)
+		return createBoolean(val<=0, 0);
+}
+
+object_t *_Integer_equals(object_t *__this__, object_t *that)
+{
+	int val = (((integer_t *)__this__)->value) - (((integer_t *)that)->value);
+		return createBoolean(val==0, 0);
+}
+
+object_t *_Boolean_negate(object_t *__this__)
+{
+	bool val = ((boolean_t *)__this__)->value;
+	return createBoolean(!val, 0);
+}
+
+object_t *_Boolean_and(object_t *__this__, object_t *that)
+{
+	bool val1 = ((boolean_t *)__this__)->value;
+	bool val2 = ((boolean_t *)that)->value;
+	return createBoolean(val1&&val2, 0);
+}
+
+object_t *_Boolean_or(object_t *__this__, object_t *that)
+{
+	bool val1 = ((boolean_t *)__this__)->value;
+	bool val2 = ((boolean_t *)that)->value;
+	return createBoolean(val1||val2, 0);
+}
+
+object_t *_Boolean_or(object_t *__this__, object_t *that)
+{
+	bool val1 = ((boolean_t *)__this__)->value;
+	bool val2 = ((boolean_t *)that)->value;
+	return createBoolean(val1||val2, 0);
+}
+
+object_t *_Boolean_through(object_t *__this__, object_t *that, object_t *includeLower, object_t *includeUpper)
+{
+	bool val1 = ((boolean_t *)__this__)->value;
+	bool val2 = ((boolean_t *)that)->value;
+	bool low = ((boolean_t *)includeLower)->value;
+	bool high = ((boolean_t *)includeUpper)->value;
+
+	if(!low && !val1)
+		val1=true;
+	if(!low && val1)
+		return NULL;
+
+	if(!high && !val2)
+		return NULL;
+	if(!high && val2)
+		val2=false;
+
+	if(val1==val2)
+		createIterable_value(createBoolean(val1, unsigned int startingRefs),0);
+
+	return iterableAppend(createIterable_value(createBoolean(val1, 0),0),createIterable_value(createBoolean(val2, 0),0));
+}
+
+object_t *_Boolean_onward(object_t *__this__, object_t *inclusive)
+{
+	bool val1 = ((boolean_t *)__this__)->value;
+	bool inc = ((boolean_t *)inclusive)->value;
+
+	if(val1 && !inc)
+		return NULL;
+	if(val1 && inc)
+		return createIterable_value(createBoolean(true, unsigned int startingRefs),0);
+	if(!val1 && !inc)
+		return createIterable_value(createBoolean(true, unsigned int startingRefs),0);
+
+	return iterableAppend(createIterable_value(createBoolean(false, 0),0),createIterable_value(createBoolean(true, 0),0));
+}
+
+object_t *_Boolean_lessThan(object_t *__this__, object_t *that, object_t *strict)
+{
+	bool val1 = ((boolean_t *)__this__)->value;
+	bool val2 = ((boolean_t *)that)->value;
+	bool strict = ((boolean_t *)strict)->value;
+
+	if(strict && (val1==val2))
+		return createBoolean(false, 0);
+	if(!strict && (val1==val2))
+			return createBoolean(true, 0);
+
+
+	if(val1&&!val2)
+		return createBoolean(false, 0);
+
+	return createBoolean(true, 0);
+
+}
+
+object_t *_Boolean_equals(object_t *__this__, object_t *that)
+{
+	bool val1 = ((boolean_t *)__this__)->value;
+	bool val2 = ((boolean_t *)that)->value;
+	return createBoolean(val1==val2, 0);
+}
+
+_Character_unicode
+_Character_equals
+__string
+__character
+
 
 /******************************\
  * OBJECT INITIALIZER SECTION *

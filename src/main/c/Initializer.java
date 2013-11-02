@@ -57,12 +57,7 @@ public class Initializer
 	public String init() throws TypeCheckException
 	{
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append("#include \"cubex_lib.h\"\n");
-		sb.append("#include \"cubex_main.h\"\n");
-		sb.append("#include \"cubex_external_functions.h\"\n\n");
-		
-		sb.append(GlobalAwareness.getDeclarations());
+	
 		sb.append(GlobalAwareness.getConstructors());
 		sb.append(GlobalAwareness.getCreateObj());
 		sb.append(initVTables());

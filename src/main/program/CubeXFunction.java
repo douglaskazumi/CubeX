@@ -1,5 +1,6 @@
 package main.program;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import main.c.CUtils;
 import main.c.GlobalAwareness;
@@ -137,23 +138,34 @@ public class CubeXFunction extends CubeXProgramPiece
 	@Override
 	public String toC() {
 		StringBuilder sb = new StringBuilder();
-		//TODO figure out how to add class name
 		sb.append("object_t * ").append(CUtils.canonName(this, false)).append("(");
 		String separator = "";
 		for (CubeXArgument arg : arglist) {
 			sb.append(separator).append(" object_t * ").append(" ").append(CUtils.canonName(arg.variable));
 			separator = ", ";
 		}
-		sb.append(")");
+		sb.append(")\n{\n");
 		
 		GlobalAwareness.declarationAppend(sb.toString() + ";");	
 		
-		sb.append("\n{\n").append(statement.preC()).append(";\n").append(statement.toC()).append("\n}\n");
+		StringBuilder sbafter = new StringBuilder();
+		sbafter.append(statement.preC(this)).append(";\n").append(statement.toC(this)).append("\n}\n");
+		
+		Iterator<String> iter = locals.iterator();
+		while(iter.hasNext())
+		{
+			String var = iter.next();
+			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(";\n");
+		}
+		
+		sb.append(sbafter.toString());
+		
 		return sb.toString();
 	}
 
 	public String toString()
 	{
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("fun ").append(name).append(" < ");
 		

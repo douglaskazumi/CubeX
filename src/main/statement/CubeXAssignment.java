@@ -1,6 +1,7 @@
 package main.statement;
 
 import main.c.CUtils;
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -46,10 +47,9 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(expr.preC());
-		sb.append("object_t *" + CUtils.canonName(variable) + ";\n");
 		return sb.toString();
 	}
 
@@ -58,6 +58,8 @@ public class CubeXAssignment extends CubeXStatement {
 	{
 		if(!variable.isField() && par != null)
 			par.addLocal(name);
+		else if(!variable.isField())
+			GlobalAwareness.addLocal(name);
 		
 		return CUtils.canonName(variable) + " = " + expr.toC() + ";\n";
 	}

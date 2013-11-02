@@ -81,7 +81,7 @@ public class CubeXIfStatement extends CubeXStatement {
 	}
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		return condition.preC();
 	}
 

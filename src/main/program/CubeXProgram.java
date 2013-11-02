@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import main.c.CUtils;
+import main.c.GlobalAwareness;
 import main.c.Initializer;
 import main.context.*;
 import main.exceptions.ContextException;
@@ -386,7 +388,14 @@ public class CubeXProgram {
 		Initializer init = new Initializer();
 		sb.append(init.init());
 		sb.append(getRunFunction());
-		return sb.toString();
+		StringBuilder sb2 = new StringBuilder();
+		
+		sb2.append("#include \"cubex_lib.h\"\n");
+		sb2.append("#include \"cubex_main.h\"\n");
+		sb2.append("#include \"cubex_external_functions.h\"\n\n");
+		sb2.append(GlobalAwareness.getDeclarations());
+		sb2.append(sb);
+		return sb2.toString();
 	}
 	
 	public String getRunFunction()
@@ -412,17 +421,31 @@ public class CubeXProgram {
 		
 		sb.append("\n");
 		sb.append("object_t * cubex_main()\n{\n");
+		
+
+		StringBuilder sbafter = new StringBuilder();
+		
 		for(CubeXProgramPiece piece : pieces){
 			if(piece.isStatement())
 			{
 				String pre = piece.preC();
 				if(!pre.isEmpty())
-					sb.append("\t").append(pre);
+					sbafter.append("\t").append(pre);
 				
-				sb.append("\t").append(piece.toC());
+				sbafter.append("\t").append(piece.toC());
 			}
 		}
-		sb.append("\n}\n");
+		sbafter.append("\n}\n");
+		
+		Iterator<String> iter = GlobalAwareness.locals.iterator();
+		while(iter.hasNext())
+		{
+			String var = iter.next();
+			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(";\n");
+		}
+		
+		sb.append(sbafter.toString());
+		
 		return sb.toString();
 	}
 
