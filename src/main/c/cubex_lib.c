@@ -214,13 +214,6 @@ object_t *_String_equals(object_t *__this__, object_t *that)
 	return createBoolean(true, 0);
 }
 
-typedef struct {
-	void *vTable;
-	unsigned int refCount;
-	int numFields;
-	signed int value;
-} integer_t;
-
 object_t *_Integer_negative(object_t *__this__)
 {
 	return createInteger(-(create-(((integer_t *)__this__)->value)), 0);
@@ -330,13 +323,6 @@ object_t *_Boolean_or(object_t *__this__, object_t *that)
 	return createBoolean(val1||val2, 0);
 }
 
-object_t *_Boolean_or(object_t *__this__, object_t *that)
-{
-	bool val1 = ((boolean_t *)__this__)->value;
-	bool val2 = ((boolean_t *)that)->value;
-	return createBoolean(val1||val2, 0);
-}
-
 object_t *_Boolean_through(object_t *__this__, object_t *that, object_t *includeLower, object_t *includeUpper)
 {
 	bool val1 = ((boolean_t *)__this__)->value;
@@ -394,6 +380,7 @@ object_t *_Boolean_lessThan(object_t *__this__, object_t *that, object_t *strict
 
 }
 
+
 object_t *_Boolean_equals(object_t *__this__, object_t *that)
 {
 	bool val1 = ((boolean_t *)__this__)->value;
@@ -401,10 +388,84 @@ object_t *_Boolean_equals(object_t *__this__, object_t *that)
 	return createBoolean(val1==val2, 0);
 }
 
-_Character_unicode
-_Character_equals
-__string
-__character
+
+object_t *_Character_unicode(object_t *__this__)
+{
+	char val = ((character_t *)__this__)->value;
+	return createInteger(charuni(val), 0);
+}
+
+object_t *_Boolean_equals(object_t *__this__, object_t *that)
+{
+	char val1 = ((character_t *)__this__)->value;
+	char val2 = ((character_t *)that)->value;
+	return createBoolean(val1==val2, 0);
+}
+
+object_t *__string(object_t *chars)
+{
+	iterable_t *iter = (iterable_t *)chars;
+	iterableEntry_t * entry;
+	int i;
+	int j;
+	int k;
+	objectIterableEntry_t *oEntry;
+	stringIterableEntry_t *sEntry;
+	unsigned int totalLength = 0;
+	char *buf;
+
+	for(i=0; i<iter->numEntries; i++)
+	{
+		entry = (iter->entries)[i];
+		switch(entry->type)
+		{
+		case OBJECT:
+			oEntry = (objectIterableEntry_t *)entry;
+			totalLength++;
+
+			((character_t *)(oEntry->obj))->value
+			break;
+		case STRING:
+			sEntry = (stringIterableEntry_t *)entry;
+			totalLength += sEntry->length;
+			break;
+		default:
+			break;
+		}
+	}
+
+	buf = (char *)x3malloc(totalLength*sizeof(char));
+	j=0;
+	for(i=0; i<iter->numEntries; i++)
+	{
+		entry = (iter->entries)[i];
+		switch(entry->type)
+		{
+		case OBJECT:
+			oEntry = (objectIterableEntry_t *)entry;
+			buf[j] = ((character_t *)(oEntry->obj))->value;
+			j++;
+			break;
+		case STRING:
+			sEntry = (stringIterableEntry_t *)entry;
+			for(k=0; k<sEntry->length; k++)
+			{
+				buf[j]=(sEntry->string)[k];
+				j++;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	return createIterable_string(buf, totalLength, 0, false);
+}
+
+object_t *__character(object_t *unicode)
+{
+	return createCharacter(unichar(((integer_t *)unicode)->value),0);
+}
 
 
 /******************************\

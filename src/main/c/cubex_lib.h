@@ -126,4 +126,26 @@ object_t * createIterable_infiniteInt(int first, unsigned int startingRefs);
 
 
 void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionIndex);
+
+object_t *__character(object_t *unicode);
+object_t *__string(object_t *chars);
+object_t *_Boolean_equals(object_t *__this__, object_t *that);
+object_t *_Character_unicode(object_t *__this__);
+object_t *_Boolean_equals(object_t *__this__, object_t *that);
+object_t *_Boolean_lessThan(object_t *__this__, object_t *that, object_t *strict);
+object_t *_Boolean_onward(object_t *__this__, object_t *inclusive);
+object_t *_Boolean_through(object_t *__this__, object_t *that, object_t *includeLower, object_t *includeUpper);
+object_t *_Boolean_or(object_t *__this__, object_t *that);
+object_t *_Boolean_and(object_t *__this__, object_t *that);
+object_t *_Boolean_negate(object_t *__this__);
+object_t *_Integer_lessThan(object_t *__this__, object_t *that, object_t *strict);
+object_t *_Integer_onwards(object_t *__this__, object_t *inclusive);
+object_t *_Integer_through(object_t *__this__, object_t *that, object_t *includeLower, object_t *includeUpper);
+object_t *_Integer_minus(object_t *__this__, object_t *that);
+object_t *_Integer_plus(object_t *__this__, object_t *that);
+object_t *_Integer_modulo(object_t *__this__, object_t *that);
+object_t *_Integer_divide(object_t *__this__, object_t *that);
+object_t *_Integer_times(object_t *__this__, object_t *that);
+object_t *_Integer_negative(object_t *__this__);
+object_t *_String_equals(object_t *__this__, object_t *that);
 #endif
