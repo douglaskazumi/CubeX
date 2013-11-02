@@ -126,6 +126,7 @@ object_t * createIterable_value(object_t *value, unsigned int startingRefs); /*m
 object_t * createIterable_finiteInt(int first, int last, unsigned int startingRefs);
 object_t * createIterable_infiniteInt(int first, unsigned int startingRefs);
 object_t * createIterable_string(char *str, int len, unsigned int startingRefs, bool isConstantString);
+object_t * getInput();
 
 void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionIndex);
 

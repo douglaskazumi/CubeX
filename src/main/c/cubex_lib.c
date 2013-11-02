@@ -588,22 +588,38 @@ void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionInde
 		return (vTablePtr+funOffset);
 }
 
+object_t * getInput()
+{
+	inputIterableEntry_t *entry;
+	iterableEntry_t **entryPtr;
+	iterable_t * iter = (iterable_t *)createObject(3, 0);
+
+	entry = (inputIterableEntry_t *)x3malloc(sizeof(inputIterableEntry_t));
+	entry->type=INPUT;
+
+	iter->numEntries=1;
+
+	entryPtr = (iterableEntry_t **)x3malloc(1*sizeof(iterableEntry_t*));
+	*(entryPtr) = (iterableEntry_t *)entry;
+
+	iter->entries=entryPtr;
+	return (object_t *)iter;
+
+}
+
 void cubex_main()
 {
 	object_t *returnValue;
-	iterable_t *strings;
 	iterable_t *entry;
-	int i = 0;
-	int numEntries = 0;
+	iterableIndex_t *indexer;
 	returnValue = cubex_main_int();
-	strings = (iterable_t *) returnValue;
-	if(strings == NULL)
+	if(returnValue == NULL)
 		return;
 
-	numEntries = strings->numEntries;
-	for(i = 0;i < numEntries; i++)
+	indexer = createIndexer();
+	while(iterableHasNext(returnValue,indexer))
 	{
-		entry = (iterable_t *)(((objectIterableEntry_t *)(strings->entries[i]))->obj);
+		entry = (iterable_t *)iterableNext(returnValue,indexer);
 		print_line(((stringIterableEntry_t *)(entry->entries[0]))->string, (int)(((stringIterableEntry_t *)(entry->entries[0]))->length));
 	}
 }

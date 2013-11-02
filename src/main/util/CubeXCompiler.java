@@ -38,7 +38,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("return [\"a\"];");
+		input = new ANTLRInputStream("return [\"Hello\",\"World!\"]++input;");
 	}
 	else
 	{

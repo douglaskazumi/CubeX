@@ -402,6 +402,7 @@ public class CubeXProgram {
 		sb2.append("#include \"cubex_main.h\"\n");
 		sb2.append("#include \"cubex_external_functions.h\"\n\n");
 		sb2.append(GlobalAwareness.getDeclarations());
+		sb2.append("object_t *v_input;\n");
 		sb2.append(sb);
 		return sb2.toString();
 	}
@@ -451,6 +452,7 @@ public class CubeXProgram {
 			String var = iter.next();
 			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(";\n");
 		}
+		sb.append("v_input=getInput();\n");
 		sb.append("\tinit_VTables();\n\n");
 		sb.append(sbafter.toString());
 		
