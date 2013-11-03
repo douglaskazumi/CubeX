@@ -13,7 +13,7 @@ import main.util.Tuple;
 
 public abstract class CubeXProgramPiece 
 {
-	protected HashSet<String>  locals = new HashSet<String>();
+	public HashSet<String>  locals = new HashSet<String>();
 
 	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
 	

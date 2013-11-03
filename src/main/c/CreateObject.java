@@ -19,22 +19,25 @@ public class CreateObject
 				"	case 0: \r\n" + 
 				"		object=x3malloc(sizeof(integer_t));\r\n" + 
 				"		object->numFields=-1;\r\n" + 
+				"		object->vTable=vt_Integer;\r\n" + 
 				"		((integer_t *)object)->value=0;\r\n" + 
 				"		break;\r\n" + 
 				"	case 1: \r\n" + 
 				"		object=x3malloc(sizeof(boolean_t));\r\n" + 
 				"		object->numFields=-1;\r\n" + 
+				"		object->vTable=vt_Boolean;\r\n" + 
 				"		((boolean_t *)object)->value=false;\r\n" + 
 				"		break;\r\n" + 
 				"	case 2:\r\n" + 
 				"		object=x3malloc(sizeof(character_t));\r\n" + 
 				"		object->numFields=-1;\r\n" + 
+				"		object->vTable=vt_Character;\r\n" + 
 				"		((character_t *)object)->value=0;\r\n" + 
 				"		break;\r\n" + 
 				"	case 3:\r\n" + 
 				"		object=x3malloc(sizeof(iterable_t));\r\n" + 
 				"		object->numFields=-2;\r\n" + 
-				"		object->vTable=NULL;\r\n" + 
+				"		object->vTable=vt_Iterable;\r\n" + 
 				"		break;\r\n\r\n");
 		
 	}

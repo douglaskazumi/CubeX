@@ -1,5 +1,6 @@
 package main.program;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import main.c.CUtils;
@@ -139,22 +140,37 @@ public class CubeXFunction extends CubeXProgramPiece
 	public String toC() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("object_t * ").append(CUtils.canonName(this, false)).append("(");
+
 		String separator = "";
+		if(this.parentHolder!=null)
+		{
+			sb.append("object_t *this");
+			separator=", ";
+		}
 		for (CubeXArgument arg : arglist) {
 			sb.append(separator).append(" object_t * ").append(" ").append(CUtils.canonName(arg.variable));
 			separator = ", ";
 		}
-		sb.append(")\n{\n");
-		
+		sb.append(")");
+			
 		GlobalAwareness.declarationAppend(sb.toString() + ";");	
+		sb.append("\n{\n");
 		
 		StringBuilder sbafter = new StringBuilder();
-		sbafter.append(statement.preC(this)).append(";\n").append(statement.toC(this)).append("\n}\n");
+		String pre = statement.preC(this);
+		if(!pre.isEmpty())
+			sbafter.append(statement.preC(this)).append(";\n");
+		sbafter.append(statement.toC(this)).append("\n}\n");
 		
-		Iterator<String> iter = locals.iterator();
-		while(iter.hasNext())
+		HashSet<String> strArgs = new HashSet<String>();
+		for(CubeXArgument ar : this.arglist)
 		{
-			String var = iter.next();
+			strArgs.add(ar.variable.getName());
+		}
+		for(String var :locals)
+		{
+			if(strArgs.contains(var))
+				continue;
 			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(";\n");
 		}
 		
@@ -162,6 +178,7 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		return sb.toString();
 	}
+	
 
 	public String toString()
 	{

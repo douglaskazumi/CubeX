@@ -8,6 +8,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
+import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 
 public abstract class CubeXExpression
@@ -30,7 +31,7 @@ public abstract class CubeXExpression
 
 	protected abstract CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
 	
-	public abstract String preC();
+	public abstract String preC(CubeXProgramPiece par);
 	
-	public abstract String toC();
+	public abstract String toC(CubeXProgramPiece par);
 }

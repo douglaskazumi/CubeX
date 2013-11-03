@@ -16,7 +16,7 @@ public class Initializer
 {
 	
 	
-	private String initVTables() throws TypeCheckException
+	public String initVTables() throws TypeCheckException
 	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -46,7 +46,6 @@ public class Initializer
 	
 		sb.append(GlobalAwareness.getConstructors());
 		sb.append(GlobalAwareness.getCreateObj());
-		sb.append(initVTables());
 		
 		BufferedReader bf = new BufferedReader(new FileReader("src/main/c/cubex_lib.c"));
 		

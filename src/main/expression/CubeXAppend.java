@@ -7,6 +7,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
+import main.program.CubeXProgramPiece;
 import main.type.*;
 
 
@@ -40,16 +41,16 @@ public class CubeXAppend extends CubeXExpression {
 	}
 
 	@Override
-	public String toC() {
+	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("iterableAppend(").append(a.toC()).append(", ").append(b.toC()).append(")");
+		sb.append("iterableAppend(").append(a.toC(par)).append(", ").append(b.toC(par)).append(")");
 		return sb.toString();
 	}
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(a.preC()).append(b.preC());
+		sb.append(a.preC(par)).append(b.preC(par));
 		return sb.toString();
 	}
 

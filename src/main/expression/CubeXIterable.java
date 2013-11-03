@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 
 
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -15,6 +16,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
+import main.program.CubeXProgramPiece;
 import main.type.*;
 
 public class CubeXIterable extends CubeXExpression
@@ -38,24 +40,24 @@ public class CubeXIterable extends CubeXExpression
 	}
 
 	@Override
-	public String preC()
+	public String preC(CubeXProgramPiece par)
 	{
 		StringBuilder sb = new StringBuilder();
 		for(CubeXExpression entry : entries)
 		{
-			sb.append(entry.preC());
+			sb.append(entry.preC(par));
 		}
 		return sb.toString();
 	}
 
 	@Override
-	public String toC() {
+	public String toC(CubeXProgramPiece par) {
 		StringBuilder sbpre = new StringBuilder();
 		StringBuilder sbpost = new StringBuilder();
 		sbpost.append("NULL");
 		for(CubeXExpression entry : entries)
 		{
-			sbpre.append("iterableAppend(createIterable_value(").append(entry.toC()).append(", 0), ");
+			sbpre.append("iterableAppend(createIterable_value(").append(entry.toC(par)).append(", 0), ");
 			sbpost.append(")");
 		}
 		return sbpre.append(sbpost).toString();

@@ -9,6 +9,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
+import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 
 
@@ -54,6 +55,14 @@ public class CubeXVariable extends CubeXExpression
 		if(setField)
 		{
 			this.setIsField(par);
+			if(par!=null && par.isClass())
+			{
+				CubeXClass clss = (CubeXClass)par;
+				if(!clss.definedFields.contains(name))
+				{
+					clss.definedFields.add(name);
+				}
+			}
 		}
 		else
 		{
@@ -66,16 +75,16 @@ public class CubeXVariable extends CubeXExpression
 	}
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		return "";
 	}
 
 	@Override
-	public String toC() {
+	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		if(isField)
 		{
-			sb.append("(((object_t **)(this+1))+").append(parent.definedFields.lastIndexOf(name)).append(")");
+			sb.append("*(((object_t **)(this+1))+").append(parent.definedFields.lastIndexOf(name)).append(")");
 		}
 		else
 		{

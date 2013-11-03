@@ -87,6 +87,7 @@ typedef struct {
 
 typedef struct {
 	iterableValue_t type;
+	iterable_t *store;
 } inputIterableEntry_t;
 
 typedef struct {

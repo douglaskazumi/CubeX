@@ -38,8 +38,9 @@ public class CubeXAssignment extends CubeXStatement {
 			throw new ContextException();
 		
 		variable.trySetField(setField, par);
+		/*
 		if(par!=null && par.isClass())
-			((CubeXClass) par).definedFields.add(name);
+			((CubeXClass) par).definedFields.add(name);*/
 		
 		varCon.add(name, type);
 		
@@ -49,7 +50,7 @@ public class CubeXAssignment extends CubeXStatement {
 	@Override
 	public String preC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(expr.preC());
+		sb.append(expr.preC(par));
 		return sb.toString();
 	}
 
@@ -61,7 +62,7 @@ public class CubeXAssignment extends CubeXStatement {
 		else if(!variable.isField())
 			GlobalAwareness.addLocal(name);
 		
-		return CUtils.canonName(variable) + " = " + expr.toC() + ";\n";
+		return variable.toC(par) + " = " + expr.toC(par) + ";\n";
 	}
 
 	public String toString()

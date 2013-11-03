@@ -390,11 +390,13 @@ public class CubeXProgram {
 	
 	}
 
-	public String toC() throws TypeCheckException, IOException 
+	public String toC() throws TypeCheckException, IOException, ContextException 
 	{
-		StringBuilder sb = new StringBuilder();		
 		Initializer init = new Initializer();
-		sb.append(init.init());
+		String vtables =  init.initVTables();
+		
+		
+		StringBuilder sb = new StringBuilder();		
 		sb.append(getRunFunction());
 		StringBuilder sb2 = new StringBuilder();
 		
@@ -403,11 +405,14 @@ public class CubeXProgram {
 		sb2.append("#include \"cubex_external_functions.h\"\n\n");
 		sb2.append(GlobalAwareness.getDeclarations());
 		sb2.append("object_t *v_input;\n");
+		
+
+		sb2.append(init.init()).append(vtables);
 		sb2.append(sb);
 		return sb2.toString();
 	}
 	
-	public String getRunFunction()
+	public String getRunFunction() throws ContextException
 	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -422,6 +427,8 @@ public class CubeXProgram {
 		for(CubeXProgramPiece piece : pieces){
 			if(piece.isClass()||piece.isInterface())
 			{
+				if(piece.isClass())
+					GlobalAwareness.addClass((CubeXClass)piece);
 				sb.append(piece.preC());
 				sb.append(piece.toC());
 			}
@@ -452,7 +459,7 @@ public class CubeXProgram {
 			String var = iter.next();
 			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(";\n");
 		}
-		sb.append("v_input=getInput();\n");
+		sb.append("\tv_input=getInput();\n");
 		sb.append("\tinit_VTables();\n\n");
 		sb.append(sbafter.toString());
 		

@@ -14,8 +14,11 @@ iterableIndex_t * createIndexer()
 
 bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
 {
+	int lineLength;
 	iterable_t *iter;
+	bool stored;
 	iterableEntry_t *entry;
+	iterableIndex_t *innerIndexer;
 	if(obj == NULL)
 		return false;
 	if(obj->numFields!=-2 || indexer==NULL)
@@ -30,9 +33,19 @@ bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
 	entry = (iter->entries)[indexer->index];
 	if(entry->type==INPUT )
 	{
-		int lineLength = next_line_len();
+		innerIndexer=createIndexer();
+		innerIndexer->index=indexer->innerIndex;
+		stored = iterableHasNext((object_t *)(((inputIterableEntry_t *)entry)->store), innerIndexer);
+		if(stored)
+			return true;
+
+		lineLength = next_line_len();
 		if(lineLength==0)
-			return false;
+		{
+			indexer->index+=1;
+			indexer->innerIndex=0;
+			return iterableHasNext(obj, indexer);
+		}
 	}
 
 	return true;
@@ -99,6 +112,8 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 	infiniteIterableEntry_t * infEntry;
 	objectIterableEntry_t * objEntry;
 	stringIterableEntry_t * strEntry;
+	inputIterableEntry_t * inpEntry;
+	iterableIndex_t *innerIndexer;
 	int len=0;
 	char * buff;
 	iterable_t *str;
@@ -161,11 +176,21 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 		return value;
 		break;
 	case INPUT:
-
+		inpEntry = (inputIterableEntry_t *)entry;
+		innerIndexer=createIndexer();
+		innerIndexer->index=indexer->innerIndex;
+		if(iterableHasNext((object_t *)(inpEntry->store), innerIndexer))
+			return iterableNext((object_t *)(inpEntry->store), indexer);
 		len = next_line_len();
 		buff = (char *)x3malloc((len+1)*sizeof(char)); /*null terminated ? */
 		read_line(buff);
+		str = (iterable_t *)createIterable_string(buff, len, 0, true);
+		inpEntry->store = (iterable_t *)iterableAppend((object_t *)(inpEntry->store), createIterable_value((object_t *)str,0));
 		str = (iterable_t *)createIterable_string(buff, len, 0, false);
+
+
+		indexer->innerIndex+=1;
+
 		return (object_t *)str;
 		break;
 	}
@@ -579,13 +604,14 @@ void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionInde
 		if(curPtr->typeId==myTypeId)
 		{
 			funOffset=curPtr->functionIndex;
+			break;
 		}
 	}
 
 	if(funOffset==0)
 		return NULL;
 	else
-		return (vTablePtr+funOffset);
+		return *((func *)vTablePtr+funOffset+functionIndex);
 }
 
 object_t * getInput()
@@ -596,6 +622,7 @@ object_t * getInput()
 
 	entry = (inputIterableEntry_t *)x3malloc(sizeof(inputIterableEntry_t));
 	entry->type=INPUT;
+	entry->store = NULL;
 
 	iter->numEntries=1;
 

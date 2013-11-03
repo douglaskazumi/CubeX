@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import main.c.CUtils;
+import main.c.GlobalAwareness;
 import main.context.*;
 import main.exceptions.*;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
+import main.program.CubeXProgramPiece;
 import main.type.*;
 import main.util.*;
 import main.program.*;
@@ -171,27 +173,35 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		
 		StringBuilder sb = new StringBuilder();
 		
 		if(parent!=null) //e.fun();
 		{
-			 sb.append(parent.preC());
+			 sb.append(parent.preC(par));
 			 tempVar = CUtils.getTempName();
-			 sb.append("object_t *").append(tempVar).append(" = ").append(parent.toC()).append(";\n");
+			 if(par!=null)
+			 {
+				 par.addLocal(tempVar);
+			 }
+			 else
+			 {
+				 GlobalAwareness.addLocal(tempVar);
+			 }
+			 sb.append(CUtils.canonName(tempVar)).append(" = ").append(parent.toC(par)).append(";\n");
 		}
 		
 		for(CubeXExpression exp : args)
 		{
-			sb.append(exp.preC());
+			sb.append(exp.preC(par));
 		}
 		
 		return sb.toString();
 	}
 
 	@Override
-	public String toC() {
+	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		try
 		{
@@ -219,16 +229,16 @@ public class CubeXFunctionCall extends CubeXExpression
 					if(fIndex==-1)
 						throw new Exception("Bad translation");
 					
-					sb.append("((object_t * (*)(object_t *");
+					sb.append("(((object_t * (*)(object_t *");
 					for(@SuppressWarnings("unused") CubeXExpression exp : args)
 					{
 						sb.append(", ").append("object_t *");
 					}
-					sb.append("))").append("(getMethod((").append(tempVar).append("), ").append(cb.getID()).append(", ").append(fIndex).append("))");
-					sb.append("(").append(tempVar);
+					sb.append("))").append("(getMethod((").append(CUtils.canonName(tempVar)).append("), ").append(cb.getID()).append(", ").append(fIndex).append(")))");
+					sb.append("(").append(CUtils.canonName(tempVar));
 					for(CubeXExpression exp : args)
 					{
-						sb.append(", ").append(exp.toC());
+						sb.append(", ").append(exp.toC(par));
 					}
 					sb.append("))");
 					
@@ -241,19 +251,18 @@ public class CubeXFunctionCall extends CubeXExpression
 				String prefix="";
 				for(CubeXExpression exp : args)
 				{
-					sb.append(prefix).append(exp.toC());
+					sb.append(prefix).append(exp.toC(par));
 					prefix=", ";
 				}
 				sb.append("))");
 			}
 			else //Constructor
 			{
-				CubeXFunction fun =  GlobalContexts.functionContext.lookup(name);
-				sb.append("(").append(CUtils.canonName(fun, true)).append("(");
+				sb.append("(c_").append(name).append("(");
 				String prefix="";
 				for(CubeXExpression exp : args)
 				{
-					sb.append(prefix).append(exp.toC());
+					sb.append(prefix).append(exp.toC(par));
 					prefix=", ";
 				}
 				sb.append("))");

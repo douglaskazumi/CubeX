@@ -100,6 +100,7 @@ public class CubeXClass extends CubeXClassBase {
 		{
 			CubeXType newType = CubeXType.validateType(arg.type, false,  classCon, classTypeVarCon);
 			newArgs.add(new CubeXArgument(arg.variable, newType));
+			definedFields.add(arg.variable.getName());
 			arg.variable.trySetField(true, this);
 			newVarCon.add(arg.variable.getName(), newType);
 		}
@@ -110,8 +111,7 @@ public class CubeXClass extends CubeXClassBase {
 			stat.typecheck(force, classCon, funCon, newVarCon, classTypeVarCon, true, this);
 		}
 		
-		definedFields.clear();
-		
+		ArrayList<String> parentFields = new ArrayList<>();
 		CubeXType pConstructor = parentType.getConstructableComponent();
 		if(pConstructor==CubeXType.getThing())
 		{
@@ -136,9 +136,10 @@ public class CubeXClass extends CubeXClassBase {
 					throw new TypeCheckException();
 			}
 			
-			definedFields.addAll(pClass.getDeclaration(classCon).definedFields);
+			parentFields.addAll(pClass.getDeclaration(classCon).definedFields);
 		}
-		
+		definedFields.clear();
+		definedFields.addAll(parentFields);
 		for (String varName : newVarCon.getInnerMap().keySet())
 		{
 			definedFields.add(varName);
@@ -256,8 +257,8 @@ public class CubeXClass extends CubeXClassBase {
 		{
 			if(fun.getParent().name.equals(this.getName()))
 			{
-				fun.preC();
-				fun.toC();
+				sb.append(fun.preC());
+				sb.append(fun.toC());
 			}
 		}
 		

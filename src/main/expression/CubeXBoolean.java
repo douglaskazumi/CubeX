@@ -5,6 +5,7 @@ import main.context.FunctionContext;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.program.CubeXClassBase;
+import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 
 public class CubeXBoolean extends CubeXExpression 
@@ -22,13 +23,13 @@ public class CubeXBoolean extends CubeXExpression
 	}
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		// TODO Auto-generated method stub
 		return "";
 	}
 
 	@Override
-	public String toC() {
+	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("createBoolean(").append(value).append(", 0)");
 		return sb.toString();

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.BitSet;
 
+import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXProgram;
 
@@ -38,8 +39,89 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("return [\"Hello\",\"World!\"]++input;");
+		input = new ANTLRInputStream("# Cubex Compiler Test 6 - Stage 8\r\n" + 
+				"\r\n" + 
+				"interface Printer\r\n" + 
+				"{\r\n" + 
+				"	fun print() : Iterable<String>;\r\n" + 
+				"	fun line() : String;\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"class SinglePrinter(s:String)\r\n" + 
+				"{\r\n" + 
+				"	fun print() : Iterable<String>\r\n" + 
+				"	{\r\n" + 
+				"		return [s];\r\n" + 
+				"	}\r\n" + 
+				"	fun line() : String = s;\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"class ConstantPrinter() extends SinglePrinter\r\n" + 
+				"{\r\n" + 
+				"	super(\"Constant\");\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"class Multiplier(s : String, n : Integer) extends SinglePrinter\r\n" + 
+				"{\r\n" + 
+				"	v:=\"\";\r\n" + 
+				"	nn := n;\r\n" + 
+				"	while(nn>0)\r\n" + 
+				"	{\r\n" + 
+				"		v:=string(v++s);\r\n" + 
+				"		nn := nn-1;\r\n" + 
+				"	}\r\n" + 
+				"	super(v);\r\n" + 
+				"	\r\n" + 
+				"	fun print() : Iterable<String>\r\n" + 
+				"	{\r\n" + 
+				"		ret:=[];\r\n" + 
+				"		nnn := n;\r\n" + 
+				"		while (nnn>0)\r\n" + 
+				"		{\r\n" + 
+				"			ret:=ret++[s];\r\n" + 
+				"			nnn:=nnn-1;\r\n" + 
+				"		}\r\n" + 
+				"		return ret;\r\n" + 
+				"	}\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"ps := [];\r\n" + 
+				"c := 0;\r\n" + 
+				"m := 0;\r\n" + 
+				"for(i in input)\r\n" + 
+				"{\r\n" + 
+				"	m:=m+1;\r\n" + 
+				"	if(c==0)\r\n" + 
+				"	{\r\n" + 
+				"		ps := ps ++ [ConstantPrinter()];\r\n" + 
+				"		c := 1;\r\n" + 
+				"	}\r\n" + 
+				"	else if(c==1)\r\n" + 
+				"	{\r\n" + 
+				"		ps := ps ++ [SinglePrinter(i)];\r\n" + 
+				"		c := 2;\r\n" + 
+				"	}\r\n" + 
+				"	else\r\n" + 
+				"	{\r\n" + 
+				"		ps := ps ++ [Multiplier(i,m)];\r\n" + 
+				"		c := 0;\r\n" + 
+				"	}\r\n" + 
+				"}\r\n" + 
+				"out := [];\r\n" + 
+				"for(p in ps)\r\n" + 
+				"{\r\n" + 
+				"	out := out ++ [p.line()];\r\n" + 
+				"}\r\n" + 
+				"for(p in ps)\r\n" + 
+				"{\r\n" + 
+				"	out := out ++ p.print();\r\n" + 
+				"}\r\n" + 
+				"return out;");
+		
+		/*x:=\"\"; y:=0; while(y<27) { x:=x++string([character(97+y)]); y:=y+1; }"
+				+ "return [string(x)]++input;*/
 	}
+	
 	else
 	{
 		input = new ANTLRInputStream(new FileInputStream(args[0]));
@@ -70,7 +152,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 		writer.println(prog.toC());
 		writer.close();
 		
-	} catch (TypeCheckException e)
+	} catch (TypeCheckException | ContextException e)
 	{
 		e.printStackTrace();
 	}

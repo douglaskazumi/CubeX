@@ -40,16 +40,19 @@ public class CubeXWhileStatement extends CubeXStatement
 
 	@Override
 	public String preC(CubeXProgramPiece par) {
-		return condition.preC();
+		return "";
 	}
 
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("while(").append(condition.toC()).append(")\n\t{\n");
-		sb.append("\t\t").append(whilestatement.preC());
-		sb.append("\t\t").append(whilestatement.toC());
+		
+		sb.append("while(true)\n\t{\n");
+		sb.append(condition.preC(par));
+		sb.append("\tif(!(((boolean_t *)").append(condition.toC(par)).append(")->value))\n\t\tbreak;\n\n");
+		sb.append("\t\t").append(whilestatement.preC(par));
+		sb.append("\t\t").append(whilestatement.toC(par));
 		sb.append("\t}\n");
 		return sb.toString();
 	}

@@ -29,12 +29,12 @@ public class CubeXReturnStatement extends CubeXStatement {
 
 	@Override
 	public String preC(CubeXProgramPiece par) {
-		return returnValue.preC();
+		return returnValue.preC(par);
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
-		return "return " + returnValue.toC() + ";\n";
+		return "return " + returnValue.toC(par) + ";\n";
 	}
 
 	public String toString()

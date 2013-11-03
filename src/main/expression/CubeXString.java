@@ -5,6 +5,7 @@ import main.context.FunctionContext;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.program.CubeXClassBase;
+import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 
 public class CubeXString extends CubeXExpression {
@@ -22,12 +23,12 @@ public class CubeXString extends CubeXExpression {
 	}
 
 	@Override
-	public String preC() {
+	public String preC(CubeXProgramPiece par) {
 		return "";
 	}
 
 	@Override
-	public String toC() {
+	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("createIterable_string(\"").append(value.replace("\\","\\\\")).append("\", ").append(value.length()).append(", 0, true)");
 		return sb.toString();

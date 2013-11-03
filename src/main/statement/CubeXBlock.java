@@ -79,7 +79,8 @@ public class CubeXBlock extends CubeXStatement
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		for(CubeXStatement stat: innerStatements){
-			sb.append("\t\t").append(stat.toC());
+			sb.append("\t\t").append(stat.preC(par));
+			sb.append("\t\t").append(stat.toC(par));
 		}
 		return sb.toString();
 	}

@@ -114,14 +114,24 @@ public class CubeXInterface extends CubeXClassBase {
 	@Override
 	public String preC() {
 		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 
 	@Override
 	public String toC() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		
+		for(CubeXFunction fun : functions)
+		{
+			if(!fun.isDeclaration() && fun.getParent().name.equals(this.getName()))
+			{
+				sb.append(fun.preC());
+				sb.append(fun.toC());
+			}
+		}
+		
+		return sb.toString();
 	}
 
 

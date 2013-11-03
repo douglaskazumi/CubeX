@@ -82,21 +82,21 @@ public class CubeXIfStatement extends CubeXStatement {
 
 	@Override
 	public String preC(CubeXProgramPiece par) {
-		return condition.preC();
+		return condition.preC(par);
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("if(").append(condition.toC()).append("){\n");
-		sb.append("\t\t").append(ifstatement.preC());
-		sb.append("\t\t").append(ifstatement.toC());
+		sb.append("if(((boolean_t *)(").append(condition.toC(par)).append("))->value){\n");
+		sb.append("\t\t").append(ifstatement.preC(par));
+		sb.append("\t\t").append(ifstatement.toC(par));
 		sb.append("\t}\n"); 
 		//When it does not have else, it's an empty block. If it is only one statment, is not a block
 		if((elsestatement.isBlock() && !((CubeXBlock)elsestatement).isEmpty()) || !elsestatement.isBlock()){
 			sb.append("\telse {\n");
-			sb.append("\t\t").append(elsestatement.preC());
-			sb.append("\t\t").append(elsestatement.toC());
+			sb.append("\t\t").append(elsestatement.preC(par));
+			sb.append("\t\t").append(elsestatement.toC(par));
 			sb.append("\t}\n");
 		}
 		return sb.toString();
