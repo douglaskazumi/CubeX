@@ -14,6 +14,11 @@ public abstract class CubeXStatement extends CubeXProgramPiece
 		return true;
 	}
 	
+	public boolean isReturn()
+	{
+		return false;
+	}
+	
 	@Override
 	public final String toC()
 	{

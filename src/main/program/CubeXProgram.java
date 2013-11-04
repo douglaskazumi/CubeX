@@ -453,11 +453,9 @@ public class CubeXProgram {
 		}
 		sbafter.append("\n}\n");
 		
-		Iterator<String> iter = GlobalAwareness.locals.iterator();
-		while(iter.hasNext())
+		for(String var : GlobalAwareness.locals)
 		{
-			String var = iter.next();
-			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(";\n");
+			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(" = NULL;\n");
 		}
 		sb.append("\tv_input=getInput();\n");
 		sb.append("\tinit_VTables();\n\n");

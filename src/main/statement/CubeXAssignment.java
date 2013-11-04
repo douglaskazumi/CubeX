@@ -51,18 +51,31 @@ public class CubeXAssignment extends CubeXStatement {
 	public String preC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(expr.preC(par));
+		
 		return sb.toString();
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) 
 	{
+
+		StringBuilder sb = new StringBuilder();
+		String temp = CUtils.getTempName();
+		sb.append("\t").append(CUtils.canonName(temp)).append(" = gc_inc_f(gc_dec(").append(variable.toC(par)).append("));\n");
+		sb.append("\t").append(variable.toC(par)).append(" = gc_inc(").append(expr.toC(par)).append(");\n");
+		sb.append("\tgc(gc_dec_f(").append(CUtils.canonName(temp)).append("));\n");
+		sb.append("\t").append(CUtils.canonName(temp)).append(" = NULL;\n");
 		if(!variable.isField() && par != null)
+		{
 			par.addLocal(name);
+			par.addLocal(temp);
+		}
 		else if(!variable.isField())
+		{
 			GlobalAwareness.addLocal(name);
-		
-		return variable.toC(par) + " = " + expr.toC(par) + ";\n";
+			GlobalAwareness.addLocal(temp);
+		}
+		return sb.toString();
 	}
 
 	public String toString()

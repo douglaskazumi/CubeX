@@ -171,7 +171,7 @@ public class CubeXFunction extends CubeXProgramPiece
 		{
 			if(strArgs.contains(var))
 				continue;
-			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(";\n");
+			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(" = NULL;\n");
 		}
 		
 		sb.append(sbafter.toString());

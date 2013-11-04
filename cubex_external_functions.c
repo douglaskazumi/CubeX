@@ -11,6 +11,8 @@ static int curr_input = 1;
 static int input_len;
 static char** input;
 
+int allocdiff=0;
+
 void initialize(int argc, char** argv) {
   input_len = argc;
   input = argv;
@@ -45,10 +47,12 @@ void read_line(char* buffer) {
 }
 
 void* x3malloc(int size) {
+	allocdiff++;
   return malloc(size);
 }
 
 void x3free(void* ptr) {
+  allocdiff--;
   free(ptr);
 }
 

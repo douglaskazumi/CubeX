@@ -11,7 +11,7 @@ public class CreateObject
 	{
 		createObjectFun=new StringBuilder();
 		
-		createObjectFun.append("object_t * createObject(int type, unsigned int startingRefs)\r\n" + 
+		createObjectFun.append("object_t * createObject(int type, int startingRefs)\r\n" + 
 				"{\r\n" + 
 				"	object_t * object;\r\n" + 
 				"	switch(type)\r\n" + 

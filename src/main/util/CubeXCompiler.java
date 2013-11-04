@@ -16,7 +16,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
-	public static boolean debug=true;
+	public static boolean debug=false;
 	
 public static void main(String[] args) throws IOException
 {
@@ -39,84 +39,50 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("# Cubex Compiler Test 6 - Stage 8\r\n" + 
+		input = new ANTLRInputStream("# Cubex Compiler Test 2 - Stage 2\r\n" + 
 				"\r\n" + 
-				"interface Printer\r\n" + 
+				"fun safeDiv( l : Integer, r : Integer, d : Integer) : Integer\r\n" + 
 				"{\r\n" + 
-				"	fun print() : Iterable<String>;\r\n" + 
-				"	fun line() : String;\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"class SinglePrinter(s:String)\r\n" + 
-				"{\r\n" + 
-				"	fun print() : Iterable<String>\r\n" + 
+				"	m := l/r;\r\n" + 
+				"	for(i in m)\r\n" + 
 				"	{\r\n" + 
-				"		return [s];\r\n" + 
+				"		return i;\r\n" + 
 				"	}\r\n" + 
-				"	fun line() : String = s;\r\n" + 
+				"	return d;\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"class ConstantPrinter() extends SinglePrinter\r\n" + 
+				"fun safeModulo(l : Integer, r : Integer, d : Integer) : Integer\r\n" + 
 				"{\r\n" + 
-				"	super(\"Constant\");\r\n" + 
+				"	m := l%r;\r\n" + 
+				"	for(i in m)\r\n" + 
+				"	{\r\n" + 
+				"		return i;\r\n" + 
+				"	}\r\n" + 
+				"	return d;\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"class Multiplier(s : String, n : Integer) extends SinglePrinter\r\n" + 
+				"fun intToStr(i : Integer) : String\r\n" + 
 				"{\r\n" + 
-				"	v:=\"\";\r\n" + 
-				"	nn := n;\r\n" + 
-				"	while(nn>0)\r\n" + 
+				"	pref := \"\";\r\n" + 
+				"	if (i<0)\r\n" + 
 				"	{\r\n" + 
-				"		v:=string(v++s);\r\n" + 
-				"		nn := nn-1;\r\n" + 
+				"		pref := \"-\";\r\n" + 
+				"		i := i * -1;\r\n" + 
 				"	}\r\n" + 
-				"	super(v);\r\n" + 
-				"	\r\n" + 
-				"	fun print() : Iterable<String>\r\n" + 
+				"	ret := [character(48+safeModulo(i,10,0))];\r\n" + 
+				"	i := safeDiv(i,10,0);\r\n" + 
+				"	while(i>0)\r\n" + 
 				"	{\r\n" + 
-				"		ret:=[];\r\n" + 
-				"		nnn := n;\r\n" + 
-				"		while (nnn>0)\r\n" + 
-				"		{\r\n" + 
-				"			ret:=ret++[s];\r\n" + 
-				"			nnn:=nnn-1;\r\n" + 
-				"		}\r\n" + 
-				"		return ret;\r\n" + 
+				"		ret := [character(48+safeModulo(i,10,0))] ++ ret;\r\n" + 
+				"		i := safeDiv(i,10,0);\r\n" + 
 				"	}\r\n" + 
+				"	return string(pref ++ ret);\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"ps := [];\r\n" + 
-				"c := 0;\r\n" + 
-				"m := 0;\r\n" + 
-				"for(i in input)\r\n" + 
-				"{\r\n" + 
-				"	m:=m+1;\r\n" + 
-				"	if(c==0)\r\n" + 
-				"	{\r\n" + 
-				"		ps := ps ++ [ConstantPrinter()];\r\n" + 
-				"		c := 1;\r\n" + 
-				"	}\r\n" + 
-				"	else if(c==1)\r\n" + 
-				"	{\r\n" + 
-				"		ps := ps ++ [SinglePrinter(i)];\r\n" + 
-				"		c := 2;\r\n" + 
-				"	}\r\n" + 
-				"	else\r\n" + 
-				"	{\r\n" + 
-				"		ps := ps ++ [Multiplier(i,m)];\r\n" + 
-				"		c := 0;\r\n" + 
-				"	}\r\n" + 
-				"}\r\n" + 
-				"out := [];\r\n" + 
-				"for(p in ps)\r\n" + 
-				"{\r\n" + 
-				"	out := out ++ [p.line()];\r\n" + 
-				"}\r\n" + 
-				"for(p in ps)\r\n" + 
-				"{\r\n" + 
-				"	out := out ++ p.print();\r\n" + 
-				"}\r\n" + 
-				"return out;");
+				"for(i in (1..5) ++ [6])\r\n" + 
+				"   return [intToStr(i)];\r\n" + 
+				"\r\n" + 
+				"return [\"nope\"];");
 		
 		/*x:=\"\"; y:=0; while(y<27) { x:=x++string([character(97+y)]); y:=y+1; }"
 				+ "return [string(x)]++input;*/
@@ -142,6 +108,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	}
 	else{
 		System.out.println("reject");
+		System.exit(0);
 	}
 	if(debug)
 		System.out.println(prog.toString());

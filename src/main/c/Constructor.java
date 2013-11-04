@@ -1,7 +1,5 @@
 package main.c;
 
-import java.util.Iterator;
-
 import main.context.GlobalContexts;
 import main.exceptions.ContextException;
 import main.expression.CubeXExpression;
@@ -46,14 +44,19 @@ public class Constructor {
 		
 		sb.append("object_t * this = createObject(").append(clss.getID()).append(", 0);\n");
 		
-		sb.append("cint_").append(clss.getName()).append("(this");
+		sb.append("cint_").append(clss.getName()).append("(gc_inc(this)");
 		for(int i=0; i<clss.getConstructorArgs().size(); ++i)
 		{
 			sb.append(prefix).append("ca_").append(i);
 			prefix=", ";
 		}
 		sb.append(");\n");
-		sb.append("return this;\n");
+		
+		for(int i=0; i<clss.getConstructorArgs().size(); ++i)
+		{
+			sb.append("\tgc(gc_dec(ca_").append(i).append("));\n");
+		}
+		sb.append("return gc_dec(this);\n");
 		sb.append("}\n\n");
 		
 		
@@ -85,6 +88,8 @@ public class Constructor {
 		StringBuilder statements = new StringBuilder();
 		for(CubeXStatement stat: clss.getStatements())	
 		{
+			if(stat.isReturn())
+				continue;
 			String pre = stat.preC(dummyFunction);
 			if(!pre.isEmpty())
 				statements.append(pre);
@@ -112,10 +117,15 @@ public class Constructor {
 		
 		for(String lvar : dummyFunction.locals)
 		{
-			sb.append("\tobject_t * ").append(CUtils.canonName(lvar)).append(";\n");
+			sb.append("\tobject_t * ").append(CUtils.canonName(lvar)).append("= NULL;\n");
 		}
 		
 		sb.append(fields).append(statements).append(superCall);
+		
+		for(String lvar : dummyFunction.locals)
+		{
+			sb.append("\tgc(gc_dec(").append(CUtils.canonName(lvar)).append("));\n");
+		}
 		
 		sb.append("}\n\n");
 		

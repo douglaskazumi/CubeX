@@ -1,7 +1,174 @@
 
-void gc(object_t *target){
-	if(target->refCount != 0)
-		return;
+bool gc(object_t *obj)
+{
+	iterable_t *iter;
+	iterableEntry_t *iterEntry;
+	int i;
+	bool res;
+	if(obj==NULL)
+		return true;
+	if(obj->refCount != 0)
+		return false;
+
+	if(obj->numFields==-1)
+	{
+		x3free(obj);
+		return true;
+	}
+	if(obj->numFields==-2)
+	{
+		iter = (iterable_t *)obj;
+
+		for(i=0; i<iter->numEntries; i++)
+		{
+			iterEntry = iter->entries[i];
+			if(iter->entries[i]==NULL || iter->entries[i]->magic!=0x12345678 )
+				continue;
+			switch(iterEntry->type)
+			{
+			case OBJECT:
+				res=gc(((objectIterableEntry_t *)iterEntry)->obj);
+				break;
+			case INPUT:
+				res=gc((object_t *)(((inputIterableEntry_t *)iterEntry)->store));
+				break;
+			case STRING:
+				x3free(((stringIterableEntry_t *)iterEntry)->string);
+				res=true;
+				break;
+			case RANGE:
+				break;
+			case INFINITE:
+				break;
+			}
+			if(res)
+			{
+				iter->entries[i]->magic=0;
+				x3free(iter->entries[i]);
+				iter->entries[i]=NULL;
+			}
+		}
+		x3free(iter->entries);
+		x3free(obj);
+		return true;
+	}
+
+	for(i=0; i<obj->numFields; i++)
+	{
+		gc(*(((object_t **)(obj+1))+i));
+	}
+	x3free(obj);
+	return true;
+}
+
+object_t* gc_inc_f(object_t *obj)
+{
+	if(obj==NULL)
+		return NULL;
+	obj->refCount+=1;
+	return obj;
+}
+object_t* gc_dec_f(object_t *obj)
+{
+	if(obj==NULL)
+		return NULL;
+	obj->refCount-=1;
+	return obj;
+}
+
+object_t* gc_inc(object_t *obj)
+{
+	iterable_t *iter;
+	iterableEntry_t *iterEntry;
+	int i;
+	if(obj==NULL)
+		return NULL;
+
+
+	obj->refCount+=1;
+
+	if(obj->numFields==-1)
+	{
+		return obj;
+	}
+	else if (obj->numFields==-2)
+	{
+		iter = (iterable_t *)obj;
+		for(i=0; i<iter->numEntries; i++)
+		{
+			iterEntry = iter->entries[i];
+			switch(iterEntry->type)
+			{
+			case OBJECT:
+				gc_inc(((objectIterableEntry_t *)iterEntry)->obj);
+				break;
+			case INPUT:
+				gc_inc((object_t *)(((inputIterableEntry_t *)iterEntry)->store));
+				((inputIterableEntry_t *)iterEntry)->innerRef+=1;
+				break;
+			default:
+				break;
+			}
+		}
+		return obj;
+	}
+
+	for(i=0; i<obj->numFields; i++)
+	{
+		gc_inc(*(((object_t **)(obj+1))+i));
+	}
+	return obj;
+}
+
+object_t* gc_dec(object_t *obj)
+{
+	iterable_t *iter;
+	iterableEntry_t *iterEntry;
+	int i;
+	if(obj==NULL)
+		return NULL;
+
+	obj->refCount-=1;
+
+	if(obj->numFields==-1)
+	{
+		return obj;
+	}
+	else if (obj->numFields==-2)
+	{
+		iter = (iterable_t *)obj;
+		for(i=0; i<iter->numEntries; i++)
+		{
+			iterEntry = iter->entries[i];
+			switch(iterEntry->type)
+			{
+			case OBJECT:
+				gc_dec(((objectIterableEntry_t *)iterEntry)->obj);
+				break;
+			case INPUT:
+				gc_dec((object_t *)(((inputIterableEntry_t *)iterEntry)->store));
+				((inputIterableEntry_t *)iterEntry)->innerRef-=1;
+				break;
+			default:
+				break;
+			}
+		}
+		return obj;
+	}
+
+	for(i=0; i<obj->numFields; i++)
+	{
+		gc_dec(*(((object_t **)(obj+1))+i));
+	}
+	return obj;
+}
+
+
+void gc_vTable(vTable_t *vtable)
+{
+	x3free(vtable->iTable);
+	x3free(vtable);
+	return;
 }
 
 iterableIndex_t * createIndexer()
@@ -10,6 +177,11 @@ iterableIndex_t * createIndexer()
 	indexer->index=0;
 	indexer->innerIndex=0;
 	return indexer;
+}
+
+void gc_iterableIndex(iterableIndex_t* iterIndex)
+{
+	x3free(iterIndex);
 }
 
 bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
@@ -36,6 +208,7 @@ bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
 		innerIndexer=createIndexer();
 		innerIndexer->index=indexer->innerIndex;
 		stored = iterableHasNext((object_t *)(((inputIterableEntry_t *)entry)->store), innerIndexer);
+		gc_iterableIndex(innerIndexer);
 		if(stored)
 			return true;
 
@@ -51,8 +224,12 @@ bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
 	return true;
 }
 
-
 object_t * iterableAppend(object_t * obj1, object_t * obj2)
+{
+	return iterableAppend_sr(obj1, obj2, 0);
+}
+
+object_t * iterableAppend_sr(object_t * obj1, object_t * obj2, int startingRefs)
 {
 	iterable_t *iter1;
 	iterable_t *iter2;
@@ -75,7 +252,7 @@ object_t * iterableAppend(object_t * obj1, object_t * obj2)
 	iter1 = (iterable_t *)obj1;
 	iter2 = (iterable_t *)obj2;
 
-	newIter = (iterable_t *) createObject(3,0);
+	newIter = (iterable_t *) createObject(3,startingRefs);
 
 	numE1 = iter1->numEntries;
 	numE2 = iter2->numEntries;
@@ -95,9 +272,16 @@ object_t * iterableAppend(object_t * obj1, object_t * obj2)
 	}
 
 	newIter->entries = entryTable;
-
-	gc(obj1);
-	gc(obj2);
+	if(obj1->refCount == 0)
+	{
+		x3free(((iterable_t *)obj1)->entries);
+		x3free(obj1);
+	}
+	if(obj1!=obj2 && obj2->refCount == 0)
+	{
+		x3free(((iterable_t *)obj2)->entries);
+		x3free(obj2);
+	}
 	return (object_t *)newIter;
 
 }
@@ -109,11 +293,13 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 	iterableEntry_t *entry;
 	rangeIterableEntry_t * rangeEntry;
 	object_t *value;
+	object_t *vtemp;
 	infiniteIterableEntry_t * infEntry;
 	objectIterableEntry_t * objEntry;
 	stringIterableEntry_t * strEntry;
 	inputIterableEntry_t * inpEntry;
 	iterableIndex_t *innerIndexer;
+	int refs=0;
 	int len=0;
 	char * buff;
 	iterable_t *str;
@@ -176,23 +362,30 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 		return value;
 		break;
 	case INPUT:
-		inpEntry = (inputIterableEntry_t *)entry;
-		innerIndexer=createIndexer();
-		innerIndexer->index=indexer->innerIndex;
-		if(iterableHasNext((object_t *)(inpEntry->store), innerIndexer))
-			return iterableNext((object_t *)(inpEntry->store), indexer);
-		len = next_line_len();
-		buff = (char *)x3malloc((len+1)*sizeof(char)); /*null terminated ? */
-		read_line(buff);
-		str = (iterable_t *)createIterable_string(buff, len, 0, true);
-		inpEntry->store = (iterable_t *)iterableAppend((object_t *)(inpEntry->store), createIterable_value((object_t *)str,0));
-		str = (iterable_t *)createIterable_string(buff, len, 0, false);
+			inpEntry = (inputIterableEntry_t *)entry;
+			innerIndexer=createIndexer();
+			innerIndexer->index=indexer->innerIndex;
+			if(iterableHasNext((object_t *)(inpEntry->store), innerIndexer))
+			{
+				gc_iterableIndex(innerIndexer);
+				return iterableNext((object_t *)(inpEntry->store), indexer);
+			}
+			gc_iterableIndex(innerIndexer);
+			len = next_line_len();
+			buff = (char *)x3malloc((len+1)*sizeof(char)); /*null terminated ? */
+			read_line(buff);
+			refs=inpEntry->innerRef-1;
+			str = (iterable_t *)createIterable_string(buff, len,refs, false);
 
+			vtemp = gc_inc_f(gc_dec((object_t *)inpEntry->store));
+			inpEntry->store = (iterable_t *)gc_inc(iterableAppend_sr((object_t *)(inpEntry->store), createIterable_value((object_t *)str,refs), refs));
+			gc(gc_dec_f(vtemp));
+			vtemp = NULL;
 
-		indexer->innerIndex+=1;
+			indexer->innerIndex+=1;
 
-		return (object_t *)str;
-		break;
+			return (object_t *)str;
+			break;
 	}
 
 	return NULL;
@@ -206,24 +399,38 @@ object_t *_String_equals(object_t *__this__, object_t *that)
 	unsigned int i;
 
 	if(len!=str2->length)
+	{
+		gc(__this__);
+		gc(that);
 		return (object_t *)createBoolean(false, 0);
+	}
 
 	for(i=0; i<len; i++)
 	{
 		if(str1->string[i]!=str2->string[i])
+		{
+			gc(__this__);
+			gc(that);
 			return (object_t *)createBoolean(false, 0);
+		}
 	}
+	gc(__this__);
+	gc(that);
 	return (object_t *)createBoolean(true, 0);
 }
 
 object_t *_Integer_negative(object_t *__this__)
 {
-	return (object_t *)createInteger(-(((integer_t *)__this__)->value), 0);
+	object_t * res=(object_t *)createInteger(-(((integer_t *)__this__)->value), 0);
+	gc(__this__);
+	return res;
 }
 
 object_t *_Integer_times(object_t *__this__, object_t *that)
 {
 	int val = (((integer_t *)__this__)->value) * (((integer_t *)that)->value);
+	gc(__this__);
+	gc(that);
 	return (object_t *)createInteger(val, 0);
 }
 
@@ -231,7 +438,8 @@ object_t *_Integer_divide(object_t *__this__, object_t *that)
 {
 	int val1 = (((integer_t *)__this__)->value);
 	int val2 = (((integer_t *)that)->value);
-
+	gc(__this__);
+	gc(that);
 	if(val2==0)
 		return NULL;
 	return (object_t *)createIterable_value(createInteger(val1/val2, 0), 0);
@@ -241,7 +449,8 @@ object_t *_Integer_modulo(object_t *__this__, object_t *that)
 {
 	int val1 = (((integer_t *)__this__)->value);
 	int val2 = (((integer_t *)that)->value);
-
+	gc(__this__);
+	gc(that);
 	if(val2==0)
 		return NULL;
 
@@ -251,12 +460,16 @@ object_t *_Integer_modulo(object_t *__this__, object_t *that)
 object_t *_Integer_plus(object_t *__this__, object_t *that)
 {
 	int val = (((integer_t *)__this__)->value) + (((integer_t *)that)->value);
+	gc(__this__);
+	gc(that);
 	return (object_t *)createInteger(val, 0);
 }
 
 object_t *_Integer_minus(object_t *__this__, object_t *that)
 {
 	int val = (((integer_t *)__this__)->value) - (((integer_t *)that)->value);
+	gc(__this__);
+	gc(that);
 	return (object_t *)createInteger(val, 0);
 }
 
@@ -266,6 +479,10 @@ object_t *_Integer_through(object_t *__this__, object_t *that, object_t *include
 	int val2 = ((integer_t *)that)->value;
 	bool low = ((boolean_t *)includeLower)->value;
 	bool high = ((boolean_t *)includeUpper)->value;
+	gc(__this__);
+	gc(that);
+	gc(includeLower);
+	gc(includeUpper);
 	if(!low)
 		val1+=1;
 	if(!high)
@@ -283,7 +500,8 @@ object_t *_Integer_onwards(object_t *__this__, object_t *inclusive)
 {
 	int val = ((integer_t *)__this__)->value;
 	bool inc = ((boolean_t *)inclusive)->value;
-
+	gc(__this__);
+	gc(inclusive);
 	if(!inc)
 		val+=1;
 
@@ -293,6 +511,9 @@ object_t *_Integer_onwards(object_t *__this__, object_t *inclusive)
 object_t *_Integer_lessThan(object_t *__this__, object_t *that, object_t *strict)
 {
 	int val = (((integer_t *)__this__)->value) - (((integer_t *)that)->value);
+	gc(__this__);
+	gc(that);
+	gc(strict);
 	if(strict)
 		return (object_t *)createBoolean(val<0, 0);
 	if(!strict)
@@ -303,12 +524,15 @@ object_t *_Integer_lessThan(object_t *__this__, object_t *that, object_t *strict
 object_t *_Integer_equals(object_t *__this__, object_t *that)
 {
 	int val = (((integer_t *)__this__)->value) - (((integer_t *)that)->value);
+	gc(__this__);
+	gc(that);
 		return (object_t *)createBoolean(val==0, 0);
 }
 
 object_t *_Boolean_negate(object_t *__this__)
 {
 	bool val = ((boolean_t *)__this__)->value;
+	gc(__this__);
 	return (object_t *)createBoolean(!val, 0);
 }
 
@@ -316,6 +540,8 @@ object_t *_Boolean_and(object_t *__this__, object_t *that)
 {
 	bool val1 = ((boolean_t *)__this__)->value;
 	bool val2 = ((boolean_t *)that)->value;
+	gc(__this__);
+	gc(that);
 	return (object_t *)createBoolean(val1&&val2, 0);
 }
 
@@ -323,6 +549,8 @@ object_t *_Boolean_or(object_t *__this__, object_t *that)
 {
 	bool val1 = ((boolean_t *)__this__)->value;
 	bool val2 = ((boolean_t *)that)->value;
+	gc(__this__);
+	gc(that);
 	return (object_t *)createBoolean(val1||val2, 0);
 }
 
@@ -332,6 +560,10 @@ object_t *_Boolean_through(object_t *__this__, object_t *that, object_t *include
 	bool val2 = ((boolean_t *)that)->value;
 	bool low = ((boolean_t *)includeLower)->value;
 	bool high = ((boolean_t *)includeUpper)->value;
+	gc(__this__);
+	gc(that);
+	gc(includeLower);
+	gc(includeUpper);
 
 	if(!low && !val1)
 		val1=true;
@@ -353,7 +585,8 @@ object_t *_Boolean_onwards(object_t *__this__, object_t *inclusive)
 {
 	bool val1 = ((boolean_t *)__this__)->value;
 	bool inc = ((boolean_t *)inclusive)->value;
-
+	gc(__this__);
+	gc(inclusive);
 	if(val1 && !inc)
 		return NULL;
 	if(val1 && inc)
@@ -369,6 +602,9 @@ object_t *_Boolean_lessThan(object_t *__this__, object_t *that, object_t *strict
 	bool val1 = ((boolean_t *)__this__)->value;
 	bool val2 = ((boolean_t *)that)->value;
 	bool bstrict = ((boolean_t *)strict)->value;
+	gc(__this__);
+	gc(that);
+	gc(strict);
 
 	if(bstrict && (val1==val2))
 		return (object_t *)createBoolean(false, 0);
@@ -388,6 +624,8 @@ object_t *_Boolean_equals(object_t *__this__, object_t *that)
 {
 	bool val1 = ((boolean_t *)__this__)->value;
 	bool val2 = ((boolean_t *)that)->value;
+	gc(__this__);
+	gc(that);
 	return (object_t *)createBoolean(val1==val2, 0);
 }
 
@@ -395,6 +633,7 @@ object_t *_Boolean_equals(object_t *__this__, object_t *that)
 object_t *_Character_unicode(object_t *__this__)
 {
 	char val = ((character_t *)__this__)->value;
+	gc(__this__);
 	return createInteger(charuni(val), 0);
 }
 
@@ -402,6 +641,8 @@ object_t *_Character_equals(object_t *__this__, object_t *that)
 {
 	char val1 = ((character_t *)__this__)->value;
 	char val2 = ((character_t *)that)->value;
+	gc(__this__);
+	gc(that);
 	return (object_t *)createBoolean(val1==val2, 0);
 }
 
@@ -461,12 +702,15 @@ object_t *__string(object_t *chars)
 		}
 	}
 
+	gc(chars);
 	return (object_t *)createIterable_string(buf, totalLength, 0, false);
 }
 
 object_t *__character(object_t *unicode)
 {
-	return (object_t *)createCharacter(unichar(((integer_t *)unicode)->value),0);
+	object_t *res = (object_t *)createCharacter(unichar(((integer_t *)unicode)->value),0);
+	gc(unicode);
+	return res;
 }
 
 
@@ -474,21 +718,21 @@ object_t *__character(object_t *unicode)
  * OBJECT INITIALIZER SECTION *
 \******************************/
 
-object_t * createInteger(int val, unsigned int startingRefs)
+object_t * createInteger(int val, int startingRefs)
 {
 	integer_t *integer = (integer_t *)createObject(0, startingRefs);
 	integer->value = val;
 	return (object_t *)integer;
 }
 
-object_t * createBoolean(bool val, unsigned int startingRefs)
+object_t * createBoolean(bool val, int startingRefs)
 {
 	boolean_t *boolean = (boolean_t *)createObject(1, startingRefs);
 	boolean->value = val;
 	return (object_t *)boolean;
 }
 
-object_t * createCharacter(char val, unsigned int startingRefs)
+object_t * createCharacter(char val, int startingRefs)
 {
 	character_t *character = (character_t *)createObject(2, startingRefs);
 	character->value = val;
@@ -496,13 +740,15 @@ object_t * createCharacter(char val, unsigned int startingRefs)
 }
 
 
-object_t * createIterable_value(object_t *value, unsigned int startingRefs)
+object_t * createIterable_value(object_t *value, int startingRefs)
 {
+
 	iterableEntry_t **entryPtr;
 	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
 	objectIterableEntry_t *entry = (objectIterableEntry_t *)x3malloc(sizeof(objectIterableEntry_t));
 	entry->type=OBJECT;
 	entry->obj=value;
+	entry->magic=0x12345678;
 
 	iter->numEntries=1;
 
@@ -513,7 +759,7 @@ object_t * createIterable_value(object_t *value, unsigned int startingRefs)
 	return (object_t *)iter;
 }
 
-object_t * createIterable_finiteInt(int first, int last, unsigned int startingRefs)
+object_t * createIterable_finiteInt(int first, int last, int startingRefs)
 {
 	rangeIterableEntry_t *entry;
 	iterableEntry_t **entryPtr;
@@ -530,6 +776,7 @@ object_t * createIterable_finiteInt(int first, int last, unsigned int startingRe
 	entry->type=RANGE;
 	entry->start=first;
 	entry->end=last;
+	entry->magic=0x12345678;
 
 	iter->numEntries=1;
 
@@ -539,7 +786,7 @@ object_t * createIterable_finiteInt(int first, int last, unsigned int startingRe
 	iter->entries=entryPtr;
 	return (object_t *)iter;
 }
-object_t * createIterable_infiniteInt(int first, unsigned int startingRefs)
+object_t * createIterable_infiniteInt(int first, int startingRefs)
 {
 	iterableEntry_t **entryPtr;
 	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
@@ -547,6 +794,7 @@ object_t * createIterable_infiniteInt(int first, unsigned int startingRefs)
 	rangeIterableEntry_t *entry = (rangeIterableEntry_t *)x3malloc(sizeof(rangeIterableEntry_t));
 	entry->type=INFINITE;
 	entry->start=first;
+	entry->magic=0x12345678;
 
 	iter->numEntries=1;
 
@@ -557,12 +805,12 @@ object_t * createIterable_infiniteInt(int first, unsigned int startingRefs)
 	return (object_t *)iter;
 }
 
-void memcopy(void * src, void * dest, unsigned int count)
+void memcopy(void * src, void * dest, int count)
 {
 	while (count--) *(unsigned char *)dest++ = *(unsigned char *)src++;
 }
 
-object_t * createIterable_string(char *str, int len, unsigned int startingRefs, bool isConstantString)
+object_t * createIterable_string(char *str, int len, int startingRefs, bool isConstantString)
 {
 	stringIterableEntry_t *entry;
 	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
@@ -581,6 +829,7 @@ object_t * createIterable_string(char *str, int len, unsigned int startingRefs, 
 	entry->type=STRING;
 	entry->string=loc;
 	entry->length=len;
+	entry->magic=0x12345678;
 
 	*(entryPtr) = (iterableEntry_t *)entry;
 
@@ -588,6 +837,13 @@ object_t * createIterable_string(char *str, int len, unsigned int startingRefs, 
 
 	iter->entries=entryPtr;
 	return (object_t *)iter;
+}
+
+bool isTrue(object_t *obj)
+{
+	bool val = ((boolean_t *)obj)->value;
+	gc(obj);
+	return val;
 }
 
 void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionIndex)
@@ -618,11 +874,13 @@ object_t * getInput()
 {
 	inputIterableEntry_t *entry;
 	iterableEntry_t **entryPtr;
-	iterable_t * iter = (iterable_t *)createObject(3, 0);
+	iterable_t * iter = (iterable_t *)createObject(3, 1);
 
 	entry = (inputIterableEntry_t *)x3malloc(sizeof(inputIterableEntry_t));
 	entry->type=INPUT;
 	entry->store = NULL;
+	entry->magic=0x12345678;
+	entry->innerRef=1;
 
 	iter->numEntries=1;
 
@@ -641,7 +899,12 @@ void cubex_main()
 	iterableIndex_t *indexer;
 	returnValue = cubex_main_int();
 	if(returnValue == NULL)
+	{
+		gc(gc_dec(returnValue));
+		gc(gc_dec(v_input));
+		gc_allVTable();
 		return;
+	}
 
 	indexer = createIndexer();
 	while(iterableHasNext(returnValue,indexer))
@@ -649,4 +912,10 @@ void cubex_main()
 		entry = (iterable_t *)iterableNext(returnValue,indexer);
 		print_line(((stringIterableEntry_t *)(entry->entries[0]))->string, (int)(((stringIterableEntry_t *)(entry->entries[0]))->length));
 	}
+
+	gc_iterableIndex(indexer);
+
+	gc(gc_dec(returnValue));
+	gc(gc_dec(v_input));
+	gc_allVTable();
 }

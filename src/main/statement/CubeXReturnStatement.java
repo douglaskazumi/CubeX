@@ -1,5 +1,11 @@
 package main.statement;
 
+import java.util.HashSet;
+
+import com.sun.org.apache.xpath.internal.operations.Variable;
+
+import main.c.CUtils;
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -7,7 +13,10 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXVariable;
+import main.program.CubeXArgument;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.util.Tuple;
@@ -19,6 +28,11 @@ public class CubeXReturnStatement extends CubeXStatement {
 	public CubeXReturnStatement(CubeXExpression returnValue)
 	{
 		this.returnValue = returnValue;
+	}
+	
+	public boolean isReturn()
+	{
+		return true;
 	}
 	
 	@Override
@@ -34,7 +48,43 @@ public class CubeXReturnStatement extends CubeXStatement {
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
-		return "return " + returnValue.toC(par) + ";\n";
+		String temp = CUtils.getTempName();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t").append(CUtils.canonName(temp)).append(" = gc_inc(").append(returnValue.toC(par)).append(");\n");
+		String ignoreVar = "";
+		if(returnValue.getTypeUnsafe().isVariable())
+		{
+			ignoreVar = ((CubeXVariable)returnValue).getName();
+		}
+		
+		HashSet<String> locals;
+		if(par==null)
+		{
+			locals=GlobalAwareness.locals;
+		}
+		else
+		{
+			locals=par.locals;
+		}
+		locals.add(temp);
+		if(par!=null && par.isFunction())
+		{
+			for(CubeXArgument var : ((CubeXFunction)par).getArglist())
+			{
+				if(var.variable.getName().equals(ignoreVar))
+					continue;
+				sb.append("\tgc(gc_dec(").append(CUtils.canonName(var.variable.getName())).append("));\n");
+			}
+		}
+		for(String var : locals)
+		{
+			if(var.equals(ignoreVar) || var.equals(temp))
+				continue;
+			sb.append("\tgc(gc_dec(").append(CUtils.canonName(var)).append("));\n");
+		}
+		sb.append("\treturn " + CUtils.canonName(temp) + ";\n");
+		return sb.toString();
 	}
 
 	public String toString()

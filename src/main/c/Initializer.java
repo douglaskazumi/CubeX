@@ -37,6 +37,17 @@ public class Initializer
 		}
 		sb.append("}\n");
 		
+		sb.append("void gc_allVTable()\r\n{\n");
+		
+		for(CubeXClassBase cb : GlobalContexts.classContext.getAllClasses())
+		{
+			if(cb.isInterface())
+				continue;
+			CubeXClass clss = (CubeXClass)cb;
+			sb.append("gc_vTable(vt_").append(clss.getName()).append(");\n");
+		}
+
+		sb.append("	return;\r\n}\n");	
 		return sb.toString();
 	}
 	

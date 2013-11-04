@@ -189,7 +189,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			 {
 				 GlobalAwareness.addLocal(tempVar);
 			 }
-			 sb.append(CUtils.canonName(tempVar)).append(" = ").append(parent.toC(par)).append(";\n");
+			 sb.append(CUtils.canonName(tempVar)).append(" = gc_inc(").append(parent.toC(par)).append(");\n");
 		}
 		
 		for(CubeXExpression exp : args)
@@ -234,11 +234,11 @@ public class CubeXFunctionCall extends CubeXExpression
 					{
 						sb.append(", ").append("object_t *");
 					}
-					sb.append("))").append("(getMethod((").append(CUtils.canonName(tempVar)).append("), ").append(cb.getID()).append(", ").append(fIndex).append(")))");
+					sb.append("))").append("(getMethod(").append(CUtils.canonName(tempVar)).append(", ").append(cb.getID()).append(", ").append(fIndex).append(")))");
 					sb.append("(").append(CUtils.canonName(tempVar));
 					for(CubeXExpression exp : args)
 					{
-						sb.append(", ").append(exp.toC(par));
+						sb.append(", gc_inc(").append(exp.toC(par)).append(")");
 					}
 					sb.append("))");
 					
@@ -251,7 +251,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				String prefix="";
 				for(CubeXExpression exp : args)
 				{
-					sb.append(prefix).append(exp.toC(par));
+					sb.append(prefix).append("gc_inc(").append(exp.toC(par)).append(")");
 					prefix=", ";
 				}
 				sb.append("))");
@@ -262,7 +262,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				String prefix="";
 				for(CubeXExpression exp : args)
 				{
-					sb.append(prefix).append(exp.toC(par));
+					sb.append(prefix).append("gc_inc(").append(exp.toC(par)).append(")");
 					prefix=", ";
 				}
 				sb.append("))");

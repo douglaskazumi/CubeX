@@ -74,14 +74,20 @@ public class CubeXForStatement extends CubeXStatement {
 			GlobalAwareness.addLocal(variable);
 		}
 		sb.append(CUtils.canonName(indexer)).append(" = (object_t *)createIndexer();\n");
-		sb.append("\t").append(CUtils.canonName(iterable)).append(" = ").append(forexpression.toC(par)).append(";\n");
+		sb.append("\t").append(CUtils.canonName(iterable)).append(" = gc_inc(").append(forexpression.toC(par)).append(");\n");
 		sb.append("\twhile(iterableHasNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("))\n\t{\n");
-		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = iterableNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append(");\n");
+		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = gc_inc(iterableNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("));\n");
 		String pre = forbody.preC(par);
 		if(!pre.isEmpty())
 			sb.append("\t\t").append(pre);
 		sb.append("\t\t").append(forbody.toC(par));
+		sb.append("\t\tgc(gc_dec(").append(CUtils.canonName(variable)).append("));\n");
+		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = NULL;\n");
 		sb.append("\t}\n");
+		sb.append("\t\tgc_iterableIndex((iterableIndex_t *)").append(CUtils.canonName(indexer)).append(");\n");
+		sb.append("\t\t").append(CUtils.canonName(indexer)).append(" = NULL;\n");
+		sb.append("\t\tgc(gc_dec(").append(CUtils.canonName(iterable)).append("));\n");
+		sb.append("\t\t").append(CUtils.canonName(iterable)).append(" = NULL;\n");
 		return sb.toString();
 	}
 
