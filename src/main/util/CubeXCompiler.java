@@ -87,7 +87,6 @@ public void run(String[] args) throws FileNotFoundException, IOException
 		/*x:=\"\"; y:=0; while(y<27) { x:=x++string([character(97+y)]); y:=y+1; }"
 				+ "return [string(x)]++input;*/
 	}
-	
 	else
 	{
 		input = new ANTLRInputStream(new FileInputStream(args[0]));
@@ -104,7 +103,16 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	CubeXProgram prog = parser.testprogram().x;
 	if(prog.typeCheck()){
-		System.out.println("accept");
+		try
+		{
+			PrintWriter writer = new PrintWriter("out.c");
+			writer.println(prog.toC());
+			writer.close();
+			
+		} catch (TypeCheckException | ContextException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	else{
 		System.out.println("reject");
@@ -113,16 +121,16 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	if(debug)
 		System.out.println(prog.toString());
 	
-	try
-	{
-		PrintWriter writer = new PrintWriter("out.c");
-		writer.println(prog.toC());
-		writer.close();
-		
-	} catch (TypeCheckException | ContextException e)
-	{
-		e.printStackTrace();
-	}
+//	try
+//	{
+//		PrintWriter writer = new PrintWriter("out.c");
+//		writer.println(prog.toC());
+//		writer.close();
+//		
+//	} catch (TypeCheckException | ContextException e)
+//	{
+//		e.printStackTrace();
+//	}
 	
 }
 

@@ -19,3 +19,4 @@ logs
 *.jar
 out.c
 a.out
+out.o
