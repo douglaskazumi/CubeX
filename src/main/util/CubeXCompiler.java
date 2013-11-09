@@ -39,53 +39,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("# Cubex Compiler Test 2 - Stage 2\r\n" + 
-				"\r\n" + 
-				"fun safeDiv( l : Integer, r : Integer, d : Integer) : Integer\r\n" + 
-				"{\r\n" + 
-				"	m := l/r;\r\n" + 
-				"	for(i in m)\r\n" + 
-				"	{\r\n" + 
-				"		return i;\r\n" + 
-				"	}\r\n" + 
-				"	return d;\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"fun safeModulo(l : Integer, r : Integer, d : Integer) : Integer\r\n" + 
-				"{\r\n" + 
-				"	m := l%r;\r\n" + 
-				"	for(i in m)\r\n" + 
-				"	{\r\n" + 
-				"		return i;\r\n" + 
-				"	}\r\n" + 
-				"	return d;\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"fun intToStr(i : Integer) : String\r\n" + 
-				"{\r\n" + 
-				"	pref := \"\";\r\n" + 
-				"	if (i<0)\r\n" + 
-				"	{\r\n" + 
-				"		pref := \"-\";\r\n" + 
-				"		i := i * -1;\r\n" + 
-				"	}\r\n" + 
-				"	ret := [character(48+safeModulo(i,10,0))];\r\n" + 
-				"	i := safeDiv(i,10,0);\r\n" + 
-				"	while(i>0)\r\n" + 
-				"	{\r\n" + 
-				"		ret := [character(48+safeModulo(i,10,0))] ++ ret;\r\n" + 
-				"		i := safeDiv(i,10,0);\r\n" + 
-				"	}\r\n" + 
-				"	return string(pref ++ ret);\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"for(i in (1..5) ++ [6])\r\n" + 
-				"   return [intToStr(i)];\r\n" + 
-				"\r\n" + 
-				"return [\"nope\"];");
-		
-		/*x:=\"\"; y:=0; while(y<27) { x:=x++string([character(97+y)]); y:=y+1; }"
-				+ "return [string(x)]++input;*/
+		input = new ANTLRInputStream("");
 	}
 	
 	else
