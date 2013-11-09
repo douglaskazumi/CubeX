@@ -199,7 +199,7 @@ bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
 	}
 
 	iter = (iterable_t *)obj;
-	if(indexer->index >= iter->numEntries){
+	if(indexer->index < iter->numEntries){
 		return false;
 	}
 

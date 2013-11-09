@@ -16,7 +16,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
-	public static boolean debug=false;
+	public static boolean debug=true;
 	
 public static void main(String[] args) throws IOException
 {
@@ -39,9 +39,17 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("");
+		input = new ANTLRInputStream("# Cubex Compiler Test 1 - Stage 1\r\n" + 
+				"ret := [];\r\n" + 
+				"for ( i in input)\r\n" + 
+				"{\r\n" + 
+				"	ret := [i] ++ ret ++ [i];\r\n" + 
+				"}\r\n" + 
+				"return ret;");
+		
+		/*x:=\"\"; y:=0; while(y<27) { x:=x++string([character(97+y)]); y:=y+1; }"
+				+ "return [string(x)]++input;*/
 	}
-	
 	else
 	{
 		input = new ANTLRInputStream(new FileInputStream(args[0]));
@@ -58,7 +66,16 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	CubeXProgram prog = parser.testprogram().x;
 	if(prog.typeCheck()){
-		System.out.println("accept");
+		try
+		{
+			PrintWriter writer = new PrintWriter("out.c");
+			writer.println(prog.toC());
+			writer.close();
+			
+		} catch (TypeCheckException | ContextException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	else{
 		System.out.println("reject");
@@ -67,16 +84,16 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	if(debug)
 		System.out.println(prog.toString());
 	
-	try
-	{
-		PrintWriter writer = new PrintWriter("out.c");
-		writer.println(prog.toC());
-		writer.close();
-		
-	} catch (TypeCheckException | ContextException e)
-	{
-		e.printStackTrace();
-	}
+//	try
+//	{
+//		PrintWriter writer = new PrintWriter("out.c");
+//		writer.println(prog.toC());
+//		writer.close();
+//		
+//	} catch (TypeCheckException | ContextException e)
+//	{
+//		e.printStackTrace();
+//	}
 	
 }
 

@@ -328,6 +328,7 @@ public class TestType {
 			
 			if(!outputString.equals("reject")){
 				//Compile and run the c code with the proper input
+				Runtime.getRuntime().exec("cp src\\main\\c\\cubex_lib.c cubex_lib.c");
 				Process make = Runtime.getRuntime().exec("make output=\"a" + i + ".out\"  input=\"out" + i + ".c\" java");
 				int makeReturn = -1;
 				try {

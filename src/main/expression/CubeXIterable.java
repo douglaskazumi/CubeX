@@ -54,11 +54,21 @@ public class CubeXIterable extends CubeXExpression
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sbpre = new StringBuilder();
 		StringBuilder sbpost = new StringBuilder();
-		sbpost.append("NULL");
+		if(entries.size()==0)
+			return "NULL";
+		int i=1;
 		for(CubeXExpression entry : entries)
 		{
-			sbpre.append("iterableAppend(createIterable_value(").append(entry.toC(par)).append(", 0), ");
+			if(i!=entries.size())
+			{
+				sbpre.append("iterableAppend(createIterable_value(").append(entry.toC(par)).append(", 0), ");
+			}
+			else
+			{
+				sbpre.append("createIterable_value(").append(entry.toC(par)).append(", 0");
+			}
 			sbpost.append(")");
+			i++;
 		}
 		return sbpre.append(sbpost).toString();
 	}

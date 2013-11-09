@@ -2,8 +2,6 @@ package main.statement;
 
 import java.util.HashSet;
 
-import com.sun.org.apache.xpath.internal.operations.Variable;
-
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -52,11 +50,6 @@ public class CubeXReturnStatement extends CubeXStatement {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t").append(CUtils.canonName(temp)).append(" = gc_inc(").append(returnValue.toC(par)).append(");\n");
-		String ignoreVar = "";
-		if(returnValue.getTypeUnsafe().isVariable())
-		{
-			ignoreVar = ((CubeXVariable)returnValue).getName();
-		}
 		
 		HashSet<String> locals;
 		if(par==null)
@@ -72,14 +65,12 @@ public class CubeXReturnStatement extends CubeXStatement {
 		{
 			for(CubeXArgument var : ((CubeXFunction)par).getArglist())
 			{
-				if(var.variable.getName().equals(ignoreVar))
-					continue;
 				sb.append("\tgc(gc_dec(").append(CUtils.canonName(var.variable.getName())).append("));\n");
 			}
 		}
 		for(String var : locals)
 		{
-			if(var.equals(ignoreVar) || var.equals(temp))
+			if(var.equals(temp))
 				continue;
 			sb.append("\tgc(gc_dec(").append(CUtils.canonName(var)).append("));\n");
 		}

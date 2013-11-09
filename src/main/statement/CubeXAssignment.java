@@ -61,9 +61,9 @@ public class CubeXAssignment extends CubeXStatement {
 
 		StringBuilder sb = new StringBuilder();
 		String temp = CUtils.getTempName();
-		sb.append("\t").append(CUtils.canonName(temp)).append(" = gc_inc_f(gc_dec(").append(variable.toC(par)).append("));\n");
+		sb.append("\t").append(CUtils.canonName(temp)).append(" = ").append(variable.toC(par)).append(";\n");
 		sb.append("\t").append(variable.toC(par)).append(" = gc_inc(").append(expr.toC(par)).append(");\n");
-		sb.append("\tgc(gc_dec_f(").append(CUtils.canonName(temp)).append("));\n");
+		sb.append("\tgc(gc_dec(").append(CUtils.canonName(temp)).append("));\n");
 		sb.append("\t").append(CUtils.canonName(temp)).append(" = NULL;\n");
 		if(!variable.isField() && par != null)
 		{
