@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 
 
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -70,6 +71,12 @@ public class CubeXIterable extends CubeXExpression
 			sbpost.append(")");
 			i++;
 		}
+		
+		for(CubeXExpression expr : entries)
+		{
+			temps.addAll(expr.temps);
+		}
+		
 		return sbpre.append(sbpost).toString();
 	}
 

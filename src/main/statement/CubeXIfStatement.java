@@ -99,6 +99,7 @@ public class CubeXIfStatement extends CubeXStatement {
 			sb.append("\t\t").append(elsestatement.toC(par));
 			sb.append("\t}\n");
 		}
+		sb.append(condition.postC(par));
 		return sb.toString();
 	}
 

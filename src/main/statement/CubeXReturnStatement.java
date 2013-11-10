@@ -1,5 +1,6 @@
 package main.statement;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import main.c.CUtils;
@@ -50,6 +51,7 @@ public class CubeXReturnStatement extends CubeXStatement {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t").append(CUtils.canonName(temp)).append(" = gc_inc(").append(returnValue.toC(par)).append(");\n");
+		sb.append(returnValue.postC(par));
 		
 		HashSet<String> locals;
 		if(par==null)
@@ -61,20 +63,23 @@ public class CubeXReturnStatement extends CubeXStatement {
 			locals=par.locals;
 		}
 		locals.add(temp);
+		ArrayList<String> toIgnore = new ArrayList<String>();
 		if(par!=null && par.isFunction())
 		{
 			for(CubeXArgument var : ((CubeXFunction)par).getArglist())
 			{
+				toIgnore.add(var.variable.getName());
 				sb.append("\tgc(gc_dec(").append(CUtils.canonName(var.variable.getName())).append("));\n");
 			}
 		}
 		for(String var : locals)
 		{
-			if(var.equals(temp))
+			if(var.equals(temp) || toIgnore.contains(var))
 				continue;
 			sb.append("\tgc(gc_dec(").append(CUtils.canonName(var)).append("));\n");
 		}
-		sb.append("\treturn " + CUtils.canonName(temp) + ";\n");
+
+		sb.append("\treturn gc_dec(" + CUtils.canonName(temp) + ");\n");
 		return sb.toString();
 	}
 

@@ -60,6 +60,7 @@ typedef enum {RANGE, INFINITE, OBJECT, INPUT, STRING} iterableValue_t;
 
 typedef struct {
 	int magic;
+	int refCount;
 	iterableValue_t type;
 } iterableEntry_t;
 
@@ -74,12 +75,14 @@ typedef struct {
 
 typedef struct {
 	int magic;
+	int refCount;
 	iterableValue_t type;
 	object_t *obj;
 } objectIterableEntry_t;
 
 typedef struct {
 	int magic;
+	int refCount;
 	iterableValue_t type;
 	int start;
 	int end;
@@ -87,19 +90,21 @@ typedef struct {
 
 typedef struct {
 	int magic;
+	int refCount;
 	iterableValue_t type;
 	int start;
 } infiniteIterableEntry_t;
 
 typedef struct {
 	int magic;
+	int refCount;
 	iterableValue_t type;
 	iterable_t *store;
-	int innerRef;
 } inputIterableEntry_t;
 
 typedef struct {
 	int magic;
+	int refCount;
 	iterableValue_t type;
 	unsigned int length;
 	char *string;
@@ -107,6 +112,9 @@ typedef struct {
 
 
 typedef struct {
+	void *vTable;
+	int refCount;
+	int numFields;
 	unsigned int index;
 	unsigned int innerIndex;
 } iterableIndex_t;
@@ -125,8 +133,6 @@ object_t* gc_dec(object_t *obj);
 void gc_allVTable();
 void gc_vTable(vTable_t *vtable);
 void gc_iterableIndex(iterableIndex_t* iterIndex);
-object_t* gc_inc_f(object_t *obj);
-object_t* gc_dec_f(object_t *obj);
 
 iterableIndex_t * createIndexer();
 bool iterableHasNext(object_t *obj, iterableIndex_t *indexer);

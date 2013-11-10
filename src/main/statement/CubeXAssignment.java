@@ -65,6 +65,7 @@ public class CubeXAssignment extends CubeXStatement {
 		sb.append("\t").append(variable.toC(par)).append(" = gc_inc(").append(expr.toC(par)).append(");\n");
 		sb.append("\tgc(gc_dec(").append(CUtils.canonName(temp)).append("));\n");
 		sb.append("\t").append(CUtils.canonName(temp)).append(" = NULL;\n");
+		sb.append(expr.postC(par));
 		if(!variable.isField() && par != null)
 		{
 			par.addLocal(name);

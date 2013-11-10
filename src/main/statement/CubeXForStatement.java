@@ -88,6 +88,7 @@ public class CubeXForStatement extends CubeXStatement {
 		sb.append("\t\t").append(CUtils.canonName(indexer)).append(" = NULL;\n");
 		sb.append("\t\tgc(gc_dec(").append(CUtils.canonName(iterable)).append("));\n");
 		sb.append("\t\t").append(CUtils.canonName(iterable)).append(" = NULL;\n");
+		sb.append(forexpression.postC(par));
 		return sb.toString();
 	}
 

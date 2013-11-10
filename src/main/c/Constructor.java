@@ -42,9 +42,9 @@ public class Constructor {
 		GlobalAwareness.declarationAppend(sbdecl.append(";").toString());
 		
 		
-		sb.append("object_t * this = createObject(").append(clss.getID()).append(", 0);\n");
+		sb.append("object_t * this = createObject(").append(clss.getID()).append(", 1);\n");
 		
-		sb.append("cint_").append(clss.getName()).append("(gc_inc(this)");
+		sb.append("cint_").append(clss.getName()).append("(this");
 		for(int i=0; i<clss.getConstructorArgs().size(); ++i)
 		{
 			sb.append(prefix).append("ca_").append(i);
@@ -52,10 +52,6 @@ public class Constructor {
 		}
 		sb.append(");\n");
 		
-		for(int i=0; i<clss.getConstructorArgs().size(); ++i)
-		{
-			sb.append("\tgc(gc_dec(ca_").append(i).append("));\n");
-		}
 		sb.append("return gc_dec(this);\n");
 		sb.append("}\n\n");
 		

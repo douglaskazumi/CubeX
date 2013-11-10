@@ -1,5 +1,8 @@
 package main.statement;
 
+import java.util.ArrayList;
+
+import main.c.CUtils;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -50,7 +53,11 @@ public class CubeXWhileStatement extends CubeXStatement
 		
 		sb.append("while(true)\n\t{\n");
 		sb.append(condition.preC(par));
-		sb.append("\tif(!isTrue(").append(condition.toC(par)).append("))\n\t\tbreak;\n\n");
+		sb.append("\tif(!isTrue(").append(condition.toC(par)).append("))\n\t");
+		sb.append("{\n");
+		sb.append(condition.postC(par));
+		sb.append("\t\tbreak;\n\t}\n");
+		sb.append(condition.postC(par)).append("\n");	
 		sb.append("\t\t").append(whilestatement.preC(par));
 		sb.append("\t\t").append(whilestatement.toC(par));
 		sb.append("\t}\n");

@@ -39,16 +39,25 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("# Cubex Compiler Test 1 - Stage 1\r\n" + 
-				"ret := [];\r\n" + 
-				"for ( i in input)\r\n" + 
+		input = new ANTLRInputStream("# Cubex Compiler Test 4 - Stage 4\r\n" + 
+				"\r\n" + 
+				"class Multiplier(s : String, n : Integer)\r\n" + 
 				"{\r\n" + 
-				"	ret := [i] ++ ret ++ [i];\r\n" + 
+				"	fun print() : Iterable<String>\r\n" + 
+				"	{\r\n" + 
+				"		ret := [];\r\n" + 
+				"		v := n;\r\n" + 
+				"		while(v>0)\r\n" + 
+				"		{\r\n" + 
+				"			v:=v-1;\r\n" + 
+				"			ret := ret ++ [s];\r\n" + 
+				"		}\r\n" + 
+				"		return ret;\r\n" + 
+				"	}\r\n" + 
 				"}\r\n" + 
-				"return ret;");
-		
-		/*x:=\"\"; y:=0; while(y<27) { x:=x++string([character(97+y)]); y:=y+1; }"
-				+ "return [string(x)]++input;*/
+				"\r\n" + 
+				"\r\n" + 
+				"return Multiplier(\"hi\", 12).print();");
 	}
 	else
 	{

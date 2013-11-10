@@ -44,13 +44,17 @@ public class CubeXAppend extends CubeXExpression {
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("iterableAppend(").append(a.toC(par)).append(", ").append(b.toC(par)).append(")");
+		
+		
+		temps.addAll(a.temps);
+		temps.addAll(b.temps);
 		return sb.toString();
 	}
 
 	@Override
 	public String preC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(a.preC(par)).append(b.preC(par));
+		sb.append(a.preC(par)).append(b.preC(par));		
 		return sb.toString();
 	}
 

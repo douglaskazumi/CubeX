@@ -235,7 +235,7 @@ public class CubeXFunctionCall extends CubeXExpression
 						sb.append(", ").append("object_t *");
 					}
 					sb.append("))").append("(getMethod(").append(CUtils.canonName(tempVar)).append(", ").append(cb.getID()).append(", ").append(fIndex).append(")))");
-					sb.append("(").append(CUtils.canonName(tempVar));
+					sb.append("(gc_inc(").append(CUtils.canonName(tempVar)).append(")");
 					for(CubeXExpression exp : args)
 					{
 						sb.append(", gc_inc(").append(exp.toC(par)).append(")");
@@ -272,6 +272,13 @@ public class CubeXFunctionCall extends CubeXExpression
 		{
 			e.printStackTrace();
 		}
+		if(tempVar!=null)
+			temps.add(tempVar);
+		for(CubeXExpression expr : args)
+		{
+			temps.addAll(expr.temps);
+		}
+		
 		return sb.toString();
 	}
 
