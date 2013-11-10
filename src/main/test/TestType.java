@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -98,6 +99,13 @@ public class TestType {
 
 	@BeforeClass
 	public static void setUp() {
+		File dir = new File(".");
+		for (File f : dir.listFiles()) {
+			if(f.getName().matches(".*output[0-9]+.txt") ||	f.getName().matches(".*out[0-9]+.c") || f.getName().matches(".*ERRORLOG[0-9]+.txt") || f.getName().matches(".*a[0-9]+.out")){
+				f.delete();
+			}
+		}
+		
 		String fileName = "log" + System.currentTimeMillis();
 		File file = new File("tests/logs/");
 		// if dir does not exists, create
