@@ -9,8 +9,6 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
-import main.expression.CubeXIterable;
-import main.expression.CubeXVariable;
 import main.program.CubeXClassBase;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
@@ -97,6 +95,19 @@ public class CubeXForStatement extends CubeXStatement {
 		StringBuilder sb = new StringBuilder();
 		sb.append("for ( ").append(variable).append(" in ").append(forexpression.toString()).append(" ) ").append(forbody.toString());
 		return sb.toString();
+	}
+
+	@Override
+	public void initializeSucc(CubeXStatement after) {
+		addSucc(forbody);
+		forbody.initializeSucc(this);
+		addSucc(after);
+	}
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

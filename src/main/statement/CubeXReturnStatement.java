@@ -12,7 +12,6 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
-import main.expression.CubeXVariable;
 import main.program.CubeXArgument;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
@@ -91,6 +90,18 @@ public class CubeXReturnStatement extends CubeXStatement {
 		StringBuilder sb = new StringBuilder();
 		sb.append("return ").append(returnValue.toString()).append(" ;");
 		return sb.toString();
+	}
+
+	@Override
+	public void initializeSucc(CubeXStatement after)
+	{
+		return;
+	}
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

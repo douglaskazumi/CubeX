@@ -1,5 +1,8 @@
 package main.statement;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -94,5 +97,22 @@ public class CubeXAssignment extends CubeXStatement {
 		return sb.toString();
 	}
 
+	@Override
+	public void initializeSucc(CubeXStatement after)
+	{
+		addSucc(after);
+	}
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void initializeDefinedVariables()
+	{
+		definedVars.add(variable.getName());		
+	}
 	
 }

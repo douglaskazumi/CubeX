@@ -96,4 +96,32 @@ public class CubeXBlock extends CubeXStatement
 		sb.append(" }");
 		return sb.toString();
 	}
+
+	@Override
+	public void initializeSucc(CubeXStatement after) 
+	{
+		if(innerStatements.size()==0)
+		{
+			addSucc(after);
+			return;
+		}
+		
+		addSucc(innerStatements.get(0));
+		
+		CubeXStatement cur = innerStatements.get(0);
+		for(int i=0; i<innerStatements.size()-1; ++i)
+		{
+			CubeXStatement next = innerStatements.get(i+1);
+			cur.initializeSucc(next);
+			cur=next;
+		}
+		cur.initializeSucc(after);
+		
+	}
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
+	}
 }

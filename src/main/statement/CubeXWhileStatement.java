@@ -1,8 +1,5 @@
 package main.statement;
 
-import java.util.ArrayList;
-
-import main.c.CUtils;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -70,6 +67,23 @@ public class CubeXWhileStatement extends CubeXStatement
 		StringBuilder sb = new StringBuilder();
 		sb.append("while ( ").append(condition.toString()).append(" ) ").append(whilestatement.toString());
 		return sb.toString();
+	}
+
+
+	@Override
+	public void initializeSucc(CubeXStatement after)
+	{
+		addSucc(this.whilestatement);
+		whilestatement.initializeSucc(this);
+		addSucc(after);
+		
+	}
+
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

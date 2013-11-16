@@ -118,4 +118,18 @@ public class CubeXIfStatement extends CubeXStatement {
 		
 		return sb.toString();
 	}
+
+	@Override
+	public void initializeSucc(CubeXStatement after) {
+		addSucc(ifstatement);
+		addSucc(elsestatement);
+		ifstatement.initializeSucc(after);
+		elsestatement.initializeSucc(after);
+	}
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
+	}
 }
