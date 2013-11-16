@@ -1,0 +1,10 @@
+x:=[];
+for (v in input)
+{
+	x:=x++[v];
+}
+for (q in input)
+{
+	x:=x++[q];
+}
+return x;

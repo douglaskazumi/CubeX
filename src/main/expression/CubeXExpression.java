@@ -55,4 +55,8 @@ public abstract class CubeXExpression
 	{
 		return temps;
 	}
+	
+	public boolean isVariable() {
+		return false;
+	}
 }

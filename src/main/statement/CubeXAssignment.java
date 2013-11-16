@@ -69,13 +69,21 @@ public class CubeXAssignment extends CubeXStatement {
 		if(!variable.isField() && par != null)
 		{
 			par.addLocal(name);
-			par.addLocal(temp);
 		}
 		else if(!variable.isField())
 		{
 			GlobalAwareness.addLocal(name);
+		}
+		
+		if(par!=null)
+		{
+			par.addLocal(temp);
+		}
+		else
+		{
 			GlobalAwareness.addLocal(temp);
 		}
+		
 		return sb.toString();
 	}
 

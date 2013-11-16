@@ -345,7 +345,7 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 	case STRING:
 		strEntry = (stringIterableEntry_t *)entry;
 		value = createCharacter((strEntry->string)[indexer->innerIndex], 0);
-		if(indexer->innerIndex >= len-1)
+		if(indexer->innerIndex+1 >= len)
 		{
 			indexer->innerIndex=0;
 			indexer->index+=1;
@@ -362,8 +362,10 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 			innerIndexer->index=indexer->innerIndex;
 			if(iterableHasNext((object_t *)(inpEntry->store), innerIndexer))
 			{
+				value =  iterableNext((object_t *)(inpEntry->store), innerIndexer);
 				gc_iterableIndex(innerIndexer);
-				return iterableNext((object_t *)(inpEntry->store), indexer);
+				indexer->innerIndex+=1;
+				return value;
 			}
 			gc_iterableIndex(innerIndexer);
 			len = next_line_len();
@@ -819,7 +821,7 @@ void memcopy(void * src, void * dest, int count)
 object_t * createIterable_string(char *str, int len, int startingRefs, bool isConstantString)
 {
 	stringIterableEntry_t *entry;
-	iterable_t * iter = (iterable_t *)createObject(3, startingRefs);
+	iterable_t * iter = (iterable_t *)createObject(4, startingRefs);
 
 	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(sizeof(iterableEntry_t*));
 
@@ -869,6 +871,7 @@ void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionInde
 			funOffset=curPtr->functionIndex;
 			break;
 		}
+		curPtr++;
 	}
 
 	if(funOffset==0)

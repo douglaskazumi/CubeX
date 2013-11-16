@@ -405,9 +405,13 @@ public class CubeXProgram {
 		sb2.append("#include \"cubex_external_functions.h\"\n\n");
 		sb2.append(GlobalAwareness.getDeclarations());
 		sb2.append("object_t *v_input;\n");
+		for(String var : GlobalAwareness.locals)
+		{
+			sb2.append("\tobject_t * ").append(CUtils.canonName(var)).append(" = NULL;\n");
+		}
 		
 
-		sb2.append(init.init()).append(vtables);
+		sb2.append(vtables).append(init.init());
 		sb2.append(sb);
 		return sb2.toString();
 	}
@@ -453,10 +457,6 @@ public class CubeXProgram {
 		}
 		sbafter.append("\n}\n");
 		
-		for(String var : GlobalAwareness.locals)
-		{
-			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(" = NULL;\n");
-		}
 		sb.append("\tv_input=getInput();\n");
 		sb.append("\tinit_VTables();\n\n");
 		sb.append(sbafter.toString());

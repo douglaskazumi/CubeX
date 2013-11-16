@@ -1,3 +1,93 @@
+#include "cubex_lib.h"
+#include "cubex_main.h"
+#include "cubex_external_functions.h"
+
+vTable_t * vt_Iterable;
+
+vTable_t * vt_String;
+
+vTable_t * vt_Integer;
+
+vTable_t * vt_Boolean;
+
+vTable_t * vt_Character;
+
+vTable_t * vt_Iterable;
+
+vTable_t * vt_String;
+
+vTable_t * vt_Integer;
+
+vTable_t * vt_Boolean;
+
+vTable_t * vt_Character;
+
+object_t * __safeDiv( object_t *  v_l,  object_t *  v_r,  object_t *  v_d);
+object_t * __safeModulo( object_t *  v_l,  object_t *  v_r,  object_t *  v_d);
+object_t * __intToStr( object_t *  v_i);
+vTable_t * vt_Iterable;
+
+vTable_t * vt_String;
+
+vTable_t * vt_Integer;
+
+vTable_t * vt_Boolean;
+
+vTable_t * vt_Character;
+
+object_t * __rest( object_t *  v_l);
+object_t * __last( object_t *  v_l,  object_t *  v_default);
+object_t * __length( object_t *  v_l);
+object_t *v_input;
+	object_t * v_ret = NULL;
+	object_t * vtemp_54 = NULL;
+	object_t * vtemp_55 = NULL;
+	object_t * vtemp_53 = NULL;
+	object_t * v_i = NULL;
+	object_t * vtemp_31 = NULL;
+	object_t * vtemp_35 = NULL;
+	object_t * vtemp_34 = NULL;
+	object_t * vtemp_33 = NULL;
+	object_t * vtemp_32 = NULL;
+	object_t * vtemp_3 = NULL;
+	object_t * vtemp_4 = NULL;
+	object_t * vtemp_0 = NULL;
+	object_t * vtemp_1 = NULL;
+	object_t * vtemp_2 = NULL;
+object_t * createObject(int type, int startingRefs)
+{
+	object_t * object;
+	switch(type)
+	{
+	case 0: 
+		object=x3malloc(sizeof(integer_t));
+		object->numFields=-1;
+		object->vTable=vt_Integer;
+		((integer_t *)object)->value=0;
+		break;
+	case 1: 
+		object=x3malloc(sizeof(boolean_t));
+		object->numFields=-1;
+		object->vTable=vt_Boolean;
+		((boolean_t *)object)->value=false;
+		break;
+	case 2:
+		object=x3malloc(sizeof(character_t));
+		object->numFields=-1;
+		object->vTable=vt_Character;
+		((character_t *)object)->value=0;
+		break;
+	case 3:
+		object=x3malloc(sizeof(iterable_t));
+		object->numFields=-2;
+		object->vTable=vt_Iterable;
+		break;
+
+	}
+	object->refCount=startingRefs;
+	return object;
+}
+
 
 bool gc(object_t *obj)
 {
@@ -926,3 +1016,289 @@ void cubex_main()
 	gc(gc_dec(v_input));
 	gc_allVTable();
 }
+void init_VTables()
+{
+	vTable_t * vtable;
+	iTable_t * itable;
+	iTableEntry_t *curEntry;
+	func * curVEntry;
+
+/*Iterable*/
+	vtable = x3malloc(sizeof(vTable_t) + 0*sizeof(func));
+	itable = x3malloc(sizeof(iTable_t) + 1*sizeof(iTableEntry_t));
+	itable->numEntries = 1;
+	curEntry = (iTableEntry_t *)(itable+1);
+		curEntry->typeId = 3;
+		curEntry->functionIndex = 1;
+		curEntry++;
+
+	vtable->iTable = itable;
+	curVEntry = (func *)(vtable+1);
+	vt_Iterable = vtable;
+/*String*/
+	vtable = x3malloc(sizeof(vTable_t) + 1*sizeof(func));
+	itable = x3malloc(sizeof(iTable_t) + 2*sizeof(iTableEntry_t));
+	itable->numEntries = 2;
+	curEntry = (iTableEntry_t *)(itable+1);
+		curEntry->typeId = 3;
+		curEntry->functionIndex = 1;
+		curEntry++;
+		curEntry->typeId = 3;
+		curEntry->functionIndex = 1;
+		curEntry++;
+
+	vtable->iTable = itable;
+	curVEntry = (func *)(vtable+1);
+	*(curVEntry)=(func)(_String_equals);
+	curVEntry++;
+	vt_String = vtable;
+/*Integer*/
+	vtable = x3malloc(sizeof(vTable_t) + 10*sizeof(func));
+	itable = x3malloc(sizeof(iTable_t) + 1*sizeof(iTableEntry_t));
+	itable->numEntries = 1;
+	curEntry = (iTableEntry_t *)(itable+1);
+		curEntry->typeId = 0;
+		curEntry->functionIndex = 1;
+		curEntry++;
+
+	vtable->iTable = itable;
+	curVEntry = (func *)(vtable+1);
+	*(curVEntry)=(func)(_Integer_negative);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_times);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_divide);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_modulo);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_plus);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_minus);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_through);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_onwards);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_lessThan);
+	curVEntry++;
+	*(curVEntry)=(func)(_Integer_equals);
+	curVEntry++;
+	vt_Integer = vtable;
+/*Boolean*/
+	vtable = x3malloc(sizeof(vTable_t) + 7*sizeof(func));
+	itable = x3malloc(sizeof(iTable_t) + 1*sizeof(iTableEntry_t));
+	itable->numEntries = 1;
+	curEntry = (iTableEntry_t *)(itable+1);
+		curEntry->typeId = 1;
+		curEntry->functionIndex = 1;
+		curEntry++;
+
+	vtable->iTable = itable;
+	curVEntry = (func *)(vtable+1);
+	*(curVEntry)=(func)(_Boolean_negate);
+	curVEntry++;
+	*(curVEntry)=(func)(_Boolean_and);
+	curVEntry++;
+	*(curVEntry)=(func)(_Boolean_or);
+	curVEntry++;
+	*(curVEntry)=(func)(_Boolean_through);
+	curVEntry++;
+	*(curVEntry)=(func)(_Boolean_onwards);
+	curVEntry++;
+	*(curVEntry)=(func)(_Boolean_lessThan);
+	curVEntry++;
+	*(curVEntry)=(func)(_Boolean_equals);
+	curVEntry++;
+	vt_Boolean = vtable;
+/*Character*/
+	vtable = x3malloc(sizeof(vTable_t) + 2*sizeof(func));
+	itable = x3malloc(sizeof(iTable_t) + 1*sizeof(iTableEntry_t));
+	itable->numEntries = 1;
+	curEntry = (iTableEntry_t *)(itable+1);
+		curEntry->typeId = 2;
+		curEntry->functionIndex = 1;
+		curEntry++;
+
+	vtable->iTable = itable;
+	curVEntry = (func *)(vtable+1);
+	*(curVEntry)=(func)(_Character_unicode);
+	curVEntry++;
+	*(curVEntry)=(func)(_Character_equals);
+	curVEntry++;
+	vt_Character = vtable;
+}
+void gc_allVTable()
+{
+gc_vTable(vt_Iterable);
+gc_vTable(vt_String);
+gc_vTable(vt_Integer);
+gc_vTable(vt_Boolean);
+gc_vTable(vt_Character);
+	return;
+}
+object_t * __rest( object_t *  v_l)
+{
+	object_t * v_ret = NULL;
+	object_t * vtemp_37 = NULL;
+	object_t * v_e = NULL;
+	object_t * vtemp_36 = NULL;
+	object_t * vtemp_39 = NULL;
+	object_t * v_passed = NULL;
+	object_t * vtemp_38 = NULL;
+	object_t * vtemp_40 = NULL;
+	object_t * vtemp_41 = NULL;
+	object_t * vtemp_42 = NULL;
+					vtemp_36 = v_ret;
+	v_ret = gc_inc(NULL);
+	gc(gc_dec(vtemp_36));
+	vtemp_36 = NULL;
+					vtemp_37 = v_passed;
+	v_passed = gc_inc(createBoolean(false, 0));
+	gc(gc_dec(vtemp_37));
+	vtemp_37 = NULL;
+				vtemp_38 = (object_t *)createIndexer();
+	vtemp_39 = gc_inc(v_l);
+	while(iterableHasNext(vtemp_39, (iterableIndex_t *)vtemp_38))
+	{
+		v_e = gc_inc(iterableNext(vtemp_39, (iterableIndex_t *)vtemp_38));
+						if(isTrue(v_passed)){
+					vtemp_40 = v_ret;
+	v_ret = gc_inc(iterableAppend(v_ret, createIterable_value(v_e, 0)));
+	gc(gc_dec(vtemp_40));
+	vtemp_40 = NULL;
+	}
+					vtemp_41 = v_passed;
+	v_passed = gc_inc(createBoolean(true, 0));
+	gc(gc_dec(vtemp_41));
+	vtemp_41 = NULL;
+		gc(gc_dec(v_e));
+		v_e = NULL;
+	}
+		gc_iterableIndex((iterableIndex_t *)vtemp_38);
+		vtemp_38 = NULL;
+		gc(gc_dec(vtemp_39));
+		vtemp_39 = NULL;
+					vtemp_42 = gc_inc(v_ret);
+	gc(gc_dec(v_l));
+	gc(gc_dec(v_ret));
+	gc(gc_dec(vtemp_37));
+	gc(gc_dec(v_e));
+	gc(gc_dec(vtemp_36));
+	gc(gc_dec(vtemp_39));
+	gc(gc_dec(v_passed));
+	gc(gc_dec(vtemp_38));
+	gc(gc_dec(vtemp_40));
+	gc(gc_dec(vtemp_41));
+	return gc_dec(vtemp_42);
+
+}
+object_t * __last( object_t *  v_l,  object_t *  v_default)
+{
+	object_t * vtemp_46 = NULL;
+	object_t * vtemp_45 = NULL;
+	object_t * v_e = NULL;
+	object_t * vtemp_43 = NULL;
+	object_t * vtemp_44 = NULL;
+				vtemp_43 = (object_t *)createIndexer();
+	vtemp_44 = gc_inc(v_l);
+	while(iterableHasNext(vtemp_44, (iterableIndex_t *)vtemp_43))
+	{
+		v_e = gc_inc(iterableNext(vtemp_44, (iterableIndex_t *)vtemp_43));
+			vtemp_45 = gc_inc((__last(gc_inc((__rest(gc_inc(v_l)))), gc_inc(v_e))));
+	gc(gc_dec(v_l));
+	gc(gc_dec(v_default));
+	gc(gc_dec(v_e));
+	gc(gc_dec(vtemp_43));
+	gc(gc_dec(vtemp_44));
+	return gc_dec(vtemp_45);
+		gc(gc_dec(v_e));
+		v_e = NULL;
+	}
+		gc_iterableIndex((iterableIndex_t *)vtemp_43);
+		vtemp_43 = NULL;
+		gc(gc_dec(vtemp_44));
+		vtemp_44 = NULL;
+					vtemp_46 = gc_inc(v_default);
+	gc(gc_dec(v_l));
+	gc(gc_dec(v_default));
+	gc(gc_dec(vtemp_45));
+	gc(gc_dec(v_e));
+	gc(gc_dec(vtemp_43));
+	gc(gc_dec(vtemp_44));
+	return gc_dec(vtemp_46);
+
+}
+object_t * __length( object_t *  v_l)
+{
+	object_t * vtemp_48 = NULL;
+	object_t * v_ret = NULL;
+	object_t * vtemp_47 = NULL;
+	object_t * v_e = NULL;
+	object_t * vtemp_49 = NULL;
+	object_t * vtemp_50 = NULL;
+	object_t * vtemp_51 = NULL;
+	object_t * vtemp_52 = NULL;
+					vtemp_47 = v_ret;
+	v_ret = gc_inc(createInteger(0, 0));
+	gc(gc_dec(vtemp_47));
+	vtemp_47 = NULL;
+				vtemp_48 = (object_t *)createIndexer();
+	vtemp_49 = gc_inc(v_l);
+	while(iterableHasNext(vtemp_49, (iterableIndex_t *)vtemp_48))
+	{
+		v_e = gc_inc(iterableNext(vtemp_49, (iterableIndex_t *)vtemp_48));
+		vtemp_50 = gc_inc(v_ret);
+			vtemp_51 = v_ret;
+	v_ret = gc_inc((((object_t * (*)(object_t *, object_t *))(getMethod(vtemp_50, 0, 4)))(gc_inc(vtemp_50), gc_inc(createInteger(1, 0)))));
+	gc(gc_dec(vtemp_51));
+	vtemp_51 = NULL;
+		gc(gc_dec(vtemp_50));
+		vtemp_50 = NULL;
+		gc(gc_dec(v_e));
+		v_e = NULL;
+	}
+		gc_iterableIndex((iterableIndex_t *)vtemp_48);
+		vtemp_48 = NULL;
+		gc(gc_dec(vtemp_49));
+		vtemp_49 = NULL;
+					vtemp_52 = gc_inc(v_ret);
+	gc(gc_dec(v_l));
+	gc(gc_dec(vtemp_48));
+	gc(gc_dec(v_ret));
+	gc(gc_dec(vtemp_47));
+	gc(gc_dec(v_e));
+	gc(gc_dec(vtemp_49));
+	gc(gc_dec(vtemp_50));
+	gc(gc_dec(vtemp_51));
+	return gc_dec(vtemp_52);
+
+}
+
+object_t * cubex_main_int()
+{
+	v_input=getInput();
+	init_VTables();
+
+	vtemp_53 = gc_inc(createInteger(5, 0));
+vtemp_54 = gc_inc((__last(gc_inc((((object_t * (*)(object_t *, object_t *, object_t *, object_t *))(getMethod(vtemp_53, 0, 6)))(gc_inc(vtemp_53), gc_inc((__length(gc_inc(v_input)))), gc_inc(createBoolean(true, 0)), gc_inc(createBoolean(true, 0))))), gc_inc(createInteger(3, 0)))));
+		vtemp_55 = gc_inc(iterableAppend(createIterable_value((__last(gc_inc(v_input), gc_inc(createIterable_string("", 0, 0, true)))), 0), createIterable_value((__string(gc_inc(createIterable_value((__character(gc_inc((((object_t * (*)(object_t *, object_t *))(getMethod(vtemp_54, 0, 4)))(gc_inc(vtemp_54), gc_inc(createInteger(30, 0))))))), 0)))), 0)));
+		gc(gc_dec(vtemp_54));
+		vtemp_54 = NULL;
+	gc(gc_dec(v_ret));
+	gc(gc_dec(vtemp_54));
+	gc(gc_dec(vtemp_53));
+	gc(gc_dec(v_i));
+	gc(gc_dec(vtemp_31));
+	gc(gc_dec(vtemp_35));
+	gc(gc_dec(vtemp_34));
+	gc(gc_dec(vtemp_33));
+	gc(gc_dec(vtemp_32));
+	gc(gc_dec(vtemp_3));
+	gc(gc_dec(vtemp_4));
+	gc(gc_dec(vtemp_0));
+	gc(gc_dec(vtemp_1));
+	gc(gc_dec(vtemp_2));
+	return gc_dec(vtemp_55);
+
+}
+

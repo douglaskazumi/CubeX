@@ -43,6 +43,10 @@ public class CubeXVariable extends CubeXExpression
 	public boolean isField() {
 		return isField;
 	}
+	
+	public boolean isVariable() {
+		return true;
+	}
 
 	private void setIsField(CubeXClassBase p)
 	{

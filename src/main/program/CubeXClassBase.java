@@ -13,7 +13,7 @@ import main.type.CubeXTypeVariable;
 
 public abstract class CubeXClassBase extends CubeXProgramPiece {
 
-	public static int curTypeID=4;
+	public static int curTypeID=5;
 	
 	protected int myTypeID;
 	

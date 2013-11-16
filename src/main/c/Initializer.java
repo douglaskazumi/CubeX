@@ -54,10 +54,8 @@ public class Initializer
 	public String init() throws TypeCheckException, IOException
 	{
 		StringBuilder sb = new StringBuilder();
-	
-		sb.append(GlobalAwareness.getConstructors());
-		sb.append(GlobalAwareness.getCreateObj());
 		
+		sb.append(GlobalAwareness.getCreateObj());
 		BufferedReader bf = new BufferedReader(new FileReader("src/main/c/cubex_lib.c"));
 		
 		String line = bf.readLine();
@@ -67,6 +65,10 @@ public class Initializer
 			line=bf.readLine();
 		}
 		bf.close();
+		
+		sb.append(GlobalAwareness.getConstructors());
+		
+
 		return sb.toString();
 	}
 }

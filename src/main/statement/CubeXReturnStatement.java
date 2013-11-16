@@ -78,7 +78,10 @@ public class CubeXReturnStatement extends CubeXStatement {
 				continue;
 			sb.append("\tgc(gc_dec(").append(CUtils.canonName(var)).append("));\n");
 		}
-
+		if(par!=null && par.isFunction() && ((CubeXFunction)par).getParent()!=null)
+		{
+			sb.append("gc_dec(this);\n");
+		}
 		sb.append("\treturn gc_dec(" + CUtils.canonName(temp) + ");\n");
 		return sb.toString();
 	}

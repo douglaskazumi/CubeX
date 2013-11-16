@@ -80,6 +80,7 @@ public class Constructor {
 		}
 		
 		CubeXFunction dummyFunction = new CubeXFunction(new CubeXFunctionHeader("test", new CubeXScheme(null, null, null)));
+		//dummyFunction.setParent(clss);
 		
 		StringBuilder statements = new StringBuilder();
 		for(CubeXStatement stat: clss.getStatements())	
@@ -105,7 +106,11 @@ public class Constructor {
 		
 			for(CubeXExpression exp : clss.getSuperArgs())
 			{
-				superCall.append(", ").append(exp.toC(dummyFunction));
+				superCall.append(", ");
+				if(!exp.isVariable() || !((CubeXVariable)exp).isField())
+					superCall.append("gc_inc(").append(exp.toC(dummyFunction)).append(")");
+				else
+					superCall.append(exp.toC(dummyFunction));
 			}
 			superCall.append(");\n");
 			

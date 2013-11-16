@@ -13,6 +13,8 @@ public class CreateObject
 		
 		createObjectFun.append("object_t * createObject(int type, int startingRefs)\r\n" + 
 				"{\r\n" + 
+				"	int numfields=-1;\r\n" +
+				"	int i=0;\r\n" +
 				"	object_t * object;\r\n" + 
 				"	switch(type)\r\n" + 
 				"	{\r\n" + 
@@ -38,6 +40,11 @@ public class CreateObject
 				"		object=x3malloc(sizeof(iterable_t));\r\n" + 
 				"		object->numFields=-2;\r\n" + 
 				"		object->vTable=vt_Iterable;\r\n" + 
+				"		break;\r\n"
+				+ "	case 4:\r\n" + 
+				"		object=x3malloc(sizeof(iterable_t));\r\n" + 
+				"		object->numFields=-2;\r\n" + 
+				"		object->vTable=vt_String;\r\n" + 
 				"		break;\r\n\r\n");
 		
 	}
@@ -46,8 +53,9 @@ public class CreateObject
 	{
 
 		createObjectFun.append("	case ").append(clss.getID()).append(":\r\n" + 
-				"		object=x3malloc(sizeof(iterable_t) + ").append(clss.definedFields.size()).append("*sizeof(object_t *));\r\n" + 
-				"		object->numFields=").append(clss.definedFields.size()).append(";\r\n" + 
+				"		object=x3malloc(sizeof(object_t) + ").append(clss.definedFields.size()).append("*sizeof(object_t *));\r\n" + 
+				"		numfields = ").append(clss.definedFields.size()).append(";\r\n" +
+				"		object->numFields=numfields;\r\n" +
 				"		object->vTable=vt_").append(clss.getName()).append(";\r\n" + 
 				"		break;\r\n\n");
 		
@@ -59,6 +67,10 @@ public class CreateObject
 		String res = createObjectFun.toString() + 
 				"	}\r\n" + 
 				"	object->refCount=startingRefs;\r\n" + 
+				"	if(numfields==-1)\r\n" +
+				"		return object;\r\n" +
+				"	for(i=0; i<numfields; ++i)\r\n" +
+				"		*(((int *)(((object_t *)object)+1))+i)=NULL;\r\n"	+
 				"	return object;\r\n" + 
 				"}\n\n";
 		
