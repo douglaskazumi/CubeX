@@ -42,6 +42,5 @@ public class GlobalAwareness {
 		createObj.addClass(clss);
 		cons.addClass(clss);
 	}
-
 	
 }

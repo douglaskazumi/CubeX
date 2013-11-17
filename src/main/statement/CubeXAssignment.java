@@ -7,6 +7,7 @@ import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
+import main.context.GlobalContexts;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
@@ -41,11 +42,12 @@ public class CubeXAssignment extends CubeXStatement {
 			throw new ContextException();
 		
 		variable.trySetField(setField, par);
-		/*
-		if(par!=null && par.isClass())
-			((CubeXClass) par).definedFields.add(name);*/
+		
+		variable.isLocal=(!variable.isField() && GlobalContexts.variableContext.lookup(name)!=null);
 		
 		varCon.add(name, type);
+		
+		
 		
 		return new Tuple<Boolean, CubeXType>(false, null);
 	}
@@ -86,7 +88,7 @@ public class CubeXAssignment extends CubeXStatement {
 		{
 			GlobalAwareness.addLocal(temp);
 		}
-		
+		sb.append(this.gcDeadVariables());
 		return sb.toString();
 	}
 
@@ -106,8 +108,16 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
-	public void initializeUsedVariables() {
-		// TODO Auto-generated method stub
+	public void initializeUsedVariables(boolean globals)
+	{
+		if(globals)
+		{
+			usedVarsGlobals.addAll(expr.getUsedVars(globals));
+		}
+		else
+		{
+			usedVarsAll.addAll(expr.getUsedVars(globals));
+		}
 		
 	}
 

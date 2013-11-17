@@ -2,6 +2,7 @@ package main.expression;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import main.c.CUtils;
 import main.context.ClassContext;
@@ -59,4 +60,6 @@ public abstract class CubeXExpression
 	public boolean isVariable() {
 		return false;
 	}
+
+	public abstract HashSet<String> getUsedVars(boolean globals);
 }

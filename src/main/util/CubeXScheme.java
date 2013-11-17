@@ -1,4 +1,4 @@
-package main.program;
+package main.util;
 import java.util.ArrayList;
 
 import main.type.CubeXType;

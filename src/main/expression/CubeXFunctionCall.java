@@ -1,6 +1,7 @@
 package main.expression;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import main.c.CUtils;
@@ -21,6 +22,10 @@ public class CubeXFunctionCall extends CubeXExpression
 	private ArrayList<? extends CubeXType> parameters;
 	private ArrayList<? extends CubeXExpression> args;
 	private String tempVar=null;
+	
+	private enum CallType {GLOBAL, CONSTRUCTOR, FUNCTION}
+	
+	private CallType calltype;
 	
 	public CubeXFunctionCall(CubeXExpression parent, String name, ArrayList<? extends CubeXType> parameters, ArrayList<? extends CubeXExpression> args)
 	{
@@ -51,6 +56,7 @@ public class CubeXFunctionCall extends CubeXExpression
 		//Object function calls
 		if(parent!=null)
 		{
+			calltype=CallType.FUNCTION;
 			CubeXType pType = parent.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 			if(pType.isVariable())
 				throw new TypeCheckException("Parent type is variable");
@@ -94,6 +100,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			//Global function call
 			if(name.substring(0, 1).toLowerCase().equals(name.substring(0, 1)))
 			{
+				calltype=CallType.GLOBAL;
 				fun=funCon.lookup(name);
 				if(fun == null){
 					throw new ContextException();
@@ -137,6 +144,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			else
 			//Constructor
 			{
+				calltype=CallType.CONSTRUCTOR;
 				CubeXClassBase base = classCon.lookup(name);
 				if(base==null)
 					throw new ContextException();
@@ -170,8 +178,6 @@ public class CubeXFunctionCall extends CubeXExpression
 		}
 	}
 	
-	
-
 	@Override
 	public String preC(CubeXProgramPiece par) {
 		
@@ -205,7 +211,7 @@ public class CubeXFunctionCall extends CubeXExpression
 		StringBuilder sb = new StringBuilder();
 		try
 		{
-			if(parent!=null) //e.fun();
+			if(calltype==CallType.FUNCTION) //e.fun();
 			{
 	
 					Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res =  parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext);
@@ -244,7 +250,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					
 	
 			}
-			else if(name.substring(0, 1).toLowerCase().equals(name.substring(0, 1))) //Global Function
+			else if(calltype==CallType.GLOBAL) //Global Function
 			{
 				CubeXFunction fun =  GlobalContexts.functionContext.lookup(name);
 				sb.append("(").append(CUtils.canonName(fun, false)).append("(");
@@ -305,6 +311,45 @@ public class CubeXFunctionCall extends CubeXExpression
 		}
 		sb.append(")");
 		return sb.toString();
+	}
+
+	
+	@Override
+	public HashSet<String> getUsedVars(boolean globals) 
+	{
+		HashSet<String> vars = new HashSet<>();
+		if(calltype==CallType.FUNCTION)
+		{
+			vars.addAll(parent.getUsedVars(globals));
+			
+			CubeXFunction fun=null;
+			try
+			{
+				fun =  parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext).second;
+				vars.addAll(fun.getInnerGlobals());
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+		}
+		else if(calltype==CallType.GLOBAL)
+		{
+			CubeXFunction fun=GlobalContexts.functionContext.lookup(name);
+			vars.addAll(fun.getInnerGlobals());
+		}
+		else // constructor
+		{
+			CubeXClass base = (CubeXClass)GlobalContexts.classContext.lookup(name);
+			base.getInnerGlobals();
+		}
+		
+		for(CubeXExpression arg : args)
+		{
+			vars.addAll(arg.getUsedVars(globals));
+		}
+		
+		return vars;
 	}
 
 }

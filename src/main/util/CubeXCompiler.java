@@ -4,11 +4,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.BitSet;
 
+import main.Optimizations.LiveVariableAnalysis;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.program.CubeXProgram;
+import main.program.CubeXProgramPiece;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
@@ -40,22 +42,9 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	if(debug)
 	{
 		input = new ANTLRInputStream("x:=3;\r\n" + 
-				"y:=x+4;\r\n" + 
-				"res:=[];\r\n" + 
-				"while(y>0)\r\n" + 
-				"{\r\n" + 
-				"if(x==234)\r\n" + 
-				"{\r\n" + 
-				"	return [\"House\"];\r\n" + 
-				"}\r\n" + 
-				"else\r\n" + 
-				"{\r\n" + 
-				"	res := string(res ++ \"house\"++\" \"++\"zombie\");\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"y:=y-1;\r\n" + 
-				"}\r\n" + 
-				"return [res];");
+				"y:=\"hello\";\r\n" + 
+				"z:=2;\r\n" + 
+				"return [y];");
 	}
 	else
 	{
@@ -72,9 +61,11 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	parser.addErrorListener(new ParserError());
 	
 	CubeXProgram prog = parser.testprogram().x;
-	if(prog.typeCheck()){
+	if(prog.typeCheck())
+	{
 		
-		prog.initCFG();
+		LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
+		lva.analyze();
 		
 		try
 		{

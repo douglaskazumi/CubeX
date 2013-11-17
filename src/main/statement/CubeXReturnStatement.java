@@ -12,11 +12,11 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
-import main.program.CubeXArgument;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
+import main.util.CubeXArgument;
 import main.util.Tuple;
 
 public class CubeXReturnStatement extends CubeXStatement {
@@ -81,6 +81,7 @@ public class CubeXReturnStatement extends CubeXStatement {
 		{
 			sb.append("gc_dec(this);\n");
 		}
+		//sb.append(this.gcDeadVariables());
 		sb.append("\treturn gc_dec(" + CUtils.canonName(temp) + ");\n");
 		return sb.toString();
 	}
@@ -102,9 +103,10 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 
 	@Override
-	public void initializeUsedVariables() {
-		// TODO Auto-generated method stub
-		
+	public void initializeUsedVariables(boolean globals)
+	{
+		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
+		usedVars.addAll(returnValue.getUsedVars(globals));
 	}
 
 }

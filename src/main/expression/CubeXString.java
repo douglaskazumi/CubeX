@@ -1,5 +1,7 @@
 package main.expression;
 
+import java.util.HashSet;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -37,5 +39,10 @@ public class CubeXString extends CubeXExpression {
 	public String toString()
 	{
 		return "\"" + value + "\"";
+	}
+	
+	@Override
+	public HashSet<String> getUsedVars(boolean globals) {
+		return new HashSet<String>();
 	}
 }

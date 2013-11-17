@@ -1,4 +1,6 @@
-package main.program;
+package main.util;
+
+import main.program.CubeXFunction;
 
 public class CubeXFunctionHeader 
 {

@@ -16,7 +16,7 @@ public class BaseContext<T> {
 		this.parent=parent;
 	}
 	
-	public T lookup(String id) throws ContextException
+	public T lookup(String id)
 	{
 		if(context.containsKey(id))
 		{

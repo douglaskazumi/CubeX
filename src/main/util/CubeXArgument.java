@@ -1,4 +1,4 @@
-package main.program;
+package main.util;
 
 import main.expression.CubeXVariable;
 import main.type.CubeXType;

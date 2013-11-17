@@ -1,5 +1,7 @@
 package main.expression;
 
+import java.util.HashSet;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -41,5 +43,12 @@ public class CubeXBoolean extends CubeXExpression
 		sb.append(value);
 		return sb.toString();
 	}
+
+	@Override
+	public HashSet<String> getUsedVars(boolean globals) {
+		return new HashSet<String>();
+	}
+	
+	
 	
 }

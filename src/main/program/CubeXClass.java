@@ -1,5 +1,6 @@
 package main.program;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import main.c.*;
@@ -310,18 +311,63 @@ public class CubeXClass extends CubeXClassBase {
 		sb.append(" }");
 		return sb.toString();
 	}
-
+	
 	@Override
 	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+		
+		if(statements.size()!=0)
+		{			
+			CubeXStatement cur = statements.get(0);
+
+			for(int i=0; i<statements.size()-1; ++i)
+			{
+				CubeXStatement next = statements.get(i+1);
+				cur.initializeSucc(next);
+				cur=next;
+			}
+			cur.initializeSucc(null);
+		}
+		
+		for(CubeXFunction fun : this.functions)
+		{
+			if(fun.getParent().name==this.name)
+			{
+				fun.initializeSucc(null);
+			}
+		}
+		
+		
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
 		addSucc(after);
 		return returns;
 	}
 
 
+	
 	@Override
-	public void initializeUsedVariables() {
-		// TODO Auto-generated method stub
+	public void initializeUsedVariables(boolean globals)
+	{
+		for(CubeXStatement stat : statements)
+		{
+			stat.getUsedVariables(globals);
+		}
 		
 	}
+	HashSet<String> innerGlobals = new HashSet<String>();
+	public HashSet<String> getInnerGlobals()
+	{
+		for(CubeXStatement stat : statements)
+		{
+			innerGlobals.addAll(stat.getUsedVariables(true));
+		}
+		return innerGlobals;
+	}
+	
+	public CubeXStatement getLastStatement()
+	{
+		if(statements.isEmpty())
+			return null;
+		return statements.get(statements.size());
+	}
+
 }

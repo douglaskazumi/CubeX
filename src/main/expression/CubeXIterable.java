@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 
 
+import java.util.HashSet;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -92,5 +94,15 @@ public class CubeXIterable extends CubeXExpression
 		}
 		sb.append("]");
 		return sb.toString();
+	}
+	
+	@Override
+	public HashSet<String> getUsedVars(boolean globals) {
+		HashSet<String> vars = new HashSet<String>();
+		for(CubeXExpression expr : entries)
+		{
+			vars.addAll(expr.getUsedVars(globals));
+		}
+		return vars;
 	}
 }

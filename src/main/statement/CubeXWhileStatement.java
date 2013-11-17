@@ -1,6 +1,7 @@
 package main.statement;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -60,6 +61,7 @@ public class CubeXWhileStatement extends CubeXStatement
 		sb.append("\t\t").append(whilestatement.preC(par));
 		sb.append("\t\t").append(whilestatement.toC(par));
 		sb.append("\t}\n");
+		sb.append(this.gcDeadVariables());
 		return sb.toString();
 	}
 
@@ -84,9 +86,11 @@ public class CubeXWhileStatement extends CubeXStatement
 
 
 	@Override
-	public void initializeUsedVariables() {
-		// TODO Auto-generated method stub
-		
+	public void initializeUsedVariables(boolean globals)
+	{
+		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
+		usedVars.addAll(condition.getUsedVars(globals));
+		whilestatement.getUsedVariables(globals);
 	}
 	
 }

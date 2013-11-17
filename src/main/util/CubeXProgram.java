@@ -1,4 +1,4 @@
-package main.program;
+package main.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,12 +12,14 @@ import main.context.*;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXVariable;
+import main.program.CubeXClass;
+import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
+import main.program.CubeXProgramPiece;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
 import main.type.CubeXTypeVariable;
-import main.util.CubeXCompiler;
-import main.util.Tuple;
 
 public class CubeXProgram {
 

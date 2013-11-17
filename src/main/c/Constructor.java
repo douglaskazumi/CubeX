@@ -4,13 +4,13 @@ import main.context.GlobalContexts;
 import main.exceptions.ContextException;
 import main.expression.CubeXExpression;
 import main.expression.CubeXVariable;
-import main.program.CubeXArgument;
 import main.program.CubeXClass;
 import main.program.CubeXFunction;
-import main.program.CubeXFunctionHeader;
-import main.program.CubeXScheme;
 import main.statement.CubeXStatement;
 import main.type.CubeXTypeClass;
+import main.util.CubeXArgument;
+import main.util.CubeXFunctionHeader;
+import main.util.CubeXScheme;
 
 public class Constructor {
 

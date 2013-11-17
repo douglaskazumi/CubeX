@@ -17,9 +17,9 @@ import java.util.BitSet;
 
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.program.CubeXProgram;
 import main.util.CubeXLexer;
 import main.util.CubeXParser;
+import main.util.CubeXProgram;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;

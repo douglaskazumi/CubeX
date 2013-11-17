@@ -16,6 +16,8 @@ import main.statement.CubeXReturnStatement;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
+import main.util.CubeXArgument;
+import main.util.CubeXFunctionHeader;
 import main.util.Tuple;
 
 
@@ -207,13 +209,23 @@ public class CubeXFunction extends CubeXProgramPiece
 	@Override
 	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
+		statement.initializeSucc(null);
 		addSucc(after);
 		return returns;
 	}
 
 	@Override
-	public void initializeUsedVariables() {
-		// TODO Auto-generated method stub
-		
+	public void initializeUsedVariables(boolean globals) 
+	{
+		statement.getUsedVariables(globals);
+	}
+	
+	public HashSet<String> getInnerGlobals()
+	{
+		if(statement==null)
+		{
+			return new HashSet<String>();
+		}
+		return statement.getUsedVariables(true);
 	}
 }

@@ -1,8 +1,11 @@
 package main.expression;
 
+import java.util.HashSet;
+
 import main.c.CUtils;
 import main.context.ClassContext;
 import main.context.FunctionContext;
+import main.context.GlobalContexts;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
@@ -17,6 +20,7 @@ public class CubeXVariable extends CubeXExpression
 {
 	private String name;
 	private boolean isField;
+	public boolean isLocal;
 	private CubeXClass parent;
 	
 	public CubeXVariable(String name)
@@ -33,6 +37,8 @@ public class CubeXVariable extends CubeXExpression
 		if(varType==null)
 			throw new ContextException("Variable not in context");
 		trySetField(setField, par);
+		isLocal = (!isField && GlobalContexts.variableContext.lookup(name)==null);
+		
 		return varType;
 	}
 	
@@ -100,5 +106,14 @@ public class CubeXVariable extends CubeXExpression
 	public String toString()
 	{
 		return name;
+	}
+	
+	@Override
+	public HashSet<String> getUsedVars(boolean globals) {
+		HashSet<String> vars = new HashSet<String>();
+		if(globals && this.isLocal)
+			return vars;
+		vars.add(name);
+		return vars;
 	}
 }

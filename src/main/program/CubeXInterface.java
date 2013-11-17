@@ -11,6 +11,7 @@ import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
+import main.util.CubeXArgument;
 import main.util.Tuple;
 
 
@@ -160,6 +161,16 @@ public class CubeXInterface extends CubeXClassBase {
 
 	@Override
 	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+	
+		for(CubeXFunction fun : this.functions)
+		{
+			if(!fun.isDeclaration() && fun.getParent().name==this.name)
+			{
+				fun.initializeSucc(null);
+			}
+		}
+		
+		
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
 		addSucc(after);
 		return returns;
@@ -168,9 +179,9 @@ public class CubeXInterface extends CubeXClassBase {
 
 
 	@Override
-	public void initializeUsedVariables() {
-		// TODO Auto-generated method stub
-		
+	public void initializeUsedVariables(boolean globals)
+	{
+		return;
 	}
 
 }

@@ -1,6 +1,7 @@
 package main.statement;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import main.c.CUtils;
 import main.c.GlobalAwareness;
@@ -89,6 +90,7 @@ public class CubeXForStatement extends CubeXStatement {
 		sb.append("\t\tgc(gc_dec(").append(CUtils.canonName(iterable)).append("));\n");
 		sb.append("\t\t").append(CUtils.canonName(iterable)).append(" = NULL;\n");
 		sb.append(forexpression.postC(par));
+		sb.append(this.gcDeadVariables());
 		return sb.toString();
 	}
 
@@ -109,10 +111,16 @@ public class CubeXForStatement extends CubeXStatement {
 	}
 
 	@Override
-	public void initializeUsedVariables() {
-		// TODO Auto-generated method stub
-		
+	public void initializeUsedVariables(boolean globals) 
+	{
+		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
+		usedVars.addAll(forexpression.getUsedVars(globals));
+		forbody.getUsedVariables(globals);
 	}
 
-	
+	@Override
+	public void initializeDefinedVariables()
+	{
+		definedVars.add(variable);		
+	}
 }

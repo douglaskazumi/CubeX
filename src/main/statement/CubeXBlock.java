@@ -1,5 +1,6 @@
 package main.statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -82,6 +83,7 @@ public class CubeXBlock extends CubeXStatement
 			sb.append("\t\t").append(stat.preC(par));
 			sb.append("\t\t").append(stat.toC(par));
 		}
+		sb.append(this.gcDeadVariables());
 		return sb.toString();
 	}
 
@@ -122,8 +124,13 @@ public class CubeXBlock extends CubeXStatement
 	}
 
 	@Override
-	public void initializeUsedVariables() {
-		// TODO Auto-generated method stub
-		
+	public void initializeUsedVariables(boolean globals) 
+	{
+		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
+		for(CubeXStatement stat : innerStatements)
+		{
+			usedVars.addAll(stat.getUsedVariables(globals));
+		}
 	}
+
 }
