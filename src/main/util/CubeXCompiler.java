@@ -39,7 +39,23 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("return [];");
+		input = new ANTLRInputStream("x:=3;\r\n" + 
+				"y:=x+4;\r\n" + 
+				"res:=[];\r\n" + 
+				"while(y>0)\r\n" + 
+				"{\r\n" + 
+				"if(x==234)\r\n" + 
+				"{\r\n" + 
+				"	return [\"House\"];\r\n" + 
+				"}\r\n" + 
+				"else\r\n" + 
+				"{\r\n" + 
+				"	res := string(res ++ \"house\"++\" \"++\"zombie\");\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"y:=y-1;\r\n" + 
+				"}\r\n" + 
+				"return [res];");
 	}
 	else
 	{
@@ -57,6 +73,9 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	CubeXProgram prog = parser.testprogram().x;
 	if(prog.typeCheck()){
+		
+		prog.initCFG();
+		
 		try
 		{
 			PrintWriter writer = new PrintWriter("out.c");

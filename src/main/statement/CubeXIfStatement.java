@@ -1,5 +1,7 @@
 package main.statement;
 
+import java.util.ArrayList;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -120,11 +122,13 @@ public class CubeXIfStatement extends CubeXStatement {
 	}
 
 	@Override
-	public void initializeSucc(CubeXStatement after) {
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+		ArrayList<CubeXProgramPiece> returns;
 		addSucc(ifstatement);
 		addSucc(elsestatement);
-		ifstatement.initializeSucc(after);
-		elsestatement.initializeSucc(after);
+		returns = ifstatement.initializeSucc(after);
+		returns.addAll(elsestatement.initializeSucc(after));
+		return returns;
 	}
 
 	@Override

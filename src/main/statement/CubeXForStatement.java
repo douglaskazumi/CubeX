@@ -1,5 +1,7 @@
 package main.statement;
 
+import java.util.ArrayList;
+
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -98,10 +100,12 @@ public class CubeXForStatement extends CubeXStatement {
 	}
 
 	@Override
-	public void initializeSucc(CubeXStatement after) {
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+		ArrayList<CubeXProgramPiece> returns;
 		addSucc(forbody);
-		forbody.initializeSucc(this);
+		returns = forbody.initializeSucc(this);
 		addSucc(after);
+		return returns;
 	}
 
 	@Override

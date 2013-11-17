@@ -203,4 +203,17 @@ public class CubeXFunction extends CubeXProgramPiece
 		sb.append(") : ").append(returnType.toString()).append(" ").append(statement==null?";":statement.toString());
 		return sb.toString();
 	}
+
+	@Override
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
+		addSucc(after);
+		return returns;
+	}
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,5 +1,7 @@
 package main.statement;
 
+import java.util.ArrayList;
+
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -71,12 +73,13 @@ public class CubeXWhileStatement extends CubeXStatement
 
 
 	@Override
-	public void initializeSucc(CubeXStatement after)
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after)
 	{
+		ArrayList<CubeXProgramPiece> returns;
 		addSucc(this.whilestatement);
-		whilestatement.initializeSucc(this);
+		returns = whilestatement.initializeSucc(this);
 		addSucc(after);
-		
+		return returns;
 	}
 
 

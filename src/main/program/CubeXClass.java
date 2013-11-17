@@ -310,4 +310,18 @@ public class CubeXClass extends CubeXClassBase {
 		sb.append(" }");
 		return sb.toString();
 	}
+
+	@Override
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
+		addSucc(after);
+		return returns;
+	}
+
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
+	}
 }

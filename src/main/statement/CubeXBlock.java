@@ -98,12 +98,13 @@ public class CubeXBlock extends CubeXStatement
 	}
 
 	@Override
-	public void initializeSucc(CubeXStatement after) 
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) 
 	{
+		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
 		if(innerStatements.size()==0)
 		{
 			addSucc(after);
-			return;
+			return returns;
 		}
 		
 		addSucc(innerStatements.get(0));
@@ -112,10 +113,11 @@ public class CubeXBlock extends CubeXStatement
 		for(int i=0; i<innerStatements.size()-1; ++i)
 		{
 			CubeXStatement next = innerStatements.get(i+1);
-			cur.initializeSucc(next);
+			returns.addAll(cur.initializeSucc(next));
 			cur=next;
 		}
 		cur.initializeSucc(after);
+		return returns;
 		
 	}
 

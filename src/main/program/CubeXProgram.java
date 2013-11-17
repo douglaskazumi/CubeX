@@ -338,7 +338,7 @@ public class CubeXProgram {
 					wasStatement=true;
 					CubeXStatement stat = (CubeXStatement)piece;
 					lastDidReturn=stat.typecheck(false, GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null);
-					if(lastDidReturn.first && (!lastDidReturn.second.isIterable() || !((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString()))
+					if(lastDidReturn.first && (!lastDidReturn.second.isIterable() || !((((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString())||((CubeXTypeIterable)lastDidReturn.second).getInnerType().isNothing())))
 						throw new TypeCheckException("Final return not a Iterable<String>");
 				}
 				else
@@ -358,7 +358,7 @@ public class CubeXProgram {
 			// shouldn't need this
 			checkFunctionBlock(wasFunction, curFunSet);
 			
-			if(!lastDidReturn.first || !lastDidReturn.second.isIterable() || !((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString())
+			if(!lastDidReturn.first || !lastDidReturn.second.isIterable() || !((((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString())||((CubeXTypeIterable)lastDidReturn.second).getInnerType().isNothing()))
 				throw new TypeCheckException("Final return not a Iterable<String>");
 		} catch (Exception e) {
 			if(CubeXCompiler.debug)
@@ -389,7 +389,7 @@ public class CubeXProgram {
 		}
 	
 	}
-
+	
 	public String toC() throws TypeCheckException, IOException, ContextException 
 	{
 		Initializer init = new Initializer();
@@ -474,5 +474,26 @@ public class CubeXProgram {
 		}
 	
 		return sb.toString();
+	}
+	
+	public ArrayList<CubeXProgramPiece> initCFG()
+	{
+		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
+
+		if(pieces.size()==0)
+		{
+			return returns;
+		}
+				
+		CubeXProgramPiece cur = pieces.get(0);
+		for(int i=0; i<pieces.size()-1; ++i)
+		{
+			CubeXProgramPiece next = pieces.get(i+1);
+			returns.addAll(cur.initializeSucc(next));
+			cur=next;
+		}
+		returns.addAll(cur.initializeSucc(null));
+		
+		return returns;
 	}
 }

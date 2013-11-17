@@ -7,6 +7,7 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
@@ -154,6 +155,22 @@ public class CubeXInterface extends CubeXClassBase {
 		}	
 		sb.append(" }");
 		return sb.toString();
+	}
+
+
+	@Override
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
+		addSucc(after);
+		return returns;
+	}
+
+
+
+	@Override
+	public void initializeUsedVariables() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -98,9 +98,11 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
-	public void initializeSucc(CubeXStatement after)
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after)
 	{
+		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
 		addSucc(after);
+		return returns;
 	}
 
 	@Override

@@ -93,9 +93,12 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 
 	@Override
-	public void initializeSucc(CubeXStatement after)
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after)
 	{
-		return;
+		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
+		returns.add(this);
+		
+		return returns;
 	}
 
 	@Override
