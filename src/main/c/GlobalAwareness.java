@@ -1,9 +1,11 @@
 package main.c;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import main.exceptions.ContextException;
 import main.program.CubeXClass;
+import main.program.CubeXProgramPiece;
 
 
 public class GlobalAwareness {
@@ -42,5 +44,7 @@ public class GlobalAwareness {
 		createObj.addClass(clss);
 		cons.addClass(clss);
 	}
+	
+	public static ArrayList<CubeXProgramPiece> allNode = new ArrayList<>();
 	
 }

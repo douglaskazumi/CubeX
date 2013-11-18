@@ -3,6 +3,7 @@ package main.statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -12,6 +13,7 @@ import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.util.Tuple;
@@ -92,18 +94,19 @@ public class CubeXIfStatement extends CubeXStatement {
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("if(isTrue(").append(condition.toC(par)).append(")){\n");
+		sb.append(this.gcDeadVariables());
 		sb.append("\t\t").append(ifstatement.preC(par));
 		sb.append("\t\t").append(ifstatement.toC(par));
 		sb.append("\t}\n"); 
 		//When it does not have else, it's an empty block. If it is only one statment, is not a block
 		if((elsestatement.isBlock() && !((CubeXBlock)elsestatement).isEmpty()) || !elsestatement.isBlock()){
 			sb.append("\telse {\n");
+			sb.append(this.gcDeadVariables());
 			sb.append("\t\t").append(elsestatement.preC(par));
 			sb.append("\t\t").append(elsestatement.toC(par));
 			sb.append("\t}\n");
 		}
 		sb.append(condition.postC(par));
-		sb.append(this.gcDeadVariables());
 		return sb.toString();
 	}
 
@@ -124,21 +127,30 @@ public class CubeXIfStatement extends CubeXStatement {
 	}
 
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel) {
+		GlobalAwareness.allNode.add(this);
 		ArrayList<CubeXProgramPiece> returns;
-		addSucc(ifstatement);
-		addSucc(elsestatement);
-		returns = ifstatement.initializeSucc(after);
-		returns.addAll(elsestatement.initializeSucc(after));
+		addSucc(ifstatement, isTopLevel);
+		addSucc(elsestatement, isTopLevel);
+		returns = ifstatement.initializeSucc(after,  isTopLevel);
+		returns.addAll(elsestatement.initializeSucc(after,  isTopLevel));
 		return returns;
 	}
 
 	@Override
-	public void initializeUsedVariables(boolean globals)
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions)
 	{
 		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
-		usedVars.addAll(condition.getUsedVars(globals));
-		ifstatement.getUsedVariables(globals);
-		elsestatement.getUsedVariables(globals);
+		usedVars.addAll(condition.getUsedVars(globals, ignoredFunctions));
+		ifstatement.getUsedVariables(globals, ignoredFunctions);
+		elsestatement.getUsedVariables(globals,ignoredFunctions);
+	}
+
+	@Override
+	public void updateDeadVariables()
+	{
+		setDeadVariables();
+		ifstatement.updateDeadVariables();
+		elsestatement.updateDeadVariables();
 	}
 }

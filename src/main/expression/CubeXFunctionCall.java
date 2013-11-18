@@ -314,19 +314,24 @@ public class CubeXFunctionCall extends CubeXExpression
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public HashSet<String> getUsedVars(boolean globals) 
+	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
 	{
 		HashSet<String> vars = new HashSet<>();
 		if(calltype==CallType.FUNCTION)
 		{
-			vars.addAll(parent.getUsedVars(globals));
-			
+			vars.addAll(parent.getUsedVars(globals, ignoredFunctions));
 			CubeXFunction fun=null;
 			try
 			{
 				fun =  parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext).second;
-				vars.addAll(fun.getInnerGlobals());
+				if(!ignoredFunctions.contains(fun))
+				{
+					HashSet<CubeXFunction> ignoredFunctionsNew = (HashSet<CubeXFunction>) ignoredFunctions.clone();
+					ignoredFunctionsNew.add(fun);
+					vars.addAll(fun.getInnerGlobals(ignoredFunctionsNew));
+				}
 			} catch (Exception e)
 			{
 				e.printStackTrace();
@@ -336,17 +341,22 @@ public class CubeXFunctionCall extends CubeXExpression
 		else if(calltype==CallType.GLOBAL)
 		{
 			CubeXFunction fun=GlobalContexts.functionContext.lookup(name);
-			vars.addAll(fun.getInnerGlobals());
+			if(!ignoredFunctions.contains(fun))
+			{
+				HashSet<CubeXFunction> ignoredFunctionsNew = (HashSet<CubeXFunction>) ignoredFunctions.clone();
+				ignoredFunctionsNew.add(fun);
+				vars.addAll(fun.getInnerGlobals(ignoredFunctionsNew));
+			}
 		}
 		else // constructor
 		{
 			CubeXClass base = (CubeXClass)GlobalContexts.classContext.lookup(name);
-			base.getInnerGlobals();
+			vars.addAll(base.getInnerGlobals(ignoredFunctions));
 		}
 		
 		for(CubeXExpression arg : args)
 		{
-			vars.addAll(arg.getUsedVars(globals));
+			vars.addAll(arg.getUsedVars(globals, ignoredFunctions));
 		}
 		
 		return vars;

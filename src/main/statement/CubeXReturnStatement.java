@@ -51,6 +51,7 @@ public class CubeXReturnStatement extends CubeXStatement {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t").append(CUtils.canonName(temp)).append(" = gc_inc(").append(returnValue.toC(par)).append(");\n");
 		sb.append(returnValue.postC(par));
+		//sb.append(this.gcDeadVariables());
 		
 		HashSet<String> locals;
 		if(par==null)
@@ -81,7 +82,6 @@ public class CubeXReturnStatement extends CubeXStatement {
 		{
 			sb.append("gc_dec(this);\n");
 		}
-		//sb.append(this.gcDeadVariables());
 		sb.append("\treturn gc_dec(" + CUtils.canonName(temp) + ");\n");
 		return sb.toString();
 	}
@@ -94,7 +94,7 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after)
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel)
 	{
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
 		returns.add(this);
@@ -103,10 +103,16 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 
 	@Override
-	public void initializeUsedVariables(boolean globals)
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions)
 	{
 		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
-		usedVars.addAll(returnValue.getUsedVars(globals));
+		usedVars.addAll(returnValue.getUsedVars(globals, ignoredFunctions));
+	}
+
+	@Override
+	public void updateDeadVariables()
+	{
+		setDeadVariables();
 	}
 
 }

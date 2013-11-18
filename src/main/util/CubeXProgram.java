@@ -491,11 +491,19 @@ public class CubeXProgram {
 		for(int i=0; i<pieces.size()-1; ++i)
 		{
 			CubeXProgramPiece next = pieces.get(i+1);
-			returns.addAll(cur.initializeSucc(next));
+			returns.addAll(cur.initializeSucc(next, true));
 			cur=next;
 		}
-		returns.addAll(cur.initializeSucc(null));
-		
+		returns.addAll(cur.initializeSucc(null, true));
+		cur.setTopLevel(true);
 		return returns;
+	}
+	
+	public void updateDeadVariables()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.updateDeadVariables();
+		}
 	}
 }

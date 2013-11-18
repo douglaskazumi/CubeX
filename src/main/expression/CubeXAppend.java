@@ -9,6 +9,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.*;
 
@@ -68,10 +69,10 @@ public class CubeXAppend extends CubeXExpression {
 	}
 
 	@Override
-	public HashSet<String> getUsedVars(boolean globals) {
+	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
 		HashSet<String> vars = new HashSet<>();
-		vars.addAll(a.getUsedVars(globals));
-		vars.addAll(b.getUsedVars(globals));
+		vars.addAll(a.getUsedVars(globals, ignoredFunctions));
+		vars.addAll(b.getUsedVars(globals, ignoredFunctions));
 		return vars;
 	}
 	

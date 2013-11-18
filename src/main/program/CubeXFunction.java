@@ -207,25 +207,31 @@ public class CubeXFunction extends CubeXProgramPiece
 	}
 
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel) {
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
-		statement.initializeSucc(null);
-		addSucc(after);
+		returns.addAll(statement.initializeSucc(null,false));
+		addSucc(after, isTopLevel);
 		return returns;
 	}
 
 	@Override
-	public void initializeUsedVariables(boolean globals) 
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
 	{
-		statement.getUsedVariables(globals);
+		statement.getUsedVariables(globals, ignoredFunctions);
 	}
 	
-	public HashSet<String> getInnerGlobals()
+	public HashSet<String> getInnerGlobals(HashSet<CubeXFunction> ignoredFunctions)
 	{
 		if(statement==null)
 		{
 			return new HashSet<String>();
 		}
-		return statement.getUsedVariables(true);
+		return statement.getUsedVariables(true, ignoredFunctions);
+	}
+
+	@Override
+	public void updateDeadVariables()
+	{
+		statement.updateDeadVariables();
 	}
 }

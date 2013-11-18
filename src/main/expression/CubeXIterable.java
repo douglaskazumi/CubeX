@@ -19,6 +19,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.*;
 
@@ -97,11 +98,11 @@ public class CubeXIterable extends CubeXExpression
 	}
 	
 	@Override
-	public HashSet<String> getUsedVars(boolean globals) {
+	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
 		HashSet<String> vars = new HashSet<String>();
 		for(CubeXExpression expr : entries)
 		{
-			vars.addAll(expr.getUsedVars(globals));
+			vars.addAll(expr.getUsedVars(globals, ignoredFunctions));
 		}
 		return vars;
 	}

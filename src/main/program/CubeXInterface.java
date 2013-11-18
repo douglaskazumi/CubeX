@@ -1,5 +1,6 @@
 package main.program;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -160,28 +161,41 @@ public class CubeXInterface extends CubeXClassBase {
 
 
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel) {
 	
 		for(CubeXFunction fun : this.functions)
 		{
 			if(!fun.isDeclaration() && fun.getParent().name==this.name)
 			{
-				fun.initializeSucc(null);
+				fun.initializeSucc(null, false);
 			}
 		}
 		
 		
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
-		addSucc(after);
+		addSucc(after, isTopLevel);
 		return returns;
 	}
 
 
 
 	@Override
-	public void initializeUsedVariables(boolean globals)
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions)
 	{
 		return;
+	}
+
+
+	@Override
+	public void updateDeadVariables() {
+		for(CubeXFunction fun : this.functions)
+		{
+			if(!fun.isDeclaration() && fun.getParent().name==this.name)
+			{
+				fun.updateDeadVariables();
+			}
+		}
+		
 	}
 
 }

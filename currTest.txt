@@ -1,10 +1,14 @@
-x:=[];
-for (v in input)
+c := 0;
+for(i in input)
 {
-	x:=x++[v];
+	if(c==0)
+	{
+		c := 1;
+	}
+	else
+	{
+		c := 0;
+	}
 }
-for (q in input)
-{
-	x:=x++[q];
-}
-return x;
+out := [];
+return out;

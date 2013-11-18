@@ -313,8 +313,8 @@ public class CubeXClass extends CubeXClassBase {
 	}
 	
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
-		
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel) {
+		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
 		if(statements.size()!=0)
 		{			
 			CubeXStatement cur = statements.get(0);
@@ -322,43 +322,41 @@ public class CubeXClass extends CubeXClassBase {
 			for(int i=0; i<statements.size()-1; ++i)
 			{
 				CubeXStatement next = statements.get(i+1);
-				cur.initializeSucc(next);
+				returns.addAll(cur.initializeSucc(next,false));
 				cur=next;
 			}
-			cur.initializeSucc(null);
+			returns.addAll(cur.initializeSucc(null,false));
 		}
 		
 		for(CubeXFunction fun : this.functions)
 		{
 			if(fun.getParent().name==this.name)
 			{
-				fun.initializeSucc(null);
+				returns.addAll(fun.initializeSucc(null, false));
 			}
 		}
 		
-		
-		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
-		addSucc(after);
+		addSucc(after, isTopLevel);
 		return returns;
 	}
 
 
 	
 	@Override
-	public void initializeUsedVariables(boolean globals)
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions)
 	{
 		for(CubeXStatement stat : statements)
 		{
-			stat.getUsedVariables(globals);
+			stat.getUsedVariables(globals, ignoredFunctions);
 		}
 		
 	}
 	HashSet<String> innerGlobals = new HashSet<String>();
-	public HashSet<String> getInnerGlobals()
+	public HashSet<String> getInnerGlobals(HashSet<CubeXFunction> ignoredFunctions)
 	{
 		for(CubeXStatement stat : statements)
 		{
-			innerGlobals.addAll(stat.getUsedVariables(true));
+			innerGlobals.addAll(stat.getUsedVariables(true, ignoredFunctions));
 		}
 		return innerGlobals;
 	}
@@ -367,7 +365,31 @@ public class CubeXClass extends CubeXClassBase {
 	{
 		if(statements.isEmpty())
 			return null;
-		return statements.get(statements.size());
+		CubeXStatement last = statements.get(statements.size()-1);
+		
+		for(CubeXExpression arg : superArgs)
+		{
+			last.currentOut.addAll(arg.getUsedVars(false, new HashSet<CubeXFunction>()));
+		}
+
+		return last;
+	}
+
+	@Override
+	public void updateDeadVariables()
+	{
+		for(CubeXStatement stat : statements)
+		{
+			stat.updateDeadVariables();
+		}
+		
+		for(CubeXFunction fun : this.functions)
+		{
+			if(fun.getParent().name==this.name)
+			{
+				fun.updateDeadVariables();
+			}
+		}
 	}
 
 }

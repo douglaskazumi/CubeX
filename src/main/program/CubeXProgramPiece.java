@@ -16,10 +16,19 @@ import main.util.Tuple;
 public abstract class CubeXProgramPiece 
 {
 	public ArrayList<String> gcAfter = new ArrayList<>();
-	
+	private boolean isTopLevel = false;
 	public HashSet<String>  locals = new HashSet<String>();
 
 	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
+	
+	public boolean isTopLevel()
+	{
+		return this.isTopLevel;
+	}
+	public void setTopLevel(boolean isTop)
+	{
+		isTopLevel=isTop;
+	}
 	
 	public boolean isFunction()
 	{
@@ -62,10 +71,10 @@ public abstract class CubeXProgramPiece
 	protected ArrayList<CubeXProgramPiece> succ = new ArrayList<CubeXProgramPiece>();
 	protected ArrayList<CubeXProgramPiece> pred = new ArrayList<CubeXProgramPiece>();
 	
-	public abstract ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece next);
-	public void addSucc(CubeXProgramPiece after)
+	public abstract ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece next, boolean isTopLevel);
+	public void addSucc(CubeXProgramPiece after, boolean isTop)
 	{
-		
+		this.isTopLevel=isTop;
 		if(after!=null)
 		{
 			this.succ.add(after);
@@ -84,17 +93,17 @@ public abstract class CubeXProgramPiece
 	
 	protected boolean isUsedInitializedGlobals = false;
 	protected boolean isUsedInitializedAll = false;
-	public abstract void initializeUsedVariables(boolean onlyGlobals);
-	public HashSet<String> getUsedVariables(boolean onlyGlobals)
+	public abstract void initializeUsedVariables(boolean onlyGlobals, HashSet<CubeXFunction> ignoredFunctions);
+	public HashSet<String> getUsedVariables(boolean onlyGlobals, HashSet<CubeXFunction> ignoredFunctions)
 	{
 		if(onlyGlobals && !isUsedInitializedGlobals)
 		{
-			initializeUsedVariables(onlyGlobals);
+			initializeUsedVariables(onlyGlobals, ignoredFunctions);
 			isUsedInitializedGlobals=true;
 		}
 		else if(!onlyGlobals && !isUsedInitializedAll)
 		{
-			initializeUsedVariables(onlyGlobals);
+			initializeUsedVariables(onlyGlobals, ignoredFunctions);
 			isUsedInitializedAll=true;
 		}
 		
@@ -119,6 +128,7 @@ public abstract class CubeXProgramPiece
 		if(!isDefinedInitialized)
 		{
 			initializeDefinedVariables();
+			isDefinedInitialized=true;
 		}
 		return definedVars;
 	}
@@ -135,12 +145,13 @@ public abstract class CubeXProgramPiece
 	public HashSet<String> getAllVariables()
 	{
 		HashSet<String> allVars = new HashSet<>();
-		allVars.addAll(this.getUsedVariables(true));
-		return currentIn;
+		allVars.addAll(this.getUsedVariables(true, new HashSet<CubeXFunction>()));
+		allVars.addAll(this.getDefinedVariables());
+		return allVars;
 		
 	}
 	
-	public boolean doLiveVariableAnalysisStep()
+	public boolean doLiveVariableAnalysisStep(boolean onlyGlobals)
 	{
 		boolean didChange = false;
 		for(CubeXProgramPiece s : this.succ)
@@ -148,18 +159,23 @@ public abstract class CubeXProgramPiece
 			didChange = didChange | currentOut.addAll(s.currentIn);
 		}
 		
-		didChange = didChange | currentIn.addAll(this.getUsedVariables(true));
+		didChange = didChange | currentIn.addAll(this.getUsedVariables(onlyGlobals, new HashSet<CubeXFunction>()));
 		@SuppressWarnings("unchecked")
 		HashSet<String> temp = (HashSet<String>)currentOut.clone();
 		temp.removeAll(this.getDefinedVariables());
 		didChange = didChange | currentIn.addAll(temp);
-		
+				
+		return didChange;
+	}
+	
+	public abstract void updateDeadVariables();
+	
+	protected void setDeadVariables()
+	{
 		currentDead=getAllVariables();
 		currentDead.removeAll(currentOut);
 		gcAfter.clear();
 		gcAfter.addAll(currentDead);
-		
-		return didChange;
 	}
 	
 	public String gcDeadVariables()

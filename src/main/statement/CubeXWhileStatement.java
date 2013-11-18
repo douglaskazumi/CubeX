@@ -3,6 +3,7 @@ package main.statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -11,6 +12,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.util.Tuple;
@@ -75,22 +77,30 @@ public class CubeXWhileStatement extends CubeXStatement
 
 
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after)
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel)
 	{
+		GlobalAwareness.allNode.add(this);
 		ArrayList<CubeXProgramPiece> returns;
-		addSucc(this.whilestatement);
-		returns = whilestatement.initializeSucc(this);
-		addSucc(after);
+		addSucc(this.whilestatement, isTopLevel);
+		returns = whilestatement.initializeSucc(this, isTopLevel);
+		addSucc(after, isTopLevel);
 		return returns;
 	}
 
 
 	@Override
-	public void initializeUsedVariables(boolean globals)
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions)
 	{
 		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
-		usedVars.addAll(condition.getUsedVars(globals));
-		whilestatement.getUsedVariables(globals);
+		usedVars.addAll(condition.getUsedVars(globals, ignoredFunctions));
+		whilestatement.getUsedVariables(globals, ignoredFunctions);
+	}
+
+
+	@Override
+	public void updateDeadVariables() {
+		setDeadVariables();
+		whilestatement.updateDeadVariables();
 	}
 	
 }

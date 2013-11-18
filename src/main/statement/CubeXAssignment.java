@@ -16,6 +16,7 @@ import main.expression.CubeXExpression;
 import main.expression.CubeXVariable;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
@@ -46,8 +47,6 @@ public class CubeXAssignment extends CubeXStatement {
 		variable.isLocal=(!variable.isField() && GlobalContexts.variableContext.lookup(name)!=null);
 		
 		varCon.add(name, type);
-		
-		
 		
 		return new Tuple<Boolean, CubeXType>(false, null);
 	}
@@ -100,23 +99,24 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after)
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel)
 	{
+		GlobalAwareness.allNode.add(this);
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
-		addSucc(after);
+		addSucc(after, isTopLevel);
 		return returns;
 	}
 
 	@Override
-	public void initializeUsedVariables(boolean globals)
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions)
 	{
 		if(globals)
 		{
-			usedVarsGlobals.addAll(expr.getUsedVars(globals));
+			usedVarsGlobals.addAll(expr.getUsedVars(globals, ignoredFunctions));
 		}
 		else
 		{
-			usedVarsAll.addAll(expr.getUsedVars(globals));
+			usedVarsAll.addAll(expr.getUsedVars(globals, ignoredFunctions));
 		}
 		
 	}
@@ -124,7 +124,16 @@ public class CubeXAssignment extends CubeXStatement {
 	@Override
 	public void initializeDefinedVariables()
 	{
-		definedVars.add(variable.getName());		
+		if(!variable.isField())
+			definedVars.add(variable.getName());		
 	}
+
+	@Override
+	public void updateDeadVariables()
+	{
+		setDeadVariables();
+	}
+	
+	
 	
 }

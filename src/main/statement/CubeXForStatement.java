@@ -13,6 +13,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
@@ -102,25 +103,32 @@ public class CubeXForStatement extends CubeXStatement {
 	}
 
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) {
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel) {
+		GlobalAwareness.allNode.add(this);
 		ArrayList<CubeXProgramPiece> returns;
-		addSucc(forbody);
-		returns = forbody.initializeSucc(this);
-		addSucc(after);
+		addSucc(forbody, isTopLevel);
+		returns = forbody.initializeSucc(this, isTopLevel);
+		addSucc(after, isTopLevel);
 		return returns;
 	}
 
 	@Override
-	public void initializeUsedVariables(boolean globals) 
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
 	{
 		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
-		usedVars.addAll(forexpression.getUsedVars(globals));
-		forbody.getUsedVariables(globals);
+		usedVars.addAll(forexpression.getUsedVars(globals, ignoredFunctions));
+		forbody.getUsedVariables(globals, ignoredFunctions);
 	}
 
 	@Override
 	public void initializeDefinedVariables()
 	{
 		definedVars.add(variable);		
+	}
+
+	@Override
+	public void updateDeadVariables() {
+		setDeadVariables();
+		forbody.updateDeadVariables();	
 	}
 }

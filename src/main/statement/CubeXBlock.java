@@ -2,6 +2,7 @@ package main.statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -9,6 +10,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
+import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.util.Tuple;
@@ -100,36 +102,46 @@ public class CubeXBlock extends CubeXStatement
 	}
 
 	@Override
-	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after) 
+	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel) 
 	{
+		GlobalAwareness.allNode.add(this);
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
 		if(innerStatements.size()==0)
 		{
-			addSucc(after);
+			addSucc(after, isTopLevel);
 			return returns;
 		}
 		
-		addSucc(innerStatements.get(0));
+		addSucc(innerStatements.get(0), isTopLevel);
 		
 		CubeXStatement cur = innerStatements.get(0);
 		for(int i=0; i<innerStatements.size()-1; ++i)
 		{
 			CubeXStatement next = innerStatements.get(i+1);
-			returns.addAll(cur.initializeSucc(next));
+			returns.addAll(cur.initializeSucc(next, isTopLevel));
 			cur=next;
 		}
-		cur.initializeSucc(after);
+		returns.addAll(cur.initializeSucc(after, isTopLevel));
 		return returns;
 		
 	}
 
 	@Override
-	public void initializeUsedVariables(boolean globals) 
+	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
 	{
 		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
 		for(CubeXStatement stat : innerStatements)
 		{
-			usedVars.addAll(stat.getUsedVariables(globals));
+			usedVars.addAll(stat.getUsedVariables(globals, ignoredFunctions));
+		}
+	}
+
+	@Override
+	public void updateDeadVariables() {
+		setDeadVariables();
+		for(CubeXStatement stat : innerStatements)
+		{
+			stat.updateDeadVariables();
 		}
 	}
 
