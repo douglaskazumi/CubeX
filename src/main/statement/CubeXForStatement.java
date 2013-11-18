@@ -131,4 +131,11 @@ public class CubeXForStatement extends CubeXStatement {
 		setDeadVariables();
 		forbody.updateDeadVariables();	
 	}
+	
+	@Override
+	public CubeXProgramPiece flatten() {
+		this.forbody = (CubeXStatement)forbody.flatten();
+		
+		return this;
+	}
 }

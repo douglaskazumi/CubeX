@@ -1,8 +1,5 @@
 package main.statement;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import main.program.CubeXProgramPiece;
 
 public abstract class CubeXStatement extends CubeXProgramPiece

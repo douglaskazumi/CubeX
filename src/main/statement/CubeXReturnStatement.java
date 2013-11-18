@@ -12,6 +12,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXFunctionCall;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
@@ -115,4 +116,18 @@ public class CubeXReturnStatement extends CubeXStatement {
 		setDeadVariables();
 	}
 
+	@Override
+	public CubeXProgramPiece flatten() {
+		if(returnValue.isFunctionCall()){
+			CubeXBlock flattened = new CubeXBlock();
+			CubeXFunctionCall originalReturn = CubeXFunctionCall.copy((CubeXFunctionCall)returnValue);
+			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), originalReturn);
+			this.returnValue = tempVar.getVariable();
+			flattened.add(tempVar);
+			flattened.add(this);			
+			return flattened;
+		}
+		
+		return this;
+	}
 }

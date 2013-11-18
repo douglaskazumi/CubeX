@@ -4,15 +4,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.BitSet;
 
-import main.Optimizations.LiveVariableAnalysis;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.program.CubeXProgramPiece;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 
@@ -41,84 +43,13 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("# Cubex Compiler Test 6 - Stage 8\r\n" + 
-				"\r\n" + 
-				"interface Printer\r\n" + 
-				"{\r\n" + 
-				"	fun print() : Iterable<String>;\r\n" + 
-				"	fun line() : String;\r\n" + 
+		input = new ANTLRInputStream("x := 0;\r\n" + 
+				"if(x < 2){\r\n" + 
+				"	j:=1;\r\n" + 
+				"	j:= 2 + 3 * (5 + 2) + 4 + (5+7);\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"class SinglePrinter(s:String)\r\n" + 
-				"{\r\n" + 
-				"	fun print() : Iterable<String>\r\n" + 
-				"	{\r\n" + 
-				"		return [s];\r\n" + 
-				"	}\r\n" + 
-				"	fun line() : String = s;\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"class ConstantPrinter() extends SinglePrinter\r\n" + 
-				"{\r\n" + 
-				"	super(\"Constant\");\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"class Multiplier(s : String, n : Integer) extends SinglePrinter\r\n" + 
-				"{\r\n" + 
-				"	v:=\"\";\r\n" + 
-				"	nn := n;\r\n" + 
-				"	while(nn>0)\r\n" + 
-				"	{\r\n" + 
-				"		v:=string(v++s);\r\n" + 
-				"		nn := nn-1;\r\n" + 
-				"	}\r\n" + 
-				"	super(v);\r\n" + 
-				"	\r\n" + 
-				"	fun print() : Iterable<String>\r\n" + 
-				"	{\r\n" + 
-				"		ret:=[];\r\n" + 
-				"		nnn := n;\r\n" + 
-				"		while (nnn>0)\r\n" + 
-				"		{\r\n" + 
-				"			ret:=ret++[s];\r\n" + 
-				"			nnn:=nnn-1;\r\n" + 
-				"		}\r\n" + 
-				"		return ret;\r\n" + 
-				"	}\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"ps := [];\r\n" + 
-				"c := 0;\r\n" + 
-				"m := 0;\r\n" + 
-				"for(i in input)\r\n" + 
-				"{\r\n" + 
-				"	m:=m+1;\r\n" + 
-				"	if(c==0)\r\n" + 
-				"	{\r\n" + 
-				"		ps := ps ++ [ConstantPrinter()];\r\n" + 
-				"		c := 1;\r\n" + 
-				"	}\r\n" + 
-				"	else if(c==1)\r\n" + 
-				"	{\r\n" + 
-				"		ps := ps ++ [SinglePrinter(i)];\r\n" + 
-				"		c := 2;\r\n" + 
-				"	}\r\n" + 
-				"	else\r\n" + 
-				"	{\r\n" + 
-				"		ps := ps ++ [Multiplier(i,m)];\r\n" + 
-				"		c := 0;\r\n" + 
-				"	}\r\n" + 
-				"}\r\n" + 
-				"out := [];\r\n" + 
-				"for(p in ps)\r\n" + 
-				"{\r\n" + 
-				"	out := out ++ [p.line()];\r\n" + 
-				"}\r\n" + 
-				"for(p in ps)\r\n" + 
-				"{\r\n" + 
-				"	out := out ++ p.print();\r\n" + 
-				"}\r\n" + 
-				"return out;");
+				"return [\"\"];");
 	}
 	else
 	{
@@ -137,9 +68,9 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	CubeXProgram prog = parser.testprogram().x;
 	if(prog.typeCheck())
 	{
-		
-		LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
-		lva.analyze();
+		prog.flattenPieces();
+//		LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
+//		lva.analyze();
 		
 		try
 		{

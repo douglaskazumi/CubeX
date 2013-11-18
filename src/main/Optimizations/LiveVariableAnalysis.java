@@ -1,6 +1,5 @@
 package main.Optimizations;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import main.c.GlobalAwareness;

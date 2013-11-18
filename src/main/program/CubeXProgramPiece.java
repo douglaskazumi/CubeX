@@ -189,4 +189,8 @@ public abstract class CubeXProgramPiece
 		}
 		return sb.toString();
 	}
+
+	public CubeXProgramPiece flatten(){
+		return this;
+	}
 }

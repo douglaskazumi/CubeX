@@ -16,6 +16,7 @@ import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
+import main.statement.CubeXBlock;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
@@ -505,5 +506,27 @@ public class CubeXProgram {
 		{
 			piece.updateDeadVariables();
 		}
+	}
+	
+	public void flattenPieces(){
+		boolean notFlattened = true;
+		while(notFlattened){
+			notFlattened = false;
+			ArrayList<CubeXProgramPiece> flattenedPieces = new ArrayList<>();
+			for(CubeXProgramPiece piece : pieces){
+				CubeXProgramPiece flattened = piece.flatten();
+				if(flattened != piece){
+					notFlattened = true;
+				}
+				if(flattened.isStatement() && ((CubeXStatement)flattened).isBlock()){
+					flattenedPieces.addAll(((CubeXBlock)flattened).getInnerStatements());
+				}
+				else{
+					flattenedPieces.add(flattened);
+				}
+			}
+			pieces = flattenedPieces;
+		}
+		
 	}
 }

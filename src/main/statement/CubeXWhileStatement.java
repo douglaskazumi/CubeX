@@ -103,4 +103,10 @@ public class CubeXWhileStatement extends CubeXStatement
 		whilestatement.updateDeadVariables();
 	}
 	
+	@Override
+	public CubeXProgramPiece flatten() {
+		whilestatement = (CubeXStatement)whilestatement.flatten();
+		
+		return this;
+	}
 }

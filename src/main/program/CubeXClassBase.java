@@ -108,4 +108,13 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		vTable.finishBase(this);
 		return;
 	}
+	
+	protected void flattenFunctions(){
+		ArrayList<CubeXFunction> flattenedFunctions = new ArrayList<CubeXFunction>();
+		for(CubeXFunction fun : functions){
+			CubeXFunction flattened = (CubeXFunction)fun.flatten();
+			flattenedFunctions.add(flattened);
+		}
+		functions = flattenedFunctions;
+	}
 }

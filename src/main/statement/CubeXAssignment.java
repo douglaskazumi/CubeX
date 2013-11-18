@@ -13,8 +13,8 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXFunctionCall;
 import main.expression.CubeXVariable;
-import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
@@ -28,11 +28,19 @@ public class CubeXAssignment extends CubeXStatement {
 	private CubeXVariable variable;
 	private CubeXExpression expr;
 	
+	public void setExpr(CubeXExpression expr) {
+		this.expr = expr;
+	}
+
 	public CubeXAssignment(String name,CubeXExpression expr)
 	{
 		this.name=name;
 		this.expr=expr;
 		this.variable=new CubeXVariable(name);
+	}
+	
+	public CubeXVariable getVariable(){
+		return variable;
 	}
 
 	@Override
@@ -134,6 +142,19 @@ public class CubeXAssignment extends CubeXStatement {
 		setDeadVariables();
 	}
 	
-	
-	
+	@Override
+	public CubeXProgramPiece flatten() {
+		if(expr.isFunctionCall() && ((CubeXFunctionCall)expr).isNested()){
+			CubeXBlock flattened = new CubeXBlock();
+			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), (CubeXFunctionCall)expr);
+			
+			flattened.add(((CubeXFunctionCall)expr).flatten(tempVar));
+			
+			this.setExpr(tempVar.getVariable());
+			flattened.add(this);
+			return flattened;
+		}
+		
+		return this;
+	}	
 }

@@ -13,6 +13,12 @@ public class GlobalAwareness {
 	private static Constructor cons = new Constructor();
 	private static CreateObject createObj = new CreateObject();
 	public static HashSet<String>  locals = new HashSet<String>();
+	public static int tempVarIndex = 0;
+	
+	public static String getTempName()
+	{
+		return "var_cubex_temp_"+ tempVarIndex++;
+	}
 	
 	public static  void addLocal(String name)
 	{

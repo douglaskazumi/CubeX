@@ -1,7 +1,6 @@
 package main.program;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import main.c.CUtils;
 import main.c.GlobalAwareness;
@@ -233,5 +232,12 @@ public class CubeXFunction extends CubeXProgramPiece
 	public void updateDeadVariables()
 	{
 		statement.updateDeadVariables();
+	}
+	
+	@Override
+	public CubeXProgramPiece flatten() {
+		this.statement = (CubeXStatement)statement.flatten();
+		
+		return this;
 	}
 }

@@ -61,6 +61,10 @@ public abstract class CubeXExpression
 	public boolean isVariable() {
 		return false;
 	}
+	
+	public boolean isFunctionCall() {
+		return false;
+	}
 
 	public abstract HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions);
 	

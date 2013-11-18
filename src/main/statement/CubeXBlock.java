@@ -145,4 +145,25 @@ public class CubeXBlock extends CubeXStatement
 		}
 	}
 
+	@Override
+	public CubeXProgramPiece flatten() {
+		ArrayList<CubeXStatement> flattenedStatements = new ArrayList<CubeXStatement>();
+		for(CubeXStatement stat : innerStatements){
+			CubeXStatement flattened = (CubeXStatement)stat.flatten();
+			if(flattened.isStatement() && flattened.isBlock()){
+				flattenedStatements.addAll(((CubeXBlock)flattened).getInnerStatements());
+			}
+			else{
+				flattenedStatements.add(flattened);
+			}
+		}
+		innerStatements = flattenedStatements;
+		
+		
+		return this;
+	}
+
+	public ArrayList<CubeXStatement> getInnerStatements() {
+		return innerStatements;
+	}
 }

@@ -8,7 +8,6 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
@@ -197,5 +196,11 @@ public class CubeXInterface extends CubeXClassBase {
 		}
 		
 	}
-
+	
+	@Override
+	public CubeXProgramPiece flatten() {
+		flattenFunctions();
+		
+		return this;
+	}
 }

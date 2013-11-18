@@ -24,7 +24,6 @@ public class Constructor {
 	public void addClass(CubeXClass clss) throws ContextException
 	{
 		StringBuilder sbdecl = new StringBuilder();
-		StringBuilder sbafter = new StringBuilder();
 		
 		sbdecl.append("object_t * c_").append(clss.getName()).append("(");
 		
