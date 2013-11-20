@@ -240,4 +240,27 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		return this;
 	}
+
+	@Override
+	public void addBoxes() {
+		statement.addBoxes();
+	}
+
+	@Override
+	public void simplifyFunctionBoxes() {
+		statement.simplifyFunctionBoxes();
+		
+	}
+
+	@Override
+	public void primitivifyVariables()
+	{	
+		statement.primitivifyVariables();
+	}
+	
+	@Override
+	public void reduceBoxes() {
+		statement.reduceBoxes();
+		
+	}
 }

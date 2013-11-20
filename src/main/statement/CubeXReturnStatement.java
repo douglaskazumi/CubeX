@@ -130,4 +130,28 @@ public class CubeXReturnStatement extends CubeXStatement {
 		
 		return this;
 	}
+
+	@Override
+	public void addBoxes()
+	{
+		returnValue=returnValue.addBoxes();
+	}
+	
+	@Override
+	public void simplifyFunctionBoxes()
+	{
+		returnValue=returnValue.simplifyFunctionBoxes();
+	}
+
+	@Override
+	public void primitivifyVariables() {
+		returnValue=returnValue.primitivifyVariables();
+		
+	}
+	
+	@Override
+	public void reduceBoxes() {
+		returnValue=returnValue.reduceBoxes();
+		
+	}
 }

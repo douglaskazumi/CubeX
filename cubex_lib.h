@@ -9,7 +9,7 @@ extern int allocdiff;
 
 typedef int* func;
 
-typedef char bool;
+typedef int bool;
 
 typedef struct {
 	void *iTable;

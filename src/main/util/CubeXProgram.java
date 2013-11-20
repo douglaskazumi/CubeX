@@ -529,4 +529,36 @@ public class CubeXProgram {
 		}
 		
 	}
+	
+	public void addBoxes()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.addBoxes();
+		}
+	}
+	
+	public void simplifyFunctionBoxes()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.simplifyFunctionBoxes();
+		}
+	}
+	
+	public void primitivifyVariables()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.primitivifyVariables();
+		}
+	}
+	
+	public void reduceBoxes()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.reduceBoxes();
+		}
+	}
 }

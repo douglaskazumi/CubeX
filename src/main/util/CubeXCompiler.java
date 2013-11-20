@@ -44,11 +44,11 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	if(debug)
 	{
 		input = new ANTLRInputStream("x := 0;\r\n" + 
+				"aoeu:=[1,2,true];\r\n" + 
 				"if(x < 2){\r\n" + 
 				"	j:=1;\r\n" + 
 				"	j:= 2 + 3 * (5 + 2) + 4 + (5+7);\r\n" + 
 				"}\r\n" + 
-				"\r\n" + 
 				"return [\"\"];");
 	}
 	else
@@ -66,9 +66,13 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	parser.addErrorListener(new ParserError());
 	
 	CubeXProgram prog = parser.testprogram().x;
+	prog.flattenPieces();
 	if(prog.typeCheck())
 	{
-		prog.flattenPieces();
+		prog.addBoxes();
+		prog.simplifyFunctionBoxes();
+		prog.primitivifyVariables();
+		prog.reduceBoxes();
 //		LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
 //		lva.analyze();
 		

@@ -3,6 +3,7 @@ package main.statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import main.Optimizations.Boxer;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -27,6 +28,7 @@ public class CubeXAssignment extends CubeXStatement {
 	private String name;
 	private CubeXVariable variable;
 	private CubeXExpression expr;
+	boolean primitive = false;
 	
 	public void setExpr(CubeXExpression expr) {
 		this.expr = expr;
@@ -156,5 +158,34 @@ public class CubeXAssignment extends CubeXStatement {
 		}
 		
 		return this;
+	}
+
+	@Override
+	public void addBoxes()
+	{
+		expr=expr.addBoxes();
+	}
+
+	@Override
+	public void simplifyFunctionBoxes() {
+		expr=expr.simplifyFunctionBoxes();
 	}	
+	
+	@Override
+	public void primitivifyVariables() {
+		
+		if(expr.getTypeUnsafe().isInt() || expr.getTypeUnsafe().isBool())
+		{
+			primitive=true;
+			expr=Boxer.unboxify(expr);
+		}
+		expr.primitivifyVariables();
+	}	
+	
+	@Override
+	public void reduceBoxes() {
+		expr=expr.reduceBoxes();
+	}	
+	
+	
 }

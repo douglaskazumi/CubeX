@@ -106,4 +106,56 @@ public class CubeXIterable extends CubeXExpression
 		}
 		return vars;
 	}
+
+	@Override
+	public CubeXExpression reduceBoxes()
+	{
+		for(int i=0; i<entries.size(); ++i)
+		{
+			CubeXExpression newEntry = entries.get(i).reduceBoxes();
+			if(newEntry==entries.get(i))
+				continue;
+			entries.set(i, newEntry);
+		}
+		return this;
+	}
+	
+	@Override
+	public CubeXExpression addBoxes() 
+	{
+		for(int i=0; i<entries.size(); ++i)
+		{
+			CubeXExpression newEntry = entries.get(i).addBoxes();
+			if(newEntry==entries.get(i))
+				continue;
+			entries.set(i, newEntry);
+		}
+		return this;	
+	}
+
+	@Override
+	public CubeXExpression simplifyFunctionBoxes() {
+		for(int i=0; i<entries.size(); ++i)
+		{
+			CubeXExpression newEntry = entries.get(i).simplifyFunctionBoxes();
+			if(newEntry==entries.get(i))
+				continue;
+			entries.set(i, newEntry);
+		}
+		return this;	
+	}
+	
+	@Override
+	public CubeXExpression primitivifyVariables() {
+		for(int i=0; i<entries.size(); ++i)
+		{
+			CubeXExpression newEntry = entries.get(i).primitivifyVariables();
+			if(newEntry==entries.get(i))
+				continue;
+			entries.set(i, newEntry);
+		}
+		return this;	
+	}
+	
+	
 }

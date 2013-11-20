@@ -193,4 +193,9 @@ public abstract class CubeXProgramPiece
 	public CubeXProgramPiece flatten(){
 		return this;
 	}
+	
+	public abstract void addBoxes();
+	public abstract void simplifyFunctionBoxes();
+	public abstract void primitivifyVariables();
+	public abstract void reduceBoxes();
 }

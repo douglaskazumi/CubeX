@@ -203,4 +203,54 @@ public class CubeXInterface extends CubeXClassBase {
 		
 		return this;
 	}
+
+
+	@Override
+	public void addBoxes() 
+	{
+		for(CubeXFunction fun : this.functions)
+		{
+			if(!fun.isDeclaration() && fun.getParent().name==this.name)
+			{
+				fun.addBoxes();
+			}
+		}
+	}
+
+
+	@Override
+	public void simplifyFunctionBoxes() {
+		for(CubeXFunction fun : this.functions)
+		{
+			if(!fun.isDeclaration() && fun.getParent().name==this.name)
+			{
+				fun.simplifyFunctionBoxes();
+			}
+		}
+		
+	}
+	
+	@Override
+	public void primitivifyVariables() {
+		for(CubeXFunction fun : this.functions)
+		{
+			if(!fun.isDeclaration() && fun.getParent().name==this.name)
+			{
+				fun.primitivifyVariables();
+			}
+		}
+		
+	}
+	
+	@Override
+	public void reduceBoxes() {
+		for(CubeXFunction fun : this.functions)
+		{
+			if(!fun.isDeclaration() && fun.getParent().name==this.name)
+			{
+				fun.reduceBoxes();
+			}
+		}
+		
+	}
 }

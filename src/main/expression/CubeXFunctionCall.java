@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import main.Optimizations.Boxer;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.*;
@@ -21,14 +22,17 @@ import main.program.*;
 public class CubeXFunctionCall extends CubeXExpression 
 {
 	private CubeXExpression parent;
+	
+	private boolean simplified = false;
+	
 	public CubeXExpression getParent() {
 		return parent;
 	}
 
 	private String name;
 	private ArrayList<? extends CubeXType> parameters;
-	private ArrayList<? extends CubeXExpression> args;
-	public ArrayList<? extends CubeXExpression> getArgs() {
+	private ArrayList<CubeXExpression> args;
+	public ArrayList<CubeXExpression> getArgs() {
 		return args;
 	}
 
@@ -38,7 +42,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 	private CallType calltype;
 	
-	public CubeXFunctionCall(CubeXExpression parent, String name, ArrayList<? extends CubeXType> parameters, ArrayList<? extends CubeXExpression> args)
+	public CubeXFunctionCall(CubeXExpression parent, String name, ArrayList<? extends CubeXType> parameters, ArrayList<CubeXExpression> args)
 	{
 		this.parent=parent;
 		this.name=name;
@@ -434,5 +438,105 @@ public class CubeXFunctionCall extends CubeXExpression
 		
 		flattened.add(tempVar);
 		return flattened;
+	}
+
+	@Override
+	public CubeXExpression reduceBoxes() 
+	{
+		if(parent!=null)
+			parent=parent.reduceBoxes();
+		
+		for(int i=0; i<args.size(); ++i)
+		{
+			CubeXExpression newEntry = args.get(i).reduceBoxes();
+			if(newEntry==args.get(i))
+				continue;
+			args.set(i, newEntry);
+		}
+		return this;
+	}
+	
+	
+	@Override
+	public CubeXExpression addBoxes() 
+	{
+		if(parent!=null)
+			parent=parent.addBoxes();
+		for(int i=0; i<args.size(); ++i)
+		{
+			CubeXExpression newEntry = args.get(i).addBoxes();
+			args.set(i, newEntry);
+		}
+		return this;
+	}
+	
+	public CubeXExpression simplifyFunctionBoxes()
+	{
+		if(parent!=null)
+		{
+			if(parent.getTypeUnsafe().isInt())
+			{
+				if(name.equals("negative"))
+				{
+					parent = Boxer.unboxify(parent);
+					simplified=true;
+				}
+				else if(args.size()==2 && args.get(0).getTypeUnsafe().isInt()  && args.get(1).getTypeUnsafe().isBool() && name.equals("lessThan"))
+				{
+					simplified=true;
+					parent = Boxer.unboxify(parent);
+					args.set(0, Boxer.unboxify(args.get(0)));
+					args.set(1, Boxer.unboxify(args.get(1)));
+				}
+				else if(args.size()==1 && args.get(0).getTypeUnsafe().isInt() && (name.equals("times") || name.equals("plus") || name.equals("minus") || name.equals("equals")))
+				{
+					simplified=true;
+					parent = Boxer.unboxify(parent);
+					args.set(0, Boxer.unboxify(args.get(0)));
+				}
+			}
+			else if(parent.getTypeUnsafe().isBool())
+			{
+				if(name.equals("negate"))
+				{
+					parent = Boxer.unboxify(parent);
+					simplified=true;
+				}
+				else if(args.size()==2 && args.get(0).getTypeUnsafe().isInt()  && args.get(1).getTypeUnsafe().isBool() && name.equals("lessThan"))
+				{
+					simplified=true;
+					parent = Boxer.unboxify(parent);
+					args.set(0, Boxer.unboxify(args.get(0)));
+					args.set(1, Boxer.unboxify(args.get(1)));
+				} 
+				else if(args.size()==1 && args.get(0).getTypeUnsafe().isBool() && (name.equals("and") || name.equals("or") || name.equals("lessThan") || name.equals("equals")))
+				{
+					simplified=true;
+					parent = Boxer.unboxify(parent);
+					args.set(0, Boxer.unboxify(args.get(0)));
+				}
+			}
+		}
+		
+		for(int i=0; i<args.size(); ++i)
+		{
+			CubeXExpression newEntry = args.get(i).simplifyFunctionBoxes();
+			if(newEntry==args.get(i))
+				continue;
+			args.set(i, newEntry);
+		}
+		return Boxer.boxify(this);
+	}
+
+	@Override
+	public CubeXExpression primitivifyVariables() {
+		if(parent!=null)
+			parent=parent.primitivifyVariables();
+		for(int i=0; i<args.size(); ++i)
+		{
+			CubeXExpression newEntry = args.get(i).primitivifyVariables();
+			args.set(i, newEntry);
+		}
+		return this;
 	}
 }

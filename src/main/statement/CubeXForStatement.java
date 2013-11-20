@@ -138,4 +138,29 @@ public class CubeXForStatement extends CubeXStatement {
 		
 		return this;
 	}
+
+	@Override
+	public void addBoxes()
+	{
+		forexpression=forexpression.addBoxes();
+		forbody.addBoxes();
+	}
+
+	@Override
+	public void simplifyFunctionBoxes() {
+		forexpression=forexpression.simplifyFunctionBoxes();
+		forbody.simplifyFunctionBoxes();
+	}
+	
+	@Override
+	public void primitivifyVariables() {
+		forexpression=forexpression.primitivifyVariables();
+		forbody.primitivifyVariables();
+	}
+	
+	@Override
+	public void reduceBoxes() {
+		forexpression=forexpression.reduceBoxes();
+		forbody.reduceBoxes();
+	}
 }

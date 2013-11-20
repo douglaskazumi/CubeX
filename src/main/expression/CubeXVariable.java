@@ -2,6 +2,7 @@ package main.expression;
 
 import java.util.HashSet;
 
+import main.Optimizations.Boxer;
 import main.c.CUtils;
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -23,6 +24,7 @@ public class CubeXVariable extends CubeXExpression
 	private boolean isField;
 	public boolean isLocal;
 	private CubeXClass parent;
+	private boolean primitive;
 	
 	public CubeXVariable(String name)
 	{
@@ -115,5 +117,32 @@ public class CubeXVariable extends CubeXExpression
 		if((!globals && this.isLocal) || (globals && !this.isLocal && !this.isField()))
 			vars.add(name);
 		return vars;
+	}
+
+	@Override
+	public CubeXExpression reduceBoxes() {
+		return this;
+	}
+	
+	@Override
+	public CubeXExpression addBoxes() {
+		return this;
+	}
+	
+	@Override
+	public CubeXExpression simplifyFunctionBoxes()
+	{
+		return this;
+	}
+
+	@Override
+	public CubeXExpression primitivifyVariables()
+	{
+		if(getTypeUnsafe().isInt() || getTypeUnsafe().isBool())
+		{
+			primitive=true;
+			return Boxer.boxify(this);
+		}
+		return this;
 	}
 }
