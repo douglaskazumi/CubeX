@@ -1,8 +1,10 @@
 package main.statement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
+import main.Optimizations.Boxer;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -49,12 +51,19 @@ public class CubeXReturnStatement extends CubeXStatement {
 	public String toC(CubeXProgramPiece par) {
 		String temp = CUtils.getTempName();
 		
+		boolean primReturnValue =(par!=null && par.isFunction() && (((CubeXFunction)par).getReturnType().isBool()||((CubeXFunction)par).getReturnType().isInt()));
+		
 		StringBuilder sb = new StringBuilder();
-		sb.append("\t").append(CUtils.canonName(temp)).append(" = gc_inc(").append(returnValue.toC(par)).append(");\n");
+		
+		if(primReturnValue)
+			sb.append("\t").append(CUtils.canonName(temp)).append(" = (object_t *)(").append(returnValue.toC(par)).append(");\n");
+		else
+			sb.append("\t").append(CUtils.canonName(temp)).append(" = gc_inc(").append(returnValue.toC(par)).append(");\n");
+		
 		sb.append(returnValue.postC(par));
 		//sb.append(this.gcDeadVariables());
 		
-		HashSet<String> locals;
+		HashMap<String, Boolean> locals;
 		if(par==null)
 		{
 			locals=GlobalAwareness.locals;
@@ -63,19 +72,23 @@ public class CubeXReturnStatement extends CubeXStatement {
 		{
 			locals=par.locals;
 		}
-		locals.add(temp);
+		locals.put(temp, returnValue.getTypeUnsafe().isInt() || returnValue.getTypeUnsafe().isBool());
 		ArrayList<String> toIgnore = new ArrayList<String>();
 		if(par!=null && par.isFunction())
 		{
 			for(CubeXArgument var : ((CubeXFunction)par).getArglist())
-			{
+			{	
 				toIgnore.add(var.variable.getName());
+				if(var.type.isBool()||var.type.isInt())
+					continue;
 				sb.append("\tgc(gc_dec(").append(CUtils.canonName(var.variable.getName())).append("));\n");
 			}
 		}
-		for(String var : locals)
+		for(String var : locals.keySet())
 		{
 			if(var.equals(temp) || toIgnore.contains(var))
+				continue;
+			if(locals.get(var))
 				continue;
 			sb.append("\tgc(gc_dec(").append(CUtils.canonName(var)).append("));\n");
 		}
@@ -83,7 +96,12 @@ public class CubeXReturnStatement extends CubeXStatement {
 		{
 			sb.append("gc_dec(this);\n");
 		}
-		sb.append("\treturn gc_dec(" + CUtils.canonName(temp) + ");\n");
+		
+		
+		if(primReturnValue)
+			sb.append("\treturn (" + CUtils.canonName(temp) + ");\n");
+		else
+			sb.append("\treturn gc_dec(" + CUtils.canonName(temp) + ");\n");
 		return sb.toString();
 	}
 
@@ -144,8 +162,10 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 
 	@Override
-	public void primitivifyVariables() {
+	public void primitivifyVariables() {		
 		returnValue=returnValue.primitivifyVariables();
+		if( returnValue.getTypeUnsafe().isBool() || returnValue.getTypeUnsafe().isInt())
+			returnValue=Boxer.unboxify(returnValue);
 		
 	}
 	

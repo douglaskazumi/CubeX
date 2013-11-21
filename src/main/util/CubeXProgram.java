@@ -408,7 +408,7 @@ public class CubeXProgram {
 		sb2.append("#include \"cubex_external_functions.h\"\n\n");
 		sb2.append(GlobalAwareness.getDeclarations());
 		sb2.append("object_t *v_input;\n");
-		for(String var : GlobalAwareness.locals)
+		for(String var : GlobalAwareness.locals.keySet())
 		{
 			sb2.append("\tobject_t * ").append(CUtils.canonName(var)).append(" = NULL;\n");
 		}

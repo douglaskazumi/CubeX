@@ -45,7 +45,16 @@ public class Boxer extends CubeXExpression {
 	public String toC(CubeXProgramPiece par) {
 		// TODO Auto-generated method stub
 		StringBuilder sb = new StringBuilder();
-		sb.append(innerExpression.toC(par));
+		
+		if(isBoxed)
+		{
+			sb.append("box((int)").append(innerExpression.toC(par)).append(innerExpression.getTypeUnsafe().isInt()?", false)":", true)");
+		}
+		else
+		{
+			sb.append("unbox((object_t *)").append(innerExpression.toC(par)).append(")");
+		}
+
 		this.temps.addAll(innerExpression.getTemps());
 		return sb.toString();
 	}
@@ -65,6 +74,11 @@ public class Boxer extends CubeXExpression {
 	public boolean isBoxed()
 	{
 		return isBoxed;
+	}
+	
+	public boolean isBoolean()
+	{
+		return innerExpression.isBoolean();
 	}
 
 	@Override

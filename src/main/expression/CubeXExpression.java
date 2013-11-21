@@ -62,6 +62,11 @@ public abstract class CubeXExpression
 		return false;
 	}
 	
+	public boolean isBoolean()
+	{
+		return false;
+	}
+	
 	public boolean isFunctionCall() {
 		return false;
 	}

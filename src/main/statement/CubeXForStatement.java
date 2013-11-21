@@ -63,27 +63,40 @@ public class CubeXForStatement extends CubeXStatement {
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
+		
+		CubeXType innerType = ((CubeXTypeIterable)forexpression.getTypeUnsafe()).getInnerType();
+		boolean isInnerPrim = innerType.isBool() || innerType.isInt();
+		
 		if(par!=null)
 		{
-			par.addLocal(indexer);
-			par.addLocal(iterable);
-			par.addLocal(variable);
+			par.addLocal(indexer, false);
+			par.addLocal(iterable, false);
+			par.addLocal(variable, isInnerPrim);
 		}
 		else
 		{
-			GlobalAwareness.addLocal(indexer);
-			GlobalAwareness.addLocal(iterable);
-			GlobalAwareness.addLocal(variable);
+			GlobalAwareness.addLocal(indexer, false);
+			GlobalAwareness.addLocal(iterable, false);
+			GlobalAwareness.addLocal(variable, isInnerPrim);
 		}
 		sb.append(CUtils.canonName(indexer)).append(" = (object_t *)createIndexer();\n");
 		sb.append("\t").append(CUtils.canonName(iterable)).append(" = gc_inc(").append(forexpression.toC(par)).append(");\n");
 		sb.append("\twhile(iterableHasNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("))\n\t{\n");
-		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = gc_inc(iterableNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("));\n");
+		if(isInnerPrim)
+		{
+			sb.append("\t\t").append(CUtils.canonName(variable)).append(" = (object_t *)unbox(iterableNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("));\n");
+		}
+		else
+		{
+			sb.append("\t\t").append(CUtils.canonName(variable)).append(" = gc_inc(iterableNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("));\n");
+		}
+		
 		String pre = forbody.preC(par);
 		if(!pre.isEmpty())
 			sb.append("\t\t").append(pre);
 		sb.append("\t\t").append(forbody.toC(par));
-		sb.append("\t\tgc(gc_dec(").append(CUtils.canonName(variable)).append("));\n");
+		if(!isInnerPrim)
+			sb.append("\t\tgc(gc_dec(").append(CUtils.canonName(variable)).append("));\n");
 		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = NULL;\n");
 		sb.append("\t}\n");
 		sb.append("\t\tgc_iterableIndex((iterableIndex_t *)").append(CUtils.canonName(indexer)).append(");\n");

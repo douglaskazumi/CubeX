@@ -1,18 +1,20 @@
 package main.c;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import main.exceptions.ContextException;
 import main.program.CubeXClass;
 import main.program.CubeXProgramPiece;
+import main.type.CubeXType;
 
 
 public class GlobalAwareness {
 	private static StringBuilder declarations = new StringBuilder();
 	private static Constructor cons = new Constructor();
 	private static CreateObject createObj = new CreateObject();
-	public static HashSet<String>  locals = new HashSet<String>();
+	public static HashMap<String,Boolean>  locals = new HashMap<String,Boolean>();
 	public static int tempVarIndex = 0;
 	
 	public static String getTempName()
@@ -20,9 +22,9 @@ public class GlobalAwareness {
 		return "var_cubex_temp_"+ tempVarIndex++;
 	}
 	
-	public static  void addLocal(String name)
+	public static  void addLocal(String name, Boolean isPrim)
 	{
-		locals.add(name);
+		locals.put(name, isPrim);
 	}
 	
 	public static void declarationAppend(String newLine){

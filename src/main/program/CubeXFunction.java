@@ -149,7 +149,16 @@ public class CubeXFunction extends CubeXProgramPiece
 			separator=", ";
 		}
 		for (CubeXArgument arg : arglist) {
-			sb.append(separator).append(" object_t * ").append(" ").append(CUtils.canonName(arg.variable));
+			boolean isPrim = arg.type.isBool()||arg.type.isInt();
+			if(isPrim)
+			{
+				sb.append(separator).append(" int ").append(" ").append(CUtils.canonName(arg.variable));
+			}
+			else
+			{
+				sb.append(separator).append(" object_t * ").append(" ").append(CUtils.canonName(arg.variable));
+			}
+			
 			separator = ", ";
 		}
 		sb.append(")");
@@ -168,7 +177,7 @@ public class CubeXFunction extends CubeXProgramPiece
 		{
 			strArgs.add(ar.variable.getName());
 		}
-		for(String var :locals)
+		for(String var :locals.keySet())
 		{
 			if(strArgs.contains(var))
 				continue;

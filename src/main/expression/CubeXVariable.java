@@ -24,7 +24,7 @@ public class CubeXVariable extends CubeXExpression
 	private boolean isField;
 	public boolean isLocal;
 	private CubeXClass parent;
-	private boolean primitive;
+	public boolean isPrimitive;
 	
 	public CubeXVariable(String name)
 	{
@@ -140,7 +140,7 @@ public class CubeXVariable extends CubeXExpression
 	{
 		if(getTypeUnsafe().isInt() || getTypeUnsafe().isBool())
 		{
-			primitive=true;
+			isPrimitive=true;
 			return Boxer.boxify(this);
 		}
 		return this;
