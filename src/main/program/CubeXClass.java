@@ -410,4 +410,102 @@ public class CubeXClass extends CubeXClassBase {
 		
 		return this;
 	}
+
+	@Override
+	public void addBoxes() {
+		
+		for(CubeXStatement stat : statements)
+		{
+			stat.addBoxes();
+		}
+		
+		for(CubeXFunction fun : this.functions)
+		{
+			if(fun.getParent().name==this.name)
+			{
+				fun.addBoxes();
+			}
+		}	
+		for(int i=0; i<superArgs.size(); ++i)
+		{
+			CubeXExpression newEntry = superArgs.get(i).addBoxes();
+			if(newEntry==superArgs.get(i))
+				continue;
+			superArgs.set(i, newEntry);
+		}
+		
+	}
+	
+	public void simplifyFunctionBoxes() {
+		
+		for(CubeXStatement stat : statements)
+		{
+			stat.simplifyFunctionBoxes();
+		}
+		
+		for(CubeXFunction fun : this.functions)
+		{
+			if(fun.getParent().name==this.name)
+			{
+				fun.simplifyFunctionBoxes();
+			}
+		}
+		
+		for(int i=0; i<superArgs.size(); ++i)
+		{
+			CubeXExpression newEntry = superArgs.get(i).simplifyFunctionBoxes();
+			if(newEntry==superArgs.get(i))
+				continue;
+			superArgs.set(i, newEntry);
+		}
+	}
+	
+	public void primitivifyVariables() {
+		
+		for(CubeXStatement stat : statements)
+		{
+			stat.primitivifyVariables();
+		}
+		
+		for(CubeXFunction fun : this.functions)
+		{
+			if(fun.getParent().name==this.name)
+			{
+				fun.primitivifyVariables();
+			}
+		}
+		
+		for(int i=0; i<superArgs.size(); ++i)
+		{
+			CubeXExpression newEntry = superArgs.get(i).primitivifyVariables();
+			if(newEntry==superArgs.get(i))
+				continue;
+			superArgs.set(i, newEntry);
+		}
+	}
+	
+	@Override
+	public void reduceBoxes() {
+		
+		for(CubeXStatement stat : statements)
+		{
+			stat.reduceBoxes();
+		}
+		
+		for(CubeXFunction fun : this.functions)
+		{
+			if(fun.getParent().name==this.name)
+			{
+				fun.reduceBoxes();
+			}
+		}	
+		for(int i=0; i<superArgs.size(); ++i)
+		{
+			CubeXExpression newEntry = superArgs.get(i).reduceBoxes();
+			if(newEntry==superArgs.get(i))
+				continue;
+			superArgs.set(i, newEntry);
+		}
+		
+	}
 }

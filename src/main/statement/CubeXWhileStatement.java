@@ -3,6 +3,7 @@ package main.statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import main.Optimizations.Boxer;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -55,7 +56,7 @@ public class CubeXWhileStatement extends CubeXStatement
 		
 		sb.append("while(true)\n\t{\n");
 		sb.append(condition.preC(par));
-		sb.append("\tif(!isTrue(").append(condition.toC(par)).append("))\n\t");
+		sb.append("\tif(!((bool)").append(condition.toC(par)).append("))\n\t");
 		sb.append("{\n");
 		sb.append(condition.postC(par));
 		sb.append("\t\tbreak;\n\t}\n");
@@ -108,5 +109,32 @@ public class CubeXWhileStatement extends CubeXStatement
 		whilestatement = (CubeXStatement)whilestatement.flatten();
 		
 		return this;
+	}
+
+
+	@Override
+	public void addBoxes()
+	{
+		condition=condition.addBoxes();
+		whilestatement.addBoxes();
+	}
+
+
+	@Override
+	public void simplifyFunctionBoxes() {
+		condition=condition.simplifyFunctionBoxes();
+		whilestatement.simplifyFunctionBoxes();		
+	}
+	
+	@Override
+	public void primitivifyVariables() {
+		condition=condition.primitivifyVariables();
+		whilestatement.primitivifyVariables();		
+	}
+	
+	@Override
+	public void reduceBoxes() {
+		condition=Boxer.unboxify(condition).reduceBoxes();
+		whilestatement.reduceBoxes();		
 	}
 }

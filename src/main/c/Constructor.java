@@ -115,14 +115,14 @@ public class Constructor {
 			
 		}
 		
-		for(String lvar : dummyFunction.locals)
+		for(String lvar : dummyFunction.locals.keySet())
 		{
 			sb.append("\tobject_t * ").append(CUtils.canonName(lvar)).append("= NULL;\n");
 		}
 		
 		sb.append(fields).append(statements).append(superCall);
 		
-		for(String lvar : dummyFunction.locals)
+		for(String lvar : dummyFunction.locals.keySet())
 		{
 			sb.append("\tgc(gc_dec(").append(CUtils.canonName(lvar)).append("));\n");
 		}

@@ -166,4 +166,46 @@ public class CubeXBlock extends CubeXStatement
 	public ArrayList<CubeXStatement> getInnerStatements() {
 		return innerStatements;
 	}
+
+	@Override
+	public void addBoxes() 
+	{
+		for(CubeXStatement stat : innerStatements)
+		{
+			stat.addBoxes();
+		}
+		
+	}
+	
+	@Override
+	public void simplifyFunctionBoxes() 
+	{
+		for(CubeXStatement stat : innerStatements)
+		{
+			stat.simplifyFunctionBoxes();
+		}
+		
+	}
+	
+	@Override
+	public void primitivifyVariables() 
+	{
+		for(CubeXStatement stat : innerStatements)
+		{
+			stat.primitivifyVariables();
+		}
+		
+	}
+	
+	@Override
+	public void reduceBoxes() 
+	{
+		for(CubeXStatement stat : innerStatements)
+		{
+			stat.reduceBoxes();
+		}
+		
+	}
+	
+	
 }

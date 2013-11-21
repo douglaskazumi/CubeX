@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import main.Optimizations.Boxer;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.*;
@@ -21,14 +22,17 @@ import main.program.*;
 public class CubeXFunctionCall extends CubeXExpression 
 {
 	private CubeXExpression parent;
+	
+	private boolean simplified = false;
+	
 	public CubeXExpression getParent() {
 		return parent;
 	}
 
 	private String name;
 	private ArrayList<? extends CubeXType> parameters;
-	private ArrayList<? extends CubeXExpression> args;
-	public ArrayList<? extends CubeXExpression> getArgs() {
+	private ArrayList<CubeXExpression> args;
+	public ArrayList<CubeXExpression> getArgs() {
 		return args;
 	}
 
@@ -38,7 +42,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 	private CallType calltype;
 	
-	public CubeXFunctionCall(CubeXExpression parent, String name, ArrayList<? extends CubeXType> parameters, ArrayList<? extends CubeXExpression> args)
+	public CubeXFunctionCall(CubeXExpression parent, String name, ArrayList<? extends CubeXType> parameters, ArrayList<CubeXExpression> args)
 	{
 		this.parent=parent;
 		this.name=name;
@@ -204,17 +208,19 @@ public class CubeXFunctionCall extends CubeXExpression
 		
 		StringBuilder sb = new StringBuilder();
 		
-		if(parent!=null) //e.fun();
+		if(parent!=null && !simplified) //e.fun();
 		{
 			 sb.append(parent.preC(par));
+			 boolean isPrim = parent.getTypeUnsafe().isBool()||parent.getTypeUnsafe().isInt();
 			 tempVar = CUtils.getTempName();
+			 
 			 if(par!=null)
 			 {
-				 par.addLocal(tempVar);
+				 par.addLocal(tempVar, isPrim);
 			 }
 			 else
 			 {
-				 GlobalAwareness.addLocal(tempVar);
+				 GlobalAwareness.addLocal(tempVar, isPrim);
 			 }
 			 sb.append(CUtils.canonName(tempVar)).append(" = gc_inc(").append(parent.toC(par)).append(");\n");
 		}
@@ -230,6 +236,58 @@ public class CubeXFunctionCall extends CubeXExpression
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
+		
+		if(simplified)
+		{
+			if(name.equals("negative"))
+			{
+				sb.append("-((int)(").append(parent.toC(par)).append("))");
+				return sb.toString();
+			}
+			else if(name.equals("negate"))
+			{
+				sb.append("!((int)(").append(parent.toC(par)).append("))");
+				return sb.toString();
+			}
+			
+			String op="";
+			if(name.equals("lessThan"))
+			{
+				if(((CubeXBoolean)args.get(1)).getValue())
+					op="<";
+				else
+					op="<=";
+			}
+			else if(name.equals("and"))
+			{
+				op="&&";
+			}
+			else if(name.equals("or"))
+			{
+				op="||";
+			}
+			else if(name.equals("times"))
+			{
+				op="*";
+			}
+			else if(name.equals("plus"))
+			{
+				op="+";
+			}
+			else if(name.equals("minus"))
+			{
+				op="-";
+			}
+			else if(name.equals("equals"))
+			{
+				op="==";
+			}
+			
+			sb.append("((object_t *)(((int)").append(parent.toC(par)).append(") ").append(op).append(" ((int)").append(args.get(0).toC(par)).append(")))");
+
+			return sb.toString();
+		}
+		
 		try
 		{
 			if(calltype==CallType.FUNCTION) //e.fun();
@@ -237,7 +295,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 					Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res =  parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext);
 					CubeXClassBase cb = (CubeXClassBase)res.third.getDeclaration(GlobalContexts.classContext);
-					
+					CubeXFunction fun = res.second;
 					ArrayList<CubeXFunction> funs = cb.getFunctions();
 					int fIndex=-1;
 					for(int i=0; i<funs.size(); ++i)
@@ -257,15 +315,38 @@ public class CubeXFunctionCall extends CubeXExpression
 						throw new Exception("Bad translation");
 					
 					sb.append("(((object_t * (*)(object_t *");
+					int i=0;
 					for(@SuppressWarnings("unused") CubeXExpression exp : args)
 					{
-						sb.append(", ").append("object_t *");
+						CubeXType argType = fun.getArglist().get(i).type;
+						boolean isPrim = argType.isBool() || argType.isInt();
+						if(!isPrim)
+						{
+							sb.append(", object_t *");
+						}
+						else
+						{
+							sb.append(", int");
+						}
+						i++;
 					}
 					sb.append("))").append("(getMethod(").append(CUtils.canonName(tempVar)).append(", ").append(cb.getID()).append(", ").append(fIndex).append(")))");
 					sb.append("(gc_inc(").append(CUtils.canonName(tempVar)).append(")");
+					i=0;
 					for(CubeXExpression exp : args)
 					{
-						sb.append(", gc_inc(").append(exp.toC(par)).append(")");
+						CubeXType argType = fun.getArglist().get(i).type;
+						boolean isPrim = argType.isBool() || argType.isInt();
+						if(!isPrim)
+						{
+							sb.append(", gc_inc(").append(exp.toC(par)).append(")");
+						}
+						else
+						{
+							sb.append(", (int)(").append(exp.toC(par)).append(")");
+						}
+						
+						i++;
 					}
 					sb.append("))");
 					
@@ -276,10 +357,21 @@ public class CubeXFunctionCall extends CubeXExpression
 				CubeXFunction fun =  GlobalContexts.functionContext.lookup(name);
 				sb.append("(").append(CUtils.canonName(fun, false)).append("(");
 				String prefix="";
+				int i=0;
 				for(CubeXExpression exp : args)
 				{
-					sb.append(prefix).append("gc_inc(").append(exp.toC(par)).append(")");
+					CubeXType argType = fun.getArglist().get(i).type;
+					boolean isPrim = argType.isBool() || argType.isInt();
+					if(!isPrim)
+					{
+						sb.append(prefix).append("gc_inc(").append(exp.toC(par)).append(")");
+					}
+					else
+					{
+						sb.append(prefix).append("(int)(").append(exp.toC(par)).append(")");
+					}
 					prefix=", ";
+					i++;
 				}
 				sb.append("))");
 			}
@@ -435,5 +527,148 @@ public class CubeXFunctionCall extends CubeXExpression
 		
 		flattened.add(tempVar);
 		return flattened;
+	}
+
+	@Override
+	public CubeXExpression reduceBoxes() 
+	{
+		if(parent!=null)
+			parent=parent.reduceBoxes();
+		
+		for(int i=0; i<args.size(); ++i)
+		{
+			CubeXExpression newEntry = args.get(i).reduceBoxes();
+			if(newEntry==args.get(i))
+				continue;
+			args.set(i, newEntry);
+		}
+		return this;
+	}
+	
+	
+	@Override
+	public CubeXExpression addBoxes() 
+	{
+		if(parent!=null)
+			parent=parent.addBoxes();
+		for(int i=0; i<args.size(); ++i)
+		{
+			CubeXExpression newEntry = args.get(i).addBoxes();
+			args.set(i, newEntry);
+		}
+		return this;
+	}
+	
+	public CubeXExpression simplifyFunctionBoxes()
+	{
+		if(parent!=null)
+		{
+			if(parent.getTypeUnsafe().isInt())
+			{
+				if(name.equals("negative"))
+				{
+					parent = Boxer.unboxify(parent);
+					simplified=true;
+				}
+				else if(args.size()==2 && args.get(0).getTypeUnsafe().isInt()  && args.get(1).getTypeUnsafe().isBool() && name.equals("lessThan"))
+				{
+					if(args.get(1).isBoolean())
+					{
+						simplified=true;
+						parent = Boxer.unboxify(parent);
+						//args.set(0, Boxer.unboxify(args.get(0)));
+						//args.set(1, Boxer.unboxify(args.get(1)));
+					}
+				}
+				else if(args.size()==1 && args.get(0).getTypeUnsafe().isInt() && (name.equals("times") || name.equals("plus") || name.equals("minus") || name.equals("equals")))
+				{
+					simplified=true;
+					parent = Boxer.unboxify(parent);
+					//args.set(0, Boxer.unboxify(args.get(0)));
+				}
+			}
+			else if(parent.getTypeUnsafe().isBool())
+			{
+				if(name.equals("negate"))
+				{
+					parent = Boxer.unboxify(parent);
+					simplified=true;
+				}
+				else if(args.size()==1 && args.get(0).getTypeUnsafe().isBool() && (name.equals("and") || name.equals("or") || name.equals("equals")))
+				{
+					simplified=true;
+					parent = Boxer.unboxify(parent);
+					//args.set(0, Boxer.unboxify(args.get(0)));
+				}
+			}
+		}
+		
+		for(int i=0; i<args.size(); ++i)
+		{
+			CubeXExpression newEntry = args.get(i).simplifyFunctionBoxes();
+			if(newEntry==args.get(i))
+				continue;
+			args.set(i, newEntry);
+		}
+		
+		if(calltype.equals(CallType.GLOBAL))
+		{
+			CubeXType retType =  GlobalContexts.functionContext.lookup(name).getReturnType();
+			if(retType.isBool() || retType.isInt())
+				return Boxer.boxify(this);
+		}
+		else if(calltype.equals(CallType.FUNCTION))
+		{
+			try
+			{
+				CubeXType retType =   parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext).second.getReturnType();
+				if(retType.isBool() || retType.isInt())
+					return Boxer.boxify(this);
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return this;
+	}
+
+	@Override
+	public CubeXExpression primitivifyVariables() {
+		
+		if(parent!=null)
+			parent=parent.primitivifyVariables();
+		
+		ArrayList<CubeXArgument> argList = null;
+		if(calltype.equals(CallType.GLOBAL))
+			argList =  GlobalContexts.functionContext.lookup(name).getArglist();
+		else if(calltype.equals(CallType.FUNCTION))
+		{
+			try
+			{
+				argList = parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext).second.getArglist();
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			CubeXClass base = (CubeXClass)GlobalContexts.classContext.lookup(name);
+			argList=base.getConstructorArgs();
+		}
+		
+		for(int i=0; i<args.size(); ++i)
+		{
+			CubeXExpression newEntry = args.get(i).primitivifyVariables();
+			CubeXType argType = argList.get(i).type;
+			boolean isPrim = argType.isBool() || argType.isInt();
+			if(isPrim)
+				newEntry=Boxer.unboxify(newEntry);
+			args.set(i, newEntry);
+		}
+
+		
+		return this;
 	}
 }

@@ -75,6 +75,36 @@ public class CubeXAppend extends CubeXExpression {
 		vars.addAll(b.getUsedVars(globals, ignoredFunctions));
 		return vars;
 	}
+
+	@Override
+	public CubeXExpression reduceBoxes()
+	{
+		a=a.reduceBoxes();
+		b=b.reduceBoxes();
+		return this;
+	}
+
+	@Override
+	public CubeXExpression addBoxes()
+	{
+		a=a.addBoxes();
+		b=b.addBoxes();
+		return this;
+	}
+
+	@Override
+	public CubeXExpression simplifyFunctionBoxes() {
+		a=a.simplifyFunctionBoxes();
+		b=b.simplifyFunctionBoxes();
+		return this;
+	}
+
+	@Override
+	public CubeXExpression primitivifyVariables() {
+		a=a.primitivifyVariables();
+		b=b.primitivifyVariables();
+		return this;
+	}	
 	
 }
 	

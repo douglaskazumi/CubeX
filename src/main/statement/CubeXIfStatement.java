@@ -3,6 +3,7 @@ package main.statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import main.Optimizations.Boxer;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -94,7 +95,7 @@ public class CubeXIfStatement extends CubeXStatement {
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("if(isTrue(").append(condition.toC(par)).append(")){\n");
+		sb.append("if((bool)(").append(condition.toC(par)).append(")){\n");
 		sb.append(this.gcDeadVariables());
 		sb.append("\t\t").append(ifstatement.preC(par));
 		sb.append("\t\t").append(ifstatement.toC(par));
@@ -171,5 +172,37 @@ public class CubeXIfStatement extends CubeXStatement {
 		}
 		
 		return this;
+	}
+
+	@Override
+	public void addBoxes()
+	{	
+		condition=condition.addBoxes();
+		ifstatement.addBoxes();
+		elsestatement.addBoxes();
+	}
+	
+	@Override
+	public void simplifyFunctionBoxes()
+	{	
+		condition=condition.simplifyFunctionBoxes();
+		ifstatement.simplifyFunctionBoxes();
+		elsestatement.simplifyFunctionBoxes();
+	}
+	
+	@Override
+	public void primitivifyVariables()
+	{	
+		condition=condition.primitivifyVariables();
+		ifstatement.primitivifyVariables();
+		elsestatement.primitivifyVariables();
+	}
+	
+	@Override
+	public void reduceBoxes()
+	{	
+		condition=Boxer.unboxify(condition).reduceBoxes();
+		ifstatement.reduceBoxes();
+		elsestatement.reduceBoxes();
 	}
 }

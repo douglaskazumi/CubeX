@@ -3,6 +3,7 @@ package main.statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import main.Optimizations.Boxer;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -27,6 +28,8 @@ public class CubeXAssignment extends CubeXStatement {
 	private String name;
 	private CubeXVariable variable;
 	private CubeXExpression expr;
+	boolean isPrimitive = false;
+	private CubeXType previousType;
 	
 	public void setExpr(CubeXExpression expr) {
 		this.expr = expr;
@@ -54,6 +57,7 @@ public class CubeXAssignment extends CubeXStatement {
 		
 		variable.isLocal=(!variable.isField() && GlobalContexts.variableContext.lookup(name)!=null);
 		
+		previousType=varCon.lookup(name);
 		varCon.add(name, type);
 		
 		return new Tuple<Boolean, CubeXType>(false, null);
@@ -73,27 +77,40 @@ public class CubeXAssignment extends CubeXStatement {
 
 		StringBuilder sb = new StringBuilder();
 		String temp = CUtils.getTempName();
-		sb.append("\t").append(CUtils.canonName(temp)).append(" = ").append(variable.toC(par)).append(";\n");
-		sb.append("\t").append(variable.toC(par)).append(" = gc_inc(").append(expr.toC(par)).append(");\n");
-		sb.append("\tgc(gc_dec(").append(CUtils.canonName(temp)).append("));\n");
+		boolean wasPrimitive = previousType!=null && (previousType.isBool()||previousType.isInt());
+		sb.append("\t").append(CUtils.canonName(temp)).append(" = (object_t *)(").append(variable.toC(par)).append(");\n");
+		if(isPrimitive)
+		{
+			sb.append("\t").append(variable.toC(par)).append(" = (object_t *)").append(expr.toC(par)).append(";\n");
+		}
+		else
+		{
+			sb.append("\t").append(variable.toC(par)).append(" = (gc_inc((").append(expr.toC(par)).append(")));\n");
+		}
+		
+		
+		if(!wasPrimitive && previousType!=null)
+		{
+			sb.append("\tgc(gc_dec(").append(CUtils.canonName(temp)).append("));\n");			
+		}
 		sb.append("\t").append(CUtils.canonName(temp)).append(" = NULL;\n");
 		sb.append(expr.postC(par));
 		if(!variable.isField() && par != null)
 		{
-			par.addLocal(name);
+			par.addLocal(name, isPrimitive);
 		}
 		else if(!variable.isField())
 		{
-			GlobalAwareness.addLocal(name);
+			GlobalAwareness.addLocal(name, isPrimitive);
 		}
 		
 		if(par!=null)
 		{
-			par.addLocal(temp);
+			par.addLocal(temp, wasPrimitive);
 		}
 		else
 		{
-			GlobalAwareness.addLocal(temp);
+			GlobalAwareness.addLocal(temp, wasPrimitive);
 		}
 		sb.append(this.gcDeadVariables());
 		return sb.toString();
@@ -156,5 +173,34 @@ public class CubeXAssignment extends CubeXStatement {
 		}
 		
 		return this;
+	}
+
+	@Override
+	public void addBoxes()
+	{
+		expr=expr.addBoxes();
+	}
+
+	@Override
+	public void simplifyFunctionBoxes() {
+		expr=expr.simplifyFunctionBoxes();
 	}	
+	
+	@Override
+	public void primitivifyVariables() {
+		
+		if(expr.getTypeUnsafe().isInt() || expr.getTypeUnsafe().isBool())
+		{
+			isPrimitive=true;
+			expr=Boxer.unboxify(expr);
+		}
+		expr.primitivifyVariables();
+	}	
+	
+	@Override
+	public void reduceBoxes() {
+		expr=expr.reduceBoxes();
+	}	
+	
+	
 }

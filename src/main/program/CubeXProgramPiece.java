@@ -1,6 +1,7 @@
 package main.program;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import main.c.CUtils;
@@ -17,7 +18,7 @@ public abstract class CubeXProgramPiece
 {
 	public ArrayList<String> gcAfter = new ArrayList<>();
 	private boolean isTopLevel = false;
-	public HashSet<String>  locals = new HashSet<String>();
+	public HashMap<String,Boolean>  locals = new HashMap<String,Boolean>();
 
 	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
 	
@@ -52,9 +53,9 @@ public abstract class CubeXProgramPiece
 	
 	
 
-	public void addLocal(String name)
+	public void addLocal(String name, Boolean isPrimitive)
 	{
-		locals.add(name);
+		locals.put(name, isPrimitive);
 	}
 
 	public abstract String preC();
@@ -193,4 +194,9 @@ public abstract class CubeXProgramPiece
 	public CubeXProgramPiece flatten(){
 		return this;
 	}
+	
+	public abstract void addBoxes();
+	public abstract void simplifyFunctionBoxes();
+	public abstract void primitivifyVariables();
+	public abstract void reduceBoxes();
 }

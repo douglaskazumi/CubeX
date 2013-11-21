@@ -408,7 +408,7 @@ public class CubeXProgram {
 		sb2.append("#include \"cubex_external_functions.h\"\n\n");
 		sb2.append(GlobalAwareness.getDeclarations());
 		sb2.append("object_t *v_input;\n");
-		for(String var : GlobalAwareness.locals)
+		for(String var : GlobalAwareness.locals.keySet())
 		{
 			sb2.append("\tobject_t * ").append(CUtils.canonName(var)).append(" = NULL;\n");
 		}
@@ -528,5 +528,37 @@ public class CubeXProgram {
 			pieces = flattenedPieces;
 		}
 		
+	}
+	
+	public void addBoxes()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.addBoxes();
+		}
+	}
+	
+	public void simplifyFunctionBoxes()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.simplifyFunctionBoxes();
+		}
+	}
+	
+	public void primitivifyVariables()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.primitivifyVariables();
+		}
+	}
+	
+	public void reduceBoxes()
+	{
+		for(CubeXProgramPiece piece : pieces)
+		{
+			piece.reduceBoxes();
+		}
 	}
 }

@@ -43,34 +43,50 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("fun foo(x :Integer):Integer\r\n" + 
+		input = new ANTLRInputStream("# Cubex Compiler Test 2 - Stage 2\r\n" + 
+				"\r\n" + 
+				"fun safeDiv( l : Integer, r : Integer, d : Integer) : Integer\r\n" + 
 				"{\r\n" + 
-				"	if(x == 2)\r\n" + 
+				"	m := l/r;\r\n" + 
+				"	for(i in m)\r\n" + 
 				"	{\r\n" + 
-				"	return 7;\r\n" + 
+				"		return i;\r\n" + 
 				"	}\r\n" + 
-				"	else\r\n" + 
-				"	{\r\n" + 
-				"	return x+foo(x-1)+2;\r\n" + 
-				"	}\r\n" + 
+				"	return d;\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"class SinglePrinter(s:String)\r\n" + 
+				"fun safeModulo(l : Integer, r : Integer, d : Integer) : Integer\r\n" + 
 				"{\r\n" + 
-				"	fun print() : Iterable<String>\r\n" + 
+				"	m := l%r;\r\n" + 
+				"	for(i in m)\r\n" + 
 				"	{\r\n" + 
-				"		x := 2 + 3 + 4;\r\n" + 
-				"		y := x + 2;\r\n" + 
-				"		return [s];\r\n" + 
+				"		return i;\r\n" + 
 				"	}\r\n" + 
-				"	\r\n" + 
-				"	fun line() : String = s;\r\n" + 
+				"	return d;\r\n" + 
 				"}\r\n" + 
 				"\r\n" + 
-				"	x := 2 + 3 + foo(4);\r\n" + 
-				"	y := x + 2;\r\n" + 
-				"	\r\n" + 
-				"return [\"\"];");
+				"fun intToStr(i : Integer) : String\r\n" + 
+				"{\r\n" + 
+				"	pref := \"\";\r\n" + 
+				"	if (i<0)\r\n" + 
+				"	{\r\n" + 
+				"		pref := \"-\";\r\n" + 
+				"		i := i * -1;\r\n" + 
+				"	}\r\n" + 
+				"	ret := [character(48+safeModulo(i,10,0))];\r\n" + 
+				"	i := safeDiv(i,10,0);\r\n" + 
+				"	while(i>0)\r\n" + 
+				"	{\r\n" + 
+				"		ret := [character(48+safeModulo(i,10,0))] ++ ret;\r\n" + 
+				"		i := safeDiv(i,10,0);\r\n" + 
+				"	}\r\n" + 
+				"	return string(pref ++ ret);\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"for(i in (1..5) ++ [6])\r\n" + 
+				"   return [intToStr(i)];\r\n" + 
+				"\r\n" + 
+				"return [\"nope\"];");
 	}
 	else
 	{
@@ -90,6 +106,10 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	prog.flattenPieces();
 	if(prog.typeCheck())
 	{
+		prog.addBoxes();
+		prog.simplifyFunctionBoxes();
+		prog.primitivifyVariables();
+		prog.reduceBoxes();
 //		LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
 //		lva.analyze();
 		

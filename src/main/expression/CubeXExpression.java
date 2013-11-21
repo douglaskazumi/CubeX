@@ -18,7 +18,7 @@ import main.type.CubeXType;
 
 public abstract class CubeXExpression
 {
-	private CubeXType myType=null;
+	protected CubeXType myType=null;
 	
 	protected ArrayList<String> temps = new ArrayList<>();
 	
@@ -62,10 +62,24 @@ public abstract class CubeXExpression
 		return false;
 	}
 	
+	public boolean isBoolean()
+	{
+		return false;
+	}
+	
 	public boolean isFunctionCall() {
 		return false;
 	}
-
 	public abstract HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions);
+	
+	public abstract CubeXExpression addBoxes();
+	public abstract CubeXExpression reduceBoxes();
+	public abstract CubeXExpression simplifyFunctionBoxes();
+	public abstract CubeXExpression primitivifyVariables();
+	
+	public boolean isBoxer()
+	{
+		return false;
+	}
 	
 }

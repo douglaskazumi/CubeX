@@ -2,6 +2,7 @@ package main.expression;
 
 import java.util.HashSet;
 
+import main.Optimizations.Boxer;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -34,7 +35,7 @@ public class CubeXBoolean extends CubeXExpression
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("createBoolean(").append(value).append(", 0)");
+		sb.append(value);
 		return sb.toString();
 	}
 
@@ -45,9 +46,41 @@ public class CubeXBoolean extends CubeXExpression
 		return sb.toString();
 	}
 
+	public boolean isBoolean()
+	{
+		return true;
+	}
+
+	public boolean getValue()
+	{
+		return value;
+	}
+
 	@Override
 	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
 		return new HashSet<String>();
+	}
+
+	@Override
+	public CubeXExpression reduceBoxes()
+	{
+		return this;
+	}
+
+	@Override
+	public CubeXExpression addBoxes() {
+		return new Boxer(this, true);
+	}
+
+	@Override
+	public CubeXExpression simplifyFunctionBoxes()
+	{
+		return this;
+	}
+
+	@Override
+	public CubeXExpression primitivifyVariables() {
+		return this;
 	}
 	
 	
