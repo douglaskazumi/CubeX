@@ -389,7 +389,8 @@ public class CubeXFunctionCall extends CubeXExpression
 	}
 	
 	public boolean isNested(){
-		return parent.isFunctionCall();
+		
+		return parent != null && parent.isFunctionCall();
 	}
 
 	public CubeXStatement flattenArgs() {
@@ -420,8 +421,8 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 	public CubeXStatement flatten(CubeXAssignment tempVar){
 		CubeXBlock flattened = new CubeXBlock();		
-		
-		if(parent.isFunctionCall()){
+
+		if(parent != null && parent.isFunctionCall()){
 			CubeXFunctionCall par = (CubeXFunctionCall)parent;
 			CubeXAssignment tempVar2 = new CubeXAssignment(GlobalAwareness.getTempName(), par);
 			flattened.add(par.flatten(tempVar2));
