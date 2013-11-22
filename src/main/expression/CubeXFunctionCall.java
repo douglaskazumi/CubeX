@@ -667,4 +667,44 @@ public class CubeXFunctionCall extends CubeXExpression
 		
 		return this;
 	}
+
+	@Override
+	public boolean equals(CubeXExpression other) {
+		if(other != null && other.isFunctionCall()){
+			CubeXFunctionCall oF = (CubeXFunctionCall)other;
+			if((args.size() != oF.args.size()) || (parameters.size() != oF.parameters.size()))
+				return false;
+			
+			for(int i = 0; i < args.size(); i++)
+				if(!args.get(i).equals(oF.args.get(i)))
+					return false;
+			
+			for(int i = 0; i < parameters.size(); i++)
+				if(!parameters.get(i).equals(oF.parameters.get(i)))
+					return false;
+			
+			return parent.equals(oF.parent) && name.equals(oF.name);
+		}
+
+		return false;
+	}
+	
+	@Override
+	public boolean contains(CubeXVariable var) {
+		return args.contains(var);
+	}
+	
+	@Override
+	public void replace(CubeXVariable oldVar, CubeXExpression newVar) {
+		ArrayList<CubeXExpression> newArgs = new ArrayList<>();
+		for(CubeXExpression arg : args){
+			if(arg.equals(oldVar)){
+				newArgs.add(newVar);
+			}
+			else{
+				newArgs.add(arg);
+			}
+		}
+		args = newArgs;
+	}
 }

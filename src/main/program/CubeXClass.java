@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import main.Optimizations.ExpressionContext;
 import main.c.*;
 import main.context.*;
 import main.exceptions.*;
@@ -507,5 +508,20 @@ public class CubeXClass extends CubeXClassBase {
 			superArgs.set(i, newEntry);
 		}
 		
+	}
+
+	@Override
+	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
+		ExpressionContext localCon = con.createChildContext();
+		
+		for(CubeXStatement stat : statements){
+			localCon = stat.eliminateCommonSubexpressions(localCon);
+		}
+		
+		for(CubeXFunction fun : functions){
+			fun.eliminateCommonSubexpressions(localCon);
+		}
+		
+		return localCon;
 	}
 }

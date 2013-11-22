@@ -188,4 +188,26 @@ public class CubeXIterable extends CubeXExpression
 		
 		return flattened;
 	}
+	
+	@Override
+	public boolean equals(CubeXExpression other) {
+		if(other != null && other.isIterable()){
+			CubeXIterable oI = (CubeXIterable)other;
+			if(entries.size() != oI.entries.size())
+				return false;
+			
+			for(int i = 0; i < entries.size(); i++)
+				if(!entries.get(i).equals(oI.entries.get(i)))
+					return false;
+			
+			return true;
+		}
+
+		return false;
+	}
+	
+	@Override
+	public boolean contains(CubeXVariable var) {
+		return entries.contains(var);
+	}
 }

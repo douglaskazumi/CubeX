@@ -2,13 +2,10 @@ package main.c;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import main.exceptions.ContextException;
 import main.program.CubeXClass;
 import main.program.CubeXProgramPiece;
-import main.type.CubeXType;
-
 
 public class GlobalAwareness {
 	private static StringBuilder declarations = new StringBuilder();

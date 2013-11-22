@@ -82,4 +82,14 @@ public class CubeXBoolean extends CubeXExpression
 	public CubeXExpression primitivifyVariables() {
 		return this;
 	}
+
+	@Override
+	public boolean equals(CubeXExpression other) {
+		if(other != null && other.isBoolean()){
+			CubeXBoolean oB = (CubeXBoolean)other;
+			return value == oB.value;
+		}
+
+		return false;
+	}
 }

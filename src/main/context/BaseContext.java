@@ -4,19 +4,19 @@ import java.util.HashMap;
 
 import main.exceptions.ContextException;
 
-public class BaseContext<T> {
+public class BaseContext<S,T> {
 
-	protected BaseContext<T> parent;
-	protected HashMap<String, T> context;
+	protected BaseContext<S,T> parent;
+	protected HashMap<S, T> context;
 	private boolean isMutable = true;
 	
-	public BaseContext(BaseContext<T> parent) 
+	public BaseContext(BaseContext<S,T> parent) 
 	{
-		context=new HashMap<String, T>();
+		context=new HashMap<S, T>();
 		this.parent=parent;
 	}
 	
-	public T lookup(String id)
+	public T lookup(S id)
 	{
 		if(context.containsKey(id))
 		{
@@ -35,7 +35,7 @@ public class BaseContext<T> {
 		}
 	}
 
-	public void add(String id, T item) throws ContextException
+	public void add(S id, T item) throws ContextException
 	{
 		if(id==null)
 			throw new ContextException();
@@ -66,9 +66,9 @@ public class BaseContext<T> {
 		
 	}
 	
-	public BaseContext<T> createChildContext()
+	public BaseContext<S,T> createChildContext()
 	{
-		return new BaseContext<T>(this);
+		return new BaseContext<S,T>(this);
 	}
 
 	public boolean isMutable() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import main.Optimizations.Boxer;
+import main.Optimizations.ExpressionContext;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -11,10 +12,8 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.expression.CubeXAppend;
 import main.expression.CubeXExpression;
 import main.expression.CubeXFunctionCall;
-import main.expression.CubeXIterable;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
@@ -208,5 +207,17 @@ public class CubeXIfStatement extends CubeXStatement {
 		condition=Boxer.unboxify(condition).reduceBoxes();
 		ifstatement.reduceBoxes();
 		elsestatement.reduceBoxes();
+	}
+
+	@Override
+	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
+		ExpressionContext localCon = con.createChildContext();
+		
+		ExpressionContext ifCon = ifstatement.eliminateCommonSubexpressions(localCon);
+		ExpressionContext elseCon = elsestatement.eliminateCommonSubexpressions(localCon);
+		
+		ifCon.merge(localCon, elseCon);
+		
+		return localCon;
 	}
 }

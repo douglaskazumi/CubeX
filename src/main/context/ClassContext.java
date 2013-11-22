@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import main.program.CubeXClassBase;
 
-public class ClassContext extends BaseContext<CubeXClassBase> {
+public class ClassContext extends BaseContext<String, CubeXClassBase> {
 
 	public ClassContext(ClassContext p) {
 		super(p);

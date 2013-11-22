@@ -67,4 +67,19 @@ public class CubeXString extends CubeXExpression {
 	public CubeXExpression primitivifyVariables() {
 		return this;
 	}
+	
+	@Override
+	public boolean isString() {
+		return true;
+	}
+	
+	@Override
+	public boolean equals(CubeXExpression other) {
+		if(other != null && other.isString()){
+			CubeXString oS = (CubeXString)other;
+			return value.equals(oS.value);
+		}
+
+		return false;
+	}
 }

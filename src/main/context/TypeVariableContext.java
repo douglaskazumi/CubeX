@@ -2,7 +2,7 @@ package main.context;
 
 import main.type.CubeXTypeVariable;
 
-public class TypeVariableContext extends BaseContext<CubeXTypeVariable> {
+public class TypeVariableContext extends BaseContext<String, CubeXTypeVariable> {
 
 	public TypeVariableContext(TypeVariableContext p)
 	{

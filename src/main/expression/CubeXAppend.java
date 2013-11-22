@@ -136,5 +136,26 @@ public class CubeXAppend extends CubeXExpression {
 		
 		return flattened;
 	}
+
+	@Override
+	public boolean equals(CubeXExpression other) {
+		if(other != null && other.isAppend()){
+			CubeXAppend oA = (CubeXAppend)other;
+			return a.equals(oA.a) && b.equals(oA.b);
+		}
+
+		return false;
+	}
+	
+	@Override
+	public boolean contains(CubeXVariable var) {
+		return a.contains(var) || b.contains(var);
+	}
+	
+	@Override
+	public void replace(CubeXVariable oldVar, CubeXExpression newVar) {
+		a.replace(oldVar, newVar);
+		b.replace(oldVar, newVar);
+	}
 }
 	

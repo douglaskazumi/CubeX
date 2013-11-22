@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import main.Optimizations.Boxer;
+import main.Optimizations.ExpressionContext;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -183,5 +184,10 @@ public class CubeXReturnStatement extends CubeXStatement {
 	public void reduceBoxes() {
 		returnValue=returnValue.reduceBoxes();
 		
+	}
+
+	@Override
+	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) {
+		return con;
 	}
 }

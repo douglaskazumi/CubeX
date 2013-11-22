@@ -58,6 +58,22 @@ public abstract class CubeXExpression
 		return temps;
 	}
 	
+	public abstract HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions);
+	
+	public abstract CubeXExpression addBoxes();
+	public abstract CubeXExpression reduceBoxes();
+	public abstract CubeXExpression simplifyFunctionBoxes();
+	public abstract CubeXExpression primitivifyVariables();
+	
+	public boolean equals(CubeXExpression other){
+		return false;
+	}
+	public boolean contains(CubeXVariable var){
+		return false;
+	}
+	public void replace(CubeXVariable oldVar, CubeXExpression newVar){
+	}
+	
 	public boolean isVariable() {
 		return false;
 	}
@@ -70,25 +86,26 @@ public abstract class CubeXExpression
 	public boolean isFunctionCall() {
 		return false;
 	}
-	public abstract HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions);
-	
-	public abstract CubeXExpression addBoxes();
-	public abstract CubeXExpression reduceBoxes();
-	public abstract CubeXExpression simplifyFunctionBoxes();
-	public abstract CubeXExpression primitivifyVariables();
 	
 	public boolean isBoxer()
 	{
 		return false;
 	}
-
+	
 	public boolean isAppend() {
 		return false;
 	}
-
+	
 	public boolean isIterable() {
 		return false;
 	}
 	
-//	public abstract boolean equals(CubeXExpression other);
+	public boolean isInteger() {
+		return false;
+	}
+	
+	public boolean isString() {
+		return false;
+	}
 }
+

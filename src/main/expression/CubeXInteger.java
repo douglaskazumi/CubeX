@@ -71,4 +71,18 @@ public class CubeXInteger extends CubeXExpression
 		return this;
 	}
 	
+	@Override
+	public boolean isInteger() {
+		return true;
+	}
+
+	@Override
+	public boolean equals(CubeXExpression other) {
+		if(other != null && other.isInteger()){
+			CubeXInteger oI = (CubeXInteger)other;
+			return value == oI.value;
+		}
+
+		return false;
+	}
 }
