@@ -78,7 +78,7 @@ public class Constructor {
 			i++;
 		}
 		
-		CubeXFunction dummyFunction = new CubeXFunction(new CubeXFunctionHeader("test", new CubeXScheme(null, null, null)));
+		CubeXFunction dummyFunction = new CubeXFunction(new CubeXFunctionHeader("_dummy", new CubeXScheme(null, clss.getConstructorArgs(), null)));
 		//dummyFunction.setParent(clss);
 		
 		StringBuilder statements = new StringBuilder();

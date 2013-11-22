@@ -21,6 +21,7 @@ import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
+import main.util.CubeXArgument;
 import main.util.Tuple;
 
 public class CubeXAssignment extends CubeXStatement {
@@ -78,10 +79,15 @@ public class CubeXAssignment extends CubeXStatement {
 		StringBuilder sb = new StringBuilder();
 		String temp = CUtils.getTempName();
 		boolean wasPrimitive = previousType!=null && (previousType.isBool()||previousType.isInt());
-		sb.append("\t").append(CUtils.canonName(temp)).append(" = (object_t *)(").append(variable.toC(par)).append(");\n");
+		if(!wasPrimitive && previousType!=null)
+			sb.append("\t").append(CUtils.canonName(temp)).append(" = (object_t *)(").append(variable.toC(par)).append(");\n");
 		if(isPrimitive)
 		{
-			sb.append("\t").append(variable.toC(par)).append(" = (object_t *)").append(expr.toC(par)).append(";\n");
+			
+			boolean isArg = (par!=null&&par.isFunction())?((CubeXFunction)par).isArg(variable):false;
+
+			String cast = isArg?"(int)":"(object_t *)";
+			sb.append("\t").append(variable.toC(par)).append(" = ").append(cast).append(expr.toC(par)).append(";\n");
 		}
 		else
 		{
@@ -91,10 +97,12 @@ public class CubeXAssignment extends CubeXStatement {
 		
 		if(!wasPrimitive && previousType!=null)
 		{
-			sb.append("\tgc(gc_dec(").append(CUtils.canonName(temp)).append("));\n");			
+			sb.append("\tgc(gc_dec(").append(CUtils.canonName(temp)).append("));\n");	
+			sb.append("\t").append(CUtils.canonName(temp)).append(" = NULL;\n");
 		}
-		sb.append("\t").append(CUtils.canonName(temp)).append(" = NULL;\n");
+
 		sb.append(expr.postC(par));
+		
 		if(!variable.isField() && par != null)
 		{
 			par.addLocal(name, isPrimitive);
@@ -104,13 +112,16 @@ public class CubeXAssignment extends CubeXStatement {
 			GlobalAwareness.addLocal(name, isPrimitive);
 		}
 		
-		if(par!=null)
+		if(!wasPrimitive && previousType!=null)
 		{
-			par.addLocal(temp, wasPrimitive);
-		}
-		else
-		{
-			GlobalAwareness.addLocal(temp, wasPrimitive);
+			if(par!=null)
+			{
+				par.addLocal(temp, wasPrimitive);
+			}
+			else
+			{
+				GlobalAwareness.addLocal(temp, wasPrimitive);
+			}
 		}
 		sb.append(this.gcDeadVariables());
 		return sb.toString();

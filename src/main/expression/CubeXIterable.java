@@ -113,8 +113,6 @@ public class CubeXIterable extends CubeXExpression
 		for(int i=0; i<entries.size(); ++i)
 		{
 			CubeXExpression newEntry = entries.get(i).reduceBoxes();
-			if(newEntry==entries.get(i))
-				continue;
 			entries.set(i, newEntry);
 		}
 		return this;
@@ -126,8 +124,6 @@ public class CubeXIterable extends CubeXExpression
 		for(int i=0; i<entries.size(); ++i)
 		{
 			CubeXExpression newEntry = entries.get(i).addBoxes();
-			if(newEntry==entries.get(i))
-				continue;
 			entries.set(i, newEntry);
 		}
 		return this;	
@@ -138,8 +134,6 @@ public class CubeXIterable extends CubeXExpression
 		for(int i=0; i<entries.size(); ++i)
 		{
 			CubeXExpression newEntry = entries.get(i).simplifyFunctionBoxes();
-			if(newEntry==entries.get(i))
-				continue;
 			entries.set(i, newEntry);
 		}
 		return this;	
