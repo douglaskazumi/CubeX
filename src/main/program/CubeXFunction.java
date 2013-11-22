@@ -12,6 +12,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXVariable;
 import main.statement.CubeXReturnStatement;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
@@ -213,6 +214,16 @@ public class CubeXFunction extends CubeXProgramPiece
 		}
 		sb.append(") : ").append(returnType.toString()).append(" ").append(statement==null?";":statement.toString());
 		return sb.toString();
+	}
+	
+	public boolean isArg(CubeXVariable variable)
+	{
+		for(CubeXArgument arg : this.getArglist())
+		{
+			if(variable.getName().equals(arg.variable.getName()))
+				return true; 
+		}
+		return false;
 	}
 
 	@Override

@@ -195,10 +195,12 @@ public class CubeXFunctionCall extends CubeXExpression
 	public String preC(CubeXProgramPiece par) {
 		
 		StringBuilder sb = new StringBuilder();
-		
+		if(parent!=null)
+			 sb.append(parent.preC(par));
+			
 		if(parent!=null && !simplified) //e.fun();
 		{
-			 sb.append(parent.preC(par));
+
 			 boolean isPrim = parent.getTypeUnsafe().isBool()||parent.getTypeUnsafe().isInt();
 			 tempVar = CUtils.getTempName();
 			 
@@ -552,6 +554,32 @@ public class CubeXFunctionCall extends CubeXExpression
 			CubeXExpression newEntry = args.get(i).addBoxes();
 			args.set(i, newEntry);
 		}
+		
+		CubeXFunction fun = null;
+		if(calltype.equals(CallType.GLOBAL))
+		{
+			fun =  GlobalContexts.functionContext.lookup(name);
+		}
+		else if(calltype.equals(CallType.FUNCTION))
+		{
+			try
+			{
+				fun = parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext).second;
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			return this;
+		}
+		
+		if(fun.getReturnType().isInt()||fun.getReturnType().isBool())
+		{
+			return Boxer.boxify(this);
+		}
+		
 		return this;
 	}
 	
@@ -602,11 +630,10 @@ public class CubeXFunctionCall extends CubeXExpression
 		for(int i=0; i<args.size(); ++i)
 		{
 			CubeXExpression newEntry = args.get(i).simplifyFunctionBoxes();
-			if(newEntry==args.get(i))
-				continue;
+
 			args.set(i, newEntry);
 		}
-		
+		/*
 		if(calltype.equals(CallType.GLOBAL))
 		{
 			CubeXType retType =  GlobalContexts.functionContext.lookup(name).getReturnType();
@@ -625,7 +652,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				e.printStackTrace();
 			}
 		}
-		
+		*/
 		return this;
 	}
 
@@ -651,16 +678,19 @@ public class CubeXFunctionCall extends CubeXExpression
 		else
 		{
 			CubeXClass base = (CubeXClass)GlobalContexts.classContext.lookup(name);
-			argList=base.getConstructorArgs();
+			//argList=base.getConstructorArgs();
 		}
 		
 		for(int i=0; i<args.size(); ++i)
 		{
 			CubeXExpression newEntry = args.get(i).primitivifyVariables();
+			if(argList!=null)
+			{
 			CubeXType argType = argList.get(i).type;
 			boolean isPrim = argType.isBool() || argType.isInt();
 			if(isPrim)
 				newEntry=Boxer.unboxify(newEntry);
+			}
 			args.set(i, newEntry);
 		}
 

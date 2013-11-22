@@ -43,12 +43,25 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("# Cubex Compiler Test 1 - Stage 1\r\n" + 
-				"ret := [];\r\n" + 
-				"ret := [\"a\"] ++ ret ++ [\"a\"];\r\n" + 
-				"x := 2 + 2;\r\n" + 
-				"y := 2 + 2;\r\n" + 
-				"return [\"a\"];");
+		input = new ANTLRInputStream("# Cubex Compiler Test 4 - Stage 4\r\n" + 
+				"\r\n" + 
+				"class Multiplier(s : String, n : Integer)\r\n" + 
+				"{\r\n" + 
+				"	fun print() : Iterable<String>\r\n" + 
+				"	{\r\n" + 
+				"		ret := [];\r\n" + 
+				"		v := n;\r\n" + 
+				"		while(v>0)\r\n" + 
+				"		{\r\n" + 
+				"			v:=v-1;\r\n" + 
+				"			ret := ret ++ [s];\r\n" + 
+				"		}\r\n" + 
+				"		return ret;\r\n" + 
+				"	}\r\n" + 
+				"}\r\n" + 
+				"\r\n" + 
+				"\r\n" + 
+				"return Multiplier(\"hi\", 1).print();");
 	}
 	else
 	{
@@ -66,12 +79,6 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	CubeXProgram prog = parser.testprogram().x;
 	prog.flattenPieces();
-	try {
-		prog.eliminateCommonSubexpressions();
-	} catch (ContextException e1) {
-		e1.printStackTrace();
-	}
-	
 	if(prog.typeCheck())
 	{
 		prog.addBoxes();

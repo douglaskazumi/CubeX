@@ -97,6 +97,7 @@ public class Boxer extends CubeXExpression {
 					return ((Boxer)innerExpression).innerExpression.reduceBoxes();
 			}
 		}
+		innerExpression=innerExpression.reduceBoxes();
 		return this;
 	}
 	
