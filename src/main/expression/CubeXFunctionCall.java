@@ -678,16 +678,19 @@ public class CubeXFunctionCall extends CubeXExpression
 		else
 		{
 			CubeXClass base = (CubeXClass)GlobalContexts.classContext.lookup(name);
-			argList=base.getConstructorArgs();
+			//argList=base.getConstructorArgs();
 		}
 		
 		for(int i=0; i<args.size(); ++i)
 		{
 			CubeXExpression newEntry = args.get(i).primitivifyVariables();
+			if(argList!=null)
+			{
 			CubeXType argType = argList.get(i).type;
 			boolean isPrim = argType.isBool() || argType.isInt();
 			if(isPrim)
 				newEntry=Boxer.unboxify(newEntry);
+			}
 			args.set(i, newEntry);
 		}
 

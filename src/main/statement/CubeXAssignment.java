@@ -83,7 +83,7 @@ public class CubeXAssignment extends CubeXStatement {
 		boolean wasPrimitive = previousType!=null && (previousType.isBool()||previousType.isInt());
 		if(!wasPrimitive && previousType!=null)
 			sb.append("\t").append(CUtils.canonName(temp)).append(" = (object_t *)(").append(variable.toC(par)).append(");\n");
-		if(isPrimitive)
+		if(isPrimitive && !variable.isField())
 		{
 			
 			boolean isArg = (par!=null&&par.isFunction())?((CubeXFunction)par).isArg(variable):false;
@@ -97,7 +97,7 @@ public class CubeXAssignment extends CubeXStatement {
 		}
 		
 		
-		if(!wasPrimitive && previousType!=null)
+		if(!wasPrimitive && previousType!=null )
 		{
 			sb.append("\tgc(gc_dec(").append(CUtils.canonName(temp)).append("));\n");	
 			sb.append("\t").append(CUtils.canonName(temp)).append(" = NULL;\n");
