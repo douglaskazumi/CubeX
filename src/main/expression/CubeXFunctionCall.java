@@ -24,17 +24,10 @@ public class CubeXFunctionCall extends CubeXExpression
 	private CubeXExpression parent;
 	
 	private boolean simplified = false;
-	
-	public CubeXExpression getParent() {
-		return parent;
-	}
 
 	private String name;
 	private ArrayList<? extends CubeXType> parameters;
 	private ArrayList<CubeXExpression> args;
-	public ArrayList<CubeXExpression> getArgs() {
-		return args;
-	}
 
 	private String tempVar=null;
 	
@@ -66,11 +59,6 @@ public class CubeXFunctionCall extends CubeXExpression
 	public static CubeXFunctionCall copy(CubeXFunctionCall original)
 	{
 		return new CubeXFunctionCall(original.parent, original.name, original.parameters, original.args);
-	}
-	
-	public static CubeXFunctionCall copy(CubeXFunctionCall original,CubeXExpression newParent)
-	{
-		return new CubeXFunctionCall(newParent, original.name, original.parameters, original.args);
 	}
 	
 	@Override
@@ -483,9 +471,8 @@ public class CubeXFunctionCall extends CubeXExpression
 	}
 	
 	public boolean isNested(){
-		if(parent==null)
-			return false;
-		return parent.isFunctionCall();
+		
+		return (parent != null && parent.isFunctionCall()) || isArgFun();
 	}
 
 	public CubeXStatement flattenArgs() {
@@ -494,7 +481,8 @@ public class CubeXFunctionCall extends CubeXExpression
 		for(CubeXExpression arg : args){
 			if(arg.isFunctionCall()){
 				CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), arg);
-				flattened.add(((CubeXFunctionCall)arg).flatten(tempVar));
+				flattened.add(((CubeXFunctionCall)arg).flatten());
+				flattened.add(tempVar);
 				flattenedArgs.add(tempVar.getVariable());
 			}
 			else{
@@ -514,13 +502,21 @@ public class CubeXFunctionCall extends CubeXExpression
 		return false;
 	}
 	
-	public CubeXStatement flatten(CubeXAssignment tempVar){
+	public CubeXExpression getParent() {
+		return parent;
+	}
+	public ArrayList<CubeXExpression> getArgs() {
+		return args;
+	}
+	
+	public CubeXStatement flatten(){
 		CubeXBlock flattened = new CubeXBlock();		
-		
-		if(parent.isFunctionCall()){
+
+		if(parent != null && parent.isFunctionCall()){
 			CubeXFunctionCall par = (CubeXFunctionCall)parent;
 			CubeXAssignment tempVar2 = new CubeXAssignment(GlobalAwareness.getTempName(), par);
-			flattened.add(par.flatten(tempVar2));
+			flattened.add(par.flatten());
+			flattened.add(tempVar2);
 			this.parent = tempVar2.getVariable();
 		}
 		
@@ -528,7 +524,6 @@ public class CubeXFunctionCall extends CubeXExpression
 			flattened.add(flattenArgs());
 		}
 		
-		flattened.add(tempVar);
 		return flattened;
 	}
 

@@ -20,3 +20,8 @@ logs
 out.c
 a.out
 out.o
+
+*.o
+
+/*.o
+/*.o

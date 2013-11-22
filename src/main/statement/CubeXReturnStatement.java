@@ -13,8 +13,10 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.expression.CubeXAppend;
 import main.expression.CubeXExpression;
 import main.expression.CubeXFunctionCall;
+import main.expression.CubeXIterable;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
@@ -136,9 +138,17 @@ public class CubeXReturnStatement extends CubeXStatement {
 
 	@Override
 	public CubeXProgramPiece flatten() {
-		if(returnValue.isFunctionCall()){
+		if(returnValue.isFunctionCall() || returnValue.isAppend() || returnValue.isIterable()){
 			CubeXBlock flattened = new CubeXBlock();
-			CubeXFunctionCall originalReturn = CubeXFunctionCall.copy((CubeXFunctionCall)returnValue);
+			
+			CubeXExpression originalReturn = null;
+			if(returnValue.isFunctionCall())
+				originalReturn = CubeXFunctionCall.copy((CubeXFunctionCall)returnValue);
+			else if(returnValue.isAppend())
+				originalReturn = CubeXAppend.copy((CubeXAppend)returnValue);
+			else if(returnValue.isIterable())
+				originalReturn = CubeXIterable.copy((CubeXIterable)returnValue);
+			
 			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), originalReturn);
 			this.returnValue = tempVar.getVariable();
 			flattened.add(tempVar);

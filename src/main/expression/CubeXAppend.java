@@ -2,6 +2,7 @@ package main.expression;
 
 import java.util.HashSet;
 
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -11,7 +12,11 @@ import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
-import main.type.*;
+import main.statement.CubeXAssignment;
+import main.statement.CubeXBlock;
+import main.statement.CubeXStatement;
+import main.type.CubeXType;
+import main.type.CubeXTypeIterable;
 
 
 public class CubeXAppend extends CubeXExpression {
@@ -106,5 +111,30 @@ public class CubeXAppend extends CubeXExpression {
 		return this;
 	}	
 	
+	@Override
+	public boolean isAppend() {
+		return true;
+	}
+
+	public static CubeXAppend copy(CubeXAppend original) {
+		return new CubeXAppend(original.a, original.b);
+	}
+	
+	public CubeXStatement flatten(){
+		CubeXBlock flattened = new CubeXBlock();		
+
+		if(a.isAppend()||a.isIterable()){
+			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), a);
+			a = tempVar.getVariable();
+			flattened.add(tempVar);
+		}
+		if(b.isAppend()||b.isIterable()){
+			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), b);
+			b = tempVar.getVariable();
+			flattened.add(tempVar);
+		}
+		
+		return flattened;
+	}
 }
 	

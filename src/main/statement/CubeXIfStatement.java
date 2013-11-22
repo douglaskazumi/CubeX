@@ -11,8 +11,10 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.expression.CubeXAppend;
 import main.expression.CubeXExpression;
 import main.expression.CubeXFunctionCall;
+import main.expression.CubeXIterable;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
@@ -163,7 +165,9 @@ public class CubeXIfStatement extends CubeXStatement {
 				
 		if(condition.isFunctionCall()){
 			CubeXBlock flattened = new CubeXBlock();
-			CubeXFunctionCall originalCondition = CubeXFunctionCall.copy((CubeXFunctionCall)condition);
+			
+			CubeXExpression originalCondition = CubeXFunctionCall.copy((CubeXFunctionCall)condition);
+			
 			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), originalCondition);
 			this.condition = tempVar.getVariable();
 			flattened.add(tempVar);

@@ -2,7 +2,6 @@ package main.expression;
 
 import java.util.HashSet;
 
-import main.Optimizations.Boxer;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
