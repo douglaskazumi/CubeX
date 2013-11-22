@@ -81,5 +81,14 @@ public abstract class CubeXExpression
 	{
 		return false;
 	}
+
+	public boolean isAppend() {
+		return false;
+	}
+
+	public boolean isIterable() {
+		return false;
+	}
 	
+//	public abstract boolean equals(CubeXExpression other);
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import java.util.HashSet;
 
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -21,6 +22,9 @@ import main.exceptions.TypeCheckException;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
+import main.statement.CubeXAssignment;
+import main.statement.CubeXBlock;
+import main.statement.CubeXStatement;
 import main.type.*;
 
 public class CubeXIterable extends CubeXExpression
@@ -157,5 +161,31 @@ public class CubeXIterable extends CubeXExpression
 		return this;	
 	}
 	
+	@Override
+	public boolean isIterable() {
+		return true;
+	}
+
+	public static CubeXIterable copy(CubeXIterable original) {
+		return new CubeXIterable(original.entries);
+	}
 	
+	public CubeXStatement flatten(){
+		CubeXBlock flattened = new CubeXBlock();	
+		ArrayList<CubeXExpression> flattenedEntries = new ArrayList<>();
+		
+		for(CubeXExpression entry : entries){
+			if(entry.isFunctionCall()){
+				CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), entry);
+				flattened.add(tempVar);
+				flattenedEntries.add(tempVar.getVariable());
+			}
+			else{
+				flattenedEntries.add(entry);
+			}
+		}
+		entries = flattenedEntries;
+		
+		return flattened;
+	}
 }

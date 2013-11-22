@@ -13,8 +13,10 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.expression.CubeXAppend;
 import main.expression.CubeXExpression;
 import main.expression.CubeXFunctionCall;
+import main.expression.CubeXIterable;
 import main.expression.CubeXVariable;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
@@ -161,13 +163,37 @@ public class CubeXAssignment extends CubeXStatement {
 	
 	@Override
 	public CubeXProgramPiece flatten() {
+		CubeXBlock flattened = new CubeXBlock();
+		boolean wasFlattened = false;
+		
 		if(expr.isFunctionCall() && ((CubeXFunctionCall)expr).isNested()){
-			CubeXBlock flattened = new CubeXBlock();
-			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), (CubeXFunctionCall)expr);
-			
-			flattened.add(((CubeXFunctionCall)expr).flatten(tempVar));
-			
-			this.setExpr(tempVar.getVariable());
+			flattened.add(((CubeXFunctionCall)expr).flatten());
+			wasFlattened = true;
+		}
+		
+		if(expr.isAppend()){
+			CubeXStatement ret = ((CubeXAppend)expr).flatten();
+			if(ret.isBlock() && ((CubeXBlock)ret).isEmpty()){
+				wasFlattened = false;
+			}
+			else{
+				flattened.add(ret);
+				wasFlattened = true;
+			}
+		}
+		
+		if(expr.isIterable()){
+			CubeXStatement ret = ((CubeXIterable)expr).flatten();
+			if(ret.isBlock() && ((CubeXBlock)ret).isEmpty()){
+				wasFlattened = false;
+			}
+			else{
+				flattened.add(ret);
+				wasFlattened = true;
+			}
+		}
+		
+		if(wasFlattened){
 			flattened.add(this);
 			return flattened;
 		}

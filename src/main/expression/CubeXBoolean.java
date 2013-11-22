@@ -82,7 +82,4 @@ public class CubeXBoolean extends CubeXExpression
 	public CubeXExpression primitivifyVariables() {
 		return this;
 	}
-	
-	
-	
 }
