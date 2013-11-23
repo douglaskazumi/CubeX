@@ -1,0 +1,14 @@
+diff a/src/main/util/CubeXCompiler.java b/src/main/util/CubeXCompiler.java	(rejected hunks)
+@@ -66,6 +66,12 @@
+ 	
+ 	CubeXProgram prog = parser.testprogram().x;
+ 	prog.flattenPieces();
++	try {
++		prog.eliminateCommonSubexpressions();
++	} catch (ContextException e1) {
++		e1.printStackTrace();
++	}
++	
+ 	if(prog.typeCheck())
+ 	{
+ 		prog.addBoxes();

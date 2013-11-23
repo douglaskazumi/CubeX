@@ -1,5 +1,6 @@
 package main.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,25 +44,14 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("# Cubex Compiler Test 4 - Stage 4\r\n" + 
-				"\r\n" + 
-				"class Multiplier(s : String, n : Integer)\r\n" + 
-				"{\r\n" + 
-				"	fun print() : Iterable<String>\r\n" + 
-				"	{\r\n" + 
-				"		ret := [];\r\n" + 
-				"		v := n;\r\n" + 
-				"		while(v>0)\r\n" + 
-				"		{\r\n" + 
-				"			v:=v-1;\r\n" + 
-				"			ret := ret ++ [s];\r\n" + 
-				"		}\r\n" + 
-				"		return ret;\r\n" + 
-				"	}\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"\r\n" + 
-				"return Multiplier(\"hi\", 1).print();");
+		File f = new File("input.txt");
+		if(f.exists())
+			input = new ANTLRInputStream(new FileInputStream("input.txt"));
+		else
+		{
+			System.out.println("debugging: No input file found\n");
+			System.exit(-1);
+		}
 	}
 	else
 	{
@@ -79,6 +69,14 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	CubeXProgram prog = parser.testprogram().x;
 	prog.flattenPieces();
+	
+	try {
+		//prog.eliminateCommonSubexpressions();
+		int x=1;
+	} catch (Exception e1) {
+		e1.printStackTrace();
+	}
+	
 	if(prog.typeCheck())
 	{
 		prog.addBoxes();

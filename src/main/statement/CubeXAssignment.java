@@ -82,7 +82,7 @@ public class CubeXAssignment extends CubeXStatement {
 		StringBuilder sb = new StringBuilder();
 		String temp = CUtils.getTempName();
 		boolean wasPrimitive = previousType!=null && (previousType.isBool()||previousType.isInt());
-		if(!wasPrimitive && previousType!=null)
+		if((!wasPrimitive && previousType!=null) || (previousType==null && !isPrimitive) )
 			sb.append("\t").append(CUtils.canonName(temp)).append(" = (object_t *)(").append(variable.toC(par)).append(");\n");
 		if(isPrimitive && !variable.isField())
 		{
@@ -98,7 +98,7 @@ public class CubeXAssignment extends CubeXStatement {
 		}
 		
 		
-		if(!wasPrimitive && previousType!=null )
+		if((!wasPrimitive && previousType!=null) || (previousType==null && !isPrimitive) )
 		{
 			sb.append("\tgc(gc_dec(").append(CUtils.canonName(temp)).append("));\n");	
 			sb.append("\t").append(CUtils.canonName(temp)).append(" = NULL;\n");
@@ -115,7 +115,7 @@ public class CubeXAssignment extends CubeXStatement {
 			GlobalAwareness.addLocal(name, isPrimitive);
 		}
 		
-		if(!wasPrimitive && previousType!=null)
+		if((!wasPrimitive && previousType!=null) || (previousType==null && !isPrimitive) )
 		{
 			if(par!=null)
 			{
