@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import main.Optimizations.ExpressionContext;
 import main.c.CUtils;
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -199,4 +200,5 @@ public abstract class CubeXProgramPiece
 	public abstract void simplifyFunctionBoxes();
 	public abstract void primitivifyVariables();
 	public abstract void reduceBoxes();
+	public abstract ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException;
 }

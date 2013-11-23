@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import main.Optimizations.ExpressionContext;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.c.Initializer;
-import main.context.*;
+import main.context.ClassContext;
+import main.context.FunctionContext;
+import main.context.GlobalContexts;
+import main.context.TypeVariableContext;
+import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXVariable;
@@ -559,6 +564,15 @@ public class CubeXProgram {
 		for(CubeXProgramPiece piece : pieces)
 		{
 			piece.reduceBoxes();
+		}
+	}
+	
+	public void eliminateCommonSubexpressions() throws ContextException{
+		ExpressionContext con = new ExpressionContext(null);
+		con.add(new CubeXVariable("input"), new CubeXVariable("input"));
+		
+		for(int i = 0; i < pieces.size();i++){
+			con = pieces.get(i).eliminateCommonSubexpressions(con);
 		}
 	}
 }

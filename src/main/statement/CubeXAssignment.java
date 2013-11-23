@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import main.Optimizations.Boxer;
+import main.Optimizations.ExpressionContext;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -237,6 +238,43 @@ public class CubeXAssignment extends CubeXStatement {
 	@Override
 	public void reduceBoxes() {
 		expr=expr.reduceBoxes();
+	}
+
+	@Override
+	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
+		ExpressionContext localCon = con.createChildContext();
+		
+		CubeXExpression previousExpr = localCon.lookup(variable);
+		if(previousExpr != null){
+			if(!(previousExpr.equals(expr))){
+				//if context contains variable, invalidates (replace variable in expressions on the context)
+				mapExpressionsUsingThisToThemselves(localCon);
+			}
+		}
+		else{
+			for(CubeXVariable var : localCon.getAllVariables()){
+				if(expr.contains(var)){
+					expr.replace(var, localCon.lookup(var));
+				}
+			}
+			localCon.add(variable, expr);
+		}
+		
+		//replace expr with variables already in context
+		CubeXVariable previousVariable = localCon.getVariableHolding(expr,variable);
+		if(previousVariable != null && previousVariable != variable){
+			expr = previousVariable;
+		}
+		
+		return localCon;
+	}
+
+	private void mapExpressionsUsingThisToThemselves(ExpressionContext localCon) {
+		for(CubeXExpression exp : localCon.getAllExpressions()){
+			if(exp.contains(variable)){
+				exp = localCon.getVariableHolding(exp,variable);
+			}
+		}
 	}	
 	
 	

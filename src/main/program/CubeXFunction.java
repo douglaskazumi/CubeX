@@ -2,6 +2,7 @@ package main.program;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import main.Optimizations.ExpressionContext;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
@@ -282,5 +283,11 @@ public class CubeXFunction extends CubeXProgramPiece
 	public void reduceBoxes() {
 		statement.reduceBoxes();
 		
+	}
+
+	@Override
+	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
+		ExpressionContext localCon = con.createChildContext();
+		return statement.eliminateCommonSubexpressions(localCon);
 	}
 }

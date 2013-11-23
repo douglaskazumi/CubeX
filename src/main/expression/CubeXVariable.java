@@ -145,4 +145,14 @@ public class CubeXVariable extends CubeXExpression
 		}
 		return this;
 	}
+	
+	@Override
+	public boolean equals(CubeXExpression other) {
+		if(other != null && other.isVariable()){
+			CubeXVariable oV = (CubeXVariable)other;
+			return name.equals(oV.name) && (parent == null ? oV.parent == null : parent.equals(oV.parent));
+		}
+
+		return false;
+	}
 }

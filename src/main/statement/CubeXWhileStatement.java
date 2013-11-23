@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import main.Optimizations.Boxer;
+import main.Optimizations.ExpressionContext;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
@@ -136,5 +137,12 @@ public class CubeXWhileStatement extends CubeXStatement
 	public void reduceBoxes() {
 		condition=Boxer.unboxify(condition).reduceBoxes();
 		whilestatement.reduceBoxes();		
+	}
+
+
+	@Override
+	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
+		ExpressionContext localCon = con.createChildContext();
+		return whilestatement.eliminateCommonSubexpressions(localCon);
 	}
 }
