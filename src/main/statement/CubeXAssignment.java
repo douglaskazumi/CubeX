@@ -215,7 +215,7 @@ public class CubeXAssignment extends CubeXStatement {
 	@Override
 	public void addBoxes()
 	{
-		expr=expr.addBoxes();
+		expr=expr.addBoxes();			
 	}
 
 	@Override
