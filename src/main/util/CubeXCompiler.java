@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.BitSet;
 
+import main.Optimizations.LiveVariableAnalysis;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 
@@ -43,25 +44,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
-		input = new ANTLRInputStream("# Cubex Compiler Test 4 - Stage 4\r\n" + 
-				"\r\n" + 
-				"class Multiplier(s : String, n : Integer)\r\n" + 
-				"{\r\n" + 
-				"	fun print() : Iterable<String>\r\n" + 
-				"	{\r\n" + 
-				"		ret := [];\r\n" + 
-				"		v := n;\r\n" + 
-				"		while(v>0)\r\n" + 
-				"		{\r\n" + 
-				"			v:=v-1;\r\n" + 
-				"			ret := ret ++ [s];\r\n" + 
-				"		}\r\n" + 
-				"		return ret;\r\n" + 
-				"	}\r\n" + 
-				"}\r\n" + 
-				"\r\n" + 
-				"\r\n" + 
-				"return Multiplier(\"hi\", 1).print();");
+		input = new ANTLRInputStream(new FileInputStream("input.txt"));
 	}
 	else
 	{
@@ -79,14 +62,29 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	CubeXProgram prog = parser.testprogram().x;
 	prog.flattenPieces();
+	try {
+		prog.eliminateCommonSubexpressions();
+		
+		//Only to check the prog toString
+		if(debug){
+			PrintWriter output = new PrintWriter("output.txt");
+			output.println(prog.toString().replace(";", ";\r\n").replace("{", "{\r\n").replace("}", "}\r\n").replace("\r\n ", "\r\n"));
+			output.close();
+		}
+	} catch (ContextException e1) {
+		e1.printStackTrace();
+	}
+	
+	
+	
 	if(prog.typeCheck())
 	{
 		prog.addBoxes();
 		prog.simplifyFunctionBoxes();
 		prog.primitivifyVariables();
 		prog.reduceBoxes();
-//		LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
-//		lva.analyze();
+		LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
+		//lva.analyze();
 		
 		try
 		{
@@ -103,20 +101,9 @@ public void run(String[] args) throws FileNotFoundException, IOException
 		System.out.println("reject");
 		System.exit(0);
 	}
-	if(debug)
+	if(debug){
 		System.out.println(prog.toString());
-	
-//	try
-//	{
-//		PrintWriter writer = new PrintWriter("out.c");
-//		writer.println(prog.toC());
-//		writer.close();
-//		
-//	} catch (TypeCheckException | ContextException e)
-//	{
-//		e.printStackTrace();
-//	}
-	
+	}
 }
 
 }

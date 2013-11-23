@@ -24,7 +24,6 @@ import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
-import main.util.CubeXArgument;
 import main.util.Tuple;
 
 public class CubeXAssignment extends CubeXStatement {
@@ -227,7 +226,7 @@ public class CubeXAssignment extends CubeXStatement {
 	@Override
 	public void primitivifyVariables() {
 		
-		if(expr.getTypeUnsafe().isInt() || expr.getTypeUnsafe().isBool())
+		if((expr.getTypeUnsafe().isInt() || expr.getTypeUnsafe().isBool()) && !variable.isField())
 		{
 			isPrimitive=true;
 			expr=Boxer.unboxify(expr);
@@ -253,8 +252,9 @@ public class CubeXAssignment extends CubeXStatement {
 		}
 		else{
 			for(CubeXVariable var : localCon.getAllVariables()){
-				if(expr.contains(var)){
-					expr.replace(var, localCon.lookup(var));
+				CubeXExpression replaceVariable =  localCon.lookup(var);
+				if(expr.contains(var) && replaceVariable.isVariable()){
+					expr.replace(var, replaceVariable);
 				}
 			}
 			localCon.add(variable, expr);

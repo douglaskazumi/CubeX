@@ -7,7 +7,7 @@ bool gc(object_t *obj)
 	if(obj==NULL)
 		return true;
 
-	if((int)obj<65536)
+	if((unsigned int)obj<65536)
 		return true;
 
 	if(obj->numFields==-3)
@@ -72,7 +72,7 @@ object_t* gc_inc(object_t *obj)
 	if(obj==NULL)
 		return NULL;
 
-	if((int)obj<65536)
+	if((unsigned int)obj<65536)
 		return obj;
 
 	if(obj->numFields==-3)
@@ -121,7 +121,7 @@ object_t* gc_dec(object_t *obj)
 	if(obj==NULL)
 		return NULL;
 
-	if((int)obj<65536)
+	if((unsigned int)obj<65536)
 		return obj;
 
 	if(obj->numFields==-3)

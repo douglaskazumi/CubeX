@@ -67,6 +67,11 @@ public class ExpressionContext extends BaseContext<CubeXVariable, CubeXExpressio
 		for(CubeXVariable varBig : big){
 			CubeXExpression fromBig = biggerCon.lookup(varBig);
 			CubeXExpression fromSmall = smallerCon.lookup(varBig);
+			
+			if(fromBig == null || fromSmall == null){
+				continue;
+			}
+			
 			if(fromBig.equals(fromSmall)){
 				local.add(varBig, fromBig);
 			}
