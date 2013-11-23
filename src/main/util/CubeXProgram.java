@@ -520,7 +520,7 @@ public class CubeXProgram {
 			ArrayList<CubeXProgramPiece> flattenedPieces = new ArrayList<>();
 			for(CubeXProgramPiece piece : pieces){
 				CubeXProgramPiece flattened = piece.flatten();
-				if(flattened != piece){
+				if(!flattened.equals(piece)){
 					notFlattened = true;
 				}
 				if(flattened.isStatement() && ((CubeXStatement)flattened).isBlock()){

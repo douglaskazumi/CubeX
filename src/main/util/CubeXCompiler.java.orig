@@ -45,6 +45,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	ANTLRInputStream input=null;
 	if(debug)
 	{
+<<<<<<< HEAD
 		File f = new File("input.txt");
 		if(f.exists())
 			input = new ANTLRInputStream(new FileInputStream("input.txt"));
@@ -53,6 +54,9 @@ public void run(String[] args) throws FileNotFoundException, IOException
 			System.out.println("debugging: No input file found\n");
 			System.exit(-1);
 		}
+=======
+		input = new ANTLRInputStream(new FileInputStream("input.txt"));
+>>>>>>> b4f2435c7a7a6a6dd86cd5d15a5b3e6ba3383d92
 	}
 	else
 	{
@@ -70,6 +74,16 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	CubeXProgram prog = parser.testprogram().x;
 	prog.flattenPieces();
+<<<<<<< HEAD
+	
+	try {
+		//prog.eliminateCommonSubexpressions();
+		int x=1;
+	} catch (Exception e1) {
+		e1.printStackTrace();
+	}
+	
+=======
 	try {
 		prog.eliminateCommonSubexpressions();
 		
@@ -85,6 +99,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	
 	
+>>>>>>> b4f2435c7a7a6a6dd86cd5d15a5b3e6ba3383d92
 	if(prog.typeCheck())
 	{
 		prog.addBoxes();

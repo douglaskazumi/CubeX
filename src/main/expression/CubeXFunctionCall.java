@@ -7,17 +7,26 @@ import java.util.Iterator;
 import main.Optimizations.Boxer;
 import main.c.CUtils;
 import main.c.GlobalAwareness;
-import main.context.*;
-import main.exceptions.*;
+import main.context.ClassContext;
+import main.context.FunctionContext;
+import main.context.GlobalContexts;
+import main.context.TypeVariableContext;
+import main.context.VariableContext;
+import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
+import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.statement.CubeXAssignment;
 import main.statement.CubeXBlock;
 import main.statement.CubeXStatement;
-import main.type.*;
-import main.util.*;
-import main.program.*;
+import main.type.CubeXType;
+import main.type.CubeXTypeClass;
+import main.type.CubeXTypeClassBase;
+import main.util.CubeXArgument;
+import main.util.Triple;
+import main.util.TypeVarSubstitution;
 
 public class CubeXFunctionCall extends CubeXExpression 
 {
@@ -480,8 +489,9 @@ public class CubeXFunctionCall extends CubeXExpression
 		CubeXBlock flattened = new CubeXBlock();
 		for(CubeXExpression arg : args){
 			if(arg.isFunctionCall()){
-				CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), arg);
-				flattened.add(((CubeXFunctionCall)arg).flatten());
+				CubeXExpression originalArg = CubeXFunctionCall.copy((CubeXFunctionCall)arg);
+				CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), originalArg);
+				flattened.add(((CubeXFunctionCall)originalArg).flatten());
 				flattened.add(tempVar);
 				flattenedArgs.add(tempVar.getVariable());
 			}
@@ -712,6 +722,10 @@ public class CubeXFunctionCall extends CubeXExpression
 			for(int i = 0; i < parameters.size(); i++)
 				if(!parameters.get(i).equals(oF.parameters.get(i)))
 					return false;
+			
+			if(parent == null || oF.parent == null){
+				return parent == null && oF.parent == null  && name.equals(oF.name);
+			}
 			
 			return parent.equals(oF.parent) && name.equals(oF.name);
 		}
