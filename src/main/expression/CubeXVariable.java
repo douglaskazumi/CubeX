@@ -96,7 +96,7 @@ public class CubeXVariable extends CubeXExpression
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		if(isField)
-		{
+		{				
 			sb.append("*(((object_t **)(this+1))+").append(parent.definedFields.lastIndexOf(name)).append(")");
 		}
 		else
@@ -138,7 +138,7 @@ public class CubeXVariable extends CubeXExpression
 	@Override
 	public CubeXExpression primitivifyVariables()
 	{
-		if(getTypeUnsafe().isInt() || getTypeUnsafe().isBool())
+		if((getTypeUnsafe().isInt() || getTypeUnsafe().isBool()) && !isField)
 		{
 			isPrimitive=true;
 			return Boxer.boxify(this);

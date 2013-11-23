@@ -215,7 +215,7 @@ public class CubeXAssignment extends CubeXStatement {
 	@Override
 	public void addBoxes()
 	{
-		expr=expr.addBoxes();
+		expr=expr.addBoxes();			
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class CubeXAssignment extends CubeXStatement {
 	@Override
 	public void primitivifyVariables() {
 		
-		if(expr.getTypeUnsafe().isInt() || expr.getTypeUnsafe().isBool())
+		if((expr.getTypeUnsafe().isInt() || expr.getTypeUnsafe().isBool()) && !variable.isField())
 		{
 			isPrimitive=true;
 			expr=Boxer.unboxify(expr);
