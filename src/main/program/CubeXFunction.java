@@ -101,7 +101,7 @@ public class CubeXFunction extends CubeXProgramPiece
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException {
 		
 		//Assumes funs are already added to funcontext
 		
@@ -125,7 +125,7 @@ public class CubeXFunction extends CubeXProgramPiece
 		
 		returnType=CubeXType.validateType(returnType, false, classCon, funTypeVarCon);
 		
-		Tuple<Boolean, CubeXType> res = statement.typecheck(force, classCon, funCon, newVarCon, funTypeVarCon, setField, par);
+		Tuple<Boolean, CubeXType> res = statement.typecheck(force, classCon, funCon, newVarCon, funTypeVarCon, setField, par==null?this:par);
 		if(!res.first)
 			throw new TypeCheckException();
 		if(!CubeXType.isSubType(res.second, returnType, classCon))
@@ -240,11 +240,11 @@ public class CubeXFunction extends CubeXProgramPiece
 		statement.getUsedVariables(globals, ignoredFunctions);
 	}
 	
-	public HashSet<String> getInnerGlobals(HashSet<CubeXFunction> ignoredFunctions)
+	public HashSet<CubeXVariable> getInnerGlobals(HashSet<CubeXFunction> ignoredFunctions)
 	{
 		if(statement==null)
 		{
-			return new HashSet<String>();
+			return new HashSet<CubeXVariable>();
 		}
 		return statement.getUsedVariables(true, ignoredFunctions);
 	}

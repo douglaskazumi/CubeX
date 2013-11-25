@@ -10,7 +10,7 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.program.CubeXClassBase;
+import main.expression.CubeXVariable;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
@@ -54,7 +54,7 @@ public class CubeXBlock extends CubeXStatement
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException 
 	{
 		boolean willReturn=false;
 		CubeXType returnType=CubeXType.getNothing();
@@ -130,7 +130,7 @@ public class CubeXBlock extends CubeXStatement
 	@Override
 	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
 	{
-		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
+		HashSet<CubeXVariable> usedVars = globals?usedVarsGlobals:usedVarsAll;
 		for(CubeXStatement stat : innerStatements)
 		{
 			usedVars.addAll(stat.getUsedVariables(globals, ignoredFunctions));

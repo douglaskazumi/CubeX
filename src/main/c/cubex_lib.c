@@ -415,7 +415,7 @@ object_t *_String_equals(object_t *__this__, object_t *that)
 	{
 		gc(gc_dec(__this__));
 		gc(gc_dec(that));
-		return (object_t *)createBoolean(false, 0);
+		return (object_t *)false;
 	}
 
 	for(i=0; i<len; i++)
@@ -424,12 +424,12 @@ object_t *_String_equals(object_t *__this__, object_t *that)
 		{
 			gc(gc_dec(__this__));
 			gc(gc_dec(that));
-			return (object_t *)createBoolean(false, 0);
+			return (object_t *)false;
 		}
 	}
 	gc(gc_dec(__this__));
 	gc(gc_dec(that));
-	return (object_t *)createBoolean(true, 0);
+	return (object_t *)true;
 }
 
 object_t *_Integer_negative(object_t *__this__)

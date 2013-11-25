@@ -15,6 +15,7 @@ import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
+import main.statement.CubeXStatement;
 import main.type.CubeXType;
 
 
@@ -34,13 +35,13 @@ public class CubeXVariable extends CubeXExpression
 	}
 		
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException
+	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException
 	{
 		CubeXType varType= varCon.lookup(name);
 		if(varType==null)
 			throw new ContextException("Variable not in context");
 		trySetField(setField, par);
-		isLocal = (!isField && GlobalContexts.variableContext.lookup(name)==null);
+		isLocal = (GlobalContexts.variableContext.lookup(name)==null && par!=null) || isField;
 		
 		return varType;
 	}
@@ -57,14 +58,17 @@ public class CubeXVariable extends CubeXExpression
 		return true;
 	}
 
-	private void setIsField(CubeXClassBase p)
+	private void setIsField(CubeXProgramPiece p)
 	{
 		parent=(CubeXClass) p;
 		isField=true;
 	}
 
-	public void trySetField(boolean setField, CubeXClassBase par)
+	public void trySetField(boolean setField, CubeXProgramPiece par)
 	{
+		if(par!=null && par.isFunction())
+			return;
+		
 		if(setField)
 		{
 			this.setIsField(par);
@@ -97,6 +101,7 @@ public class CubeXVariable extends CubeXExpression
 		StringBuilder sb = new StringBuilder();
 		if(isField)
 		{				
+			
 			sb.append("*(((object_t **)(this+1))+").append(parent.definedFields.lastIndexOf(name)).append(")");
 		}
 		else
@@ -112,10 +117,10 @@ public class CubeXVariable extends CubeXExpression
 	}
 	
 	@Override
-	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
-		HashSet<String> vars = new HashSet<String>();
+	public HashSet<CubeXVariable> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
+		HashSet<CubeXVariable> vars = new HashSet<CubeXVariable>();
 		if((!globals && this.isLocal) || (globals && !this.isLocal && !this.isField()))
-			vars.add(name);
+			vars.add(this);
 		return vars;
 	}
 

@@ -9,7 +9,6 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.statement.CubeXAssignment;
@@ -30,7 +29,7 @@ public class CubeXAppend extends CubeXExpression {
 	}
 
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException {
+	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException {
 		CubeXType typeA=a.getType(force, classCon,funCon,varCon,typeVarCon, setField, par);
 		CubeXType typeB=b.getType(force, classCon,funCon,varCon,typeVarCon, setField, par);
 		if (typeA.equals(CubeXType.getString()))
@@ -74,8 +73,8 @@ public class CubeXAppend extends CubeXExpression {
 	}
 
 	@Override
-	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
-		HashSet<String> vars = new HashSet<>();
+	public HashSet<CubeXVariable> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
+		HashSet<CubeXVariable> vars = new HashSet<>();
 		vars.addAll(a.getUsedVars(globals, ignoredFunctions));
 		vars.addAll(b.getUsedVars(globals, ignoredFunctions));
 		return vars;

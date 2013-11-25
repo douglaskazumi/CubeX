@@ -112,8 +112,13 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 	protected void flattenFunctions(){
 		ArrayList<CubeXFunction> flattenedFunctions = new ArrayList<CubeXFunction>();
 		for(CubeXFunction fun : functions){
+			if(!fun.isDeclaration())
+			{
 			CubeXFunction flattened = (CubeXFunction)fun.flatten();
 			flattenedFunctions.add(flattened);
+			}
+			else
+				flattenedFunctions.add(fun);
 		}
 		functions = flattenedFunctions;
 	}

@@ -24,6 +24,14 @@ fun last<T>(l : Iterable<T>, default : T) : T
 	return default;
 }
 
-t1:=last<Integer>(12..13,0);
+fun length(l : Iterable<Thing>) : Integer
+{
+	ret := 0;
+	for(e in l)
+	{
+		ret := ret + 1;
+	}
+	return ret;
+}
 
-return [""];
+return [last<String>(input,"")]++[string([character(last<Integer>(5..length(input),3)+30)])];

@@ -1,0 +1,23 @@
+fun foo < > ( x : Integer < > ) : Integer < > {
+var_cubex_temp_1 := x . equals < > ( 0 ) ;
+if ( var_cubex_temp_1 ) return 1 ;
+else {
+var_cubex_temp_6 := x . minus < > ( 1 ) ;
+var_cubex_temp_5 := foo < > ( var_cubex_temp_6 ) ;
+var_cubex_temp_8 := var_cubex_temp_6 ;
+var_cubex_temp_7 := foo < > ( var_cubex_temp_8 ) ;
+var_cubex_temp_0 := var_cubex_temp_5 . plus < > ( var_cubex_temp_7 ) ;
+return var_cubex_temp_0 ;
+}
+}
+y := foo < > ( 5 ) ;
+var_cubex_temp_4 := y . equals < > ( 32 ) ;
+if ( var_cubex_temp_4 ) {
+var_cubex_temp_2 := [ "GOOD" ] ;
+return var_cubex_temp_2 ;
+}
+else {
+var_cubex_temp_3 := [ "BAD" ] ;
+return var_cubex_temp_3 ;
+}
+

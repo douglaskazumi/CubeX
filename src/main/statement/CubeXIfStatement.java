@@ -16,7 +16,6 @@ import main.expression.CubeXExpression;
 import main.expression.CubeXFunctionCall;
 import main.expression.CubeXVariable;
 import main.program.CubeXClass;
-import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
@@ -38,7 +37,7 @@ public class CubeXIfStatement extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException {
 		
 		CubeXType condType = condition.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		if(!condType.isBool())
@@ -144,7 +143,7 @@ public class CubeXIfStatement extends CubeXStatement {
 	@Override
 	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions)
 	{
-		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
+		HashSet<CubeXVariable> usedVars = globals?usedVarsGlobals:usedVarsAll;
 		usedVars.addAll(condition.getUsedVars(globals, ignoredFunctions));
 		ifstatement.getUsedVariables(globals, ignoredFunctions);
 		elsestatement.getUsedVariables(globals,ignoredFunctions);

@@ -1,0 +1,13 @@
+fun foo(x : Integer) : Integer
+{
+	if(x==0)
+		return 1;
+	else
+		return foo(x-1)+foo(x-1);
+}
+
+y := foo(5);
+if(y==32)
+	return ["GOOD"];
+	else
+return ["BAD"];

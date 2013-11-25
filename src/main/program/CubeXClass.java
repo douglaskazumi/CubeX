@@ -79,7 +79,7 @@ public class CubeXClass extends CubeXClassBase {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException 
 	{
 		if (classCon.lookup(name)!=null)
 			throw new ContextException("Class already in context");
@@ -352,8 +352,8 @@ public class CubeXClass extends CubeXClassBase {
 		}
 		
 	}
-	HashSet<String> innerGlobals = new HashSet<String>();
-	public HashSet<String> getInnerGlobals(HashSet<CubeXFunction> ignoredFunctions)
+	HashSet<CubeXVariable> innerGlobals = new HashSet<CubeXVariable>();
+	public HashSet<CubeXVariable> getInnerGlobals(HashSet<CubeXFunction> ignoredFunctions)
 	{
 		for(CubeXStatement stat : statements)
 		{
