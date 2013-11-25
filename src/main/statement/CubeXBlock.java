@@ -219,5 +219,35 @@ public class CubeXBlock extends CubeXStatement
 		return localCon;
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXBlock))
+			return false;
+		
+		CubeXBlock oB = (CubeXBlock) other;
+		
+		if(innerStatements.size() != oB.innerStatements.size())
+			return false;
+		
+		for(int i = 0; i < innerStatements.size(); i++){
+			if(!(innerStatements.get(i).equals(oB.innerStatements.get(i))))
+				return false;
+		}
+		
+		return true;
+	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		
+		for(int i = 0; i < innerStatements.size(); i++){
+			result = prime * result + innerStatements.get(i).hashCode();
+		}
+		
+		return result;
+	}
 }

@@ -181,6 +181,34 @@ public class CubeXForStatement extends CubeXStatement {
 	@Override
 	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
 		ExpressionContext localCon = con.createChildContext();
-		return forbody.eliminateCommonSubexpressions(localCon);
+		
+		ExpressionContext forCon = forbody.eliminateCommonSubexpressions(localCon);
+		ExpressionContext addToLocalCon = new ExpressionContext(null);
+		forCon.merge(addToLocalCon, localCon);
+		
+		localCon.addAll(addToLocalCon);
+		
+		return localCon;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXForStatement))
+			return false;
+		
+		CubeXForStatement oF = (CubeXForStatement) other;
+		
+		return forexpression.equals(oF.forexpression) && forbody.equals(oF.forbody);
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((forexpression == null) ? 0 : forexpression.hashCode());
+		result = prime * result + ((forbody == null) ? 0 : forbody.hashCode());
+		return result;
 	}
 }

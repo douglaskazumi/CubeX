@@ -190,4 +190,24 @@ public class CubeXReturnStatement extends CubeXStatement {
 	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) {
 		return con;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXReturnStatement))
+			return false;
+		
+		CubeXReturnStatement oR = (CubeXReturnStatement) other;
+		
+		return returnValue.equals(oR.returnValue);
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((returnValue == null) ? 0 : returnValue.hashCode());
+		return result;
+	}
 }

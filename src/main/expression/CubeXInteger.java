@@ -77,12 +77,22 @@ public class CubeXInteger extends CubeXExpression
 	}
 
 	@Override
-	public boolean equals(CubeXExpression other) {
-		if(other != null && other.isInteger()){
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXInteger))
+			return false;
+		
+		if(((CubeXInteger) other).isInteger()){
 			CubeXInteger oI = (CubeXInteger)other;
 			return value == oI.value;
 		}
 
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return value*31;
 	}
 }

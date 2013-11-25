@@ -14,6 +14,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
 import main.expression.CubeXFunctionCall;
+import main.expression.CubeXVariable;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
@@ -219,5 +220,27 @@ public class CubeXIfStatement extends CubeXStatement {
 		ifCon.merge(localCon, elseCon);
 		
 		return localCon;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXIfStatement))
+			return false;
+		
+		CubeXIfStatement oI = (CubeXIfStatement) other;
+		
+		return condition.equals(oI.condition) && ifstatement.equals(oI.ifstatement) && elsestatement.equals(oI.elsestatement);
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
+		result = prime * result + ((ifstatement == null) ? 0 : ifstatement.hashCode());
+		result = prime * result + ((elsestatement == null) ? 0 : elsestatement.hashCode());
+		return result;
 	}
 }

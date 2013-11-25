@@ -9,6 +9,7 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.statement.CubeXWhileStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClassBase;
 import main.type.CubeXTypeVariable;
@@ -265,5 +266,47 @@ public class CubeXInterface extends CubeXClassBase {
 		}
 		
 		return localCon;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXInterface))
+			return false;
+		
+		CubeXInterface oI = (CubeXInterface) other;
+		
+		if(types.size() != oI.types.size())
+			return false;
+		
+		if(functions.size() != oI.functions.size())
+			return false;
+		
+		for(int i = 0; i < types.size(); i++)
+			if(!(types.get(i).equals(oI.types.get(i))))
+				return false;
+
+		for(int i = 0; i < functions.size(); i++)
+			if(!(functions.get(i).equals(oI.functions.get(i))))
+				return false;
+		
+		return name.equals(oI.name) && parentType.equals(oI.parentType);
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		
+		for(int i = 0; i < types.size(); i++)
+			result = prime * result + types.get(i).hashCode();
+
+		for(int i = 0; i < functions.size(); i++)
+			result = prime * result + functions.get(i).hashCode();
+		
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((parentType == null) ? 0 : parentType.hashCode());
+		return result;
 	}
 }

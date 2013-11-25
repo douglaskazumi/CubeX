@@ -184,8 +184,13 @@ public class CubeXIterable extends CubeXExpression
 	}
 	
 	@Override
-	public boolean equals(CubeXExpression other) {
-		if(other != null && other.isIterable()){
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXIterable))
+			return false;
+		
+		if(((CubeXIterable) other).isIterable()){
 			CubeXIterable oI = (CubeXIterable)other;
 			if(entries.size() != oI.entries.size())
 				return false;
@@ -198,6 +203,16 @@ public class CubeXIterable extends CubeXExpression
 		}
 
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		for(int i = 0; i < entries.size(); i++)
+			result = prime * result + entries.get(i).hashCode();
+		
+		return result;
 	}
 	
 	@Override

@@ -74,12 +74,25 @@ public class CubeXString extends CubeXExpression {
 	}
 	
 	@Override
-	public boolean equals(CubeXExpression other) {
-		if(other != null && other.isString()){
+	public boolean equals(Object other) {
+		if(other == null)
+			return false;
+		if(!(other instanceof CubeXString))
+			return false;
+		
+		if(((CubeXString)other).isString()){
 			CubeXString oS = (CubeXString)other;
 			return value.equals(oS.value);
 		}
 
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
 	}
 }

@@ -84,12 +84,22 @@ public class CubeXBoolean extends CubeXExpression
 	}
 
 	@Override
-	public boolean equals(CubeXExpression other) {
-		if(other != null && other.isBoolean()){
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXBoolean))
+			return false;
+		
+		if(((CubeXBoolean) other).isBoolean()){
 			CubeXBoolean oB = (CubeXBoolean)other;
 			return value == oB.value;
 		}
 
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return value ? 1231 : 1237;
 	}
 }

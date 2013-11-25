@@ -524,4 +524,76 @@ public class CubeXClass extends CubeXClassBase {
 		
 		return localCon;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXClass))
+			return false;
+		
+		CubeXClass oC = (CubeXClass) other;
+		
+		if(types.size() != oC.types.size())
+			return false;
+		
+		if(functions.size() != oC.functions.size())
+			return false;
+		
+		if(constructorArgs.size() != oC.constructorArgs.size())
+			return false;
+		
+		if(statements.size() != oC.statements.size())
+			return false;
+		
+		if(superArgs.size() != oC.superArgs.size())
+			return false;
+		
+		for(int i = 0; i < types.size(); i++)
+			if(!(types.get(i).equals(oC.types.get(i))))
+				return false;
+
+		for(int i = 0; i < functions.size(); i++)
+			if(!(functions.get(i).equals(oC.functions.get(i))))
+				return false;
+		
+		for(int i = 0; i < constructorArgs.size(); i++)
+			if(!(constructorArgs.get(i).equals(oC.constructorArgs.get(i))))
+				return false;
+		
+		for(int i = 0; i < statements.size(); i++)
+			if(!(statements.get(i).equals(oC.statements.get(i))))
+				return false;
+		
+		for(int i = 0; i < superArgs.size(); i++)
+			if(!(superArgs.get(i).equals(oC.superArgs.get(i))))
+				return false;
+		
+		return name.equals(oC.name) && parentType.equals(oC.parentType);
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		
+		for(int i = 0; i < types.size(); i++)
+			result = prime * result + types.get(i).hashCode();
+
+		for(int i = 0; i < functions.size(); i++)
+			result = prime * result + functions.get(i).hashCode();
+		
+		for(int i = 0; i < constructorArgs.size(); i++)
+			result = prime * result + constructorArgs.get(i).hashCode();
+		
+		for(int i = 0; i < statements.size(); i++)
+			result = prime * result + statements.get(i).hashCode();
+		
+		for(int i = 0; i < superArgs.size(); i++)
+			result = prime * result + superArgs.get(i).hashCode();
+		
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((parentType == null) ? 0 : parentType.hashCode());
+		return result;
+	}
 }

@@ -709,8 +709,13 @@ public class CubeXFunctionCall extends CubeXExpression
 	}
 
 	@Override
-	public boolean equals(CubeXExpression other) {
-		if(other != null && other.isFunctionCall()){
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXFunctionCall))
+			return false;
+		
+		if(((CubeXFunctionCall) other).isFunctionCall()){
 			CubeXFunctionCall oF = (CubeXFunctionCall)other;
 			if((args.size() != oF.args.size()) || (parameters.size() != oF.parameters.size()))
 				return false;
@@ -731,6 +736,17 @@ public class CubeXFunctionCall extends CubeXExpression
 		}
 
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((args == null) ? 0 : args.hashCode());
+		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
 	}
 	
 	@Override

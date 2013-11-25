@@ -290,4 +290,48 @@ public class CubeXFunction extends CubeXProgramPiece
 		ExpressionContext localCon = con.createChildContext();
 		return statement.eliminateCommonSubexpressions(localCon);
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXFunction))
+			return false;
+		
+		CubeXFunction oC = (CubeXFunction) other;
+		
+		if(types.size() != oC.types.size())
+			return false;
+		
+		if(arglist.size() != oC.arglist.size())
+			return false;
+		
+		for(int i = 0; i < types.size(); i++)
+			if(!(types.get(i).equals(oC.types.get(i))))
+				return false;
+		
+		for(int i = 0; i < arglist.size(); i++)
+			if(!(arglist.get(i).equals(oC.arglist.get(i))))
+				return false;
+		
+		return name.equals(oC.name) && (parentHolder == null ? oC.parentHolder == null : parentHolder.equals(oC.parentHolder)) && (returnType == null ? oC.returnType== null : returnType.equals(oC.returnType)) && (statement == null ? oC.statement == null : statement.equals(oC.statement));
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		
+		for(int i = 0; i < types.size(); i++)
+			result = prime * result + types.get(i).hashCode();
+
+		for(int i = 0; i < arglist.size(); i++)
+			result = prime * result + arglist.get(i).hashCode();
+		
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((parentHolder == null) ? 0 : parentHolder.hashCode());
+		result = prime * result + ((returnType == null) ? 0 : returnType.hashCode());
+		result = prime * result + ((statement == null) ? 0 : statement.hashCode());
+		return result;
+	}
 }

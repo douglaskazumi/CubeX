@@ -62,8 +62,5 @@ public class CubeXTypeSpecial extends CubeXType
 			return true;
 		
 		return false;
-	}
-	
-	
-	
+	}	
 }

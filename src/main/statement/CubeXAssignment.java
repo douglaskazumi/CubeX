@@ -247,18 +247,17 @@ public class CubeXAssignment extends CubeXStatement {
 		if(previousExpr != null){
 			if(!(previousExpr.equals(expr))){
 				//if context contains variable, invalidates (replace variable in expressions on the context)
-				mapExpressionsUsingThisToThemselves(localCon);
+				localCon.invalidateExpressionsUsing(variable);
 			}
 		}
-		else{
-			for(CubeXVariable var : localCon.getAllVariables()){
-				CubeXExpression replaceVariable =  localCon.lookup(var);
-				if(expr.contains(var) && replaceVariable.isVariable()){
-					expr.replace(var, replaceVariable);
-				}
+
+		for(CubeXVariable var : localCon.getAllVariables()){
+			CubeXExpression replaceVariable =  localCon.lookup(var);
+			if(expr.contains(var) && replaceVariable.isVariable()){
+				expr.replace(var, replaceVariable);
 			}
-			localCon.add(variable, expr);
 		}
+		localCon.add(variable, expr);
 		
 		//replace expr with variables already in context
 		CubeXVariable previousVariable = localCon.getVariableHolding(expr,variable);
@@ -267,15 +266,26 @@ public class CubeXAssignment extends CubeXStatement {
 		}
 		
 		return localCon;
-	}
-
-	private void mapExpressionsUsingThisToThemselves(ExpressionContext localCon) {
-		for(CubeXExpression exp : localCon.getAllExpressions()){
-			if(exp.contains(variable)){
-				exp = localCon.getVariableHolding(exp,variable);
-			}
-		}
 	}	
 	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXAssignment))
+			return false;
+		
+		CubeXAssignment oA = (CubeXAssignment) other;
+		
+		return variable.equals(oA.variable) && expr.equals(oA.expr);
+	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((variable == null) ? 0 : variable.hashCode());
+		result = prime * result + ((expr == null) ? 0 : expr.hashCode());
+		return result;
+	}
 }

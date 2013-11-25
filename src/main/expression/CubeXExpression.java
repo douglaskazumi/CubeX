@@ -65,9 +65,6 @@ public abstract class CubeXExpression
 	public abstract CubeXExpression simplifyFunctionBoxes();
 	public abstract CubeXExpression primitivifyVariables();
 	
-	public boolean equals(CubeXExpression other){
-		return false;
-	}
 	public boolean contains(CubeXVariable var){
 		return false;
 	}

@@ -30,7 +30,6 @@ public class CubeXTypeIterable extends CubeXTypeClass
 	public CubeXType getInnerType() {
 		return innerType;
 	}
-	
 }
 
 class CubeXTypeString extends CubeXTypeIterable

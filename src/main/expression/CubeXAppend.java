@@ -138,13 +138,27 @@ public class CubeXAppend extends CubeXExpression {
 	}
 
 	@Override
-	public boolean equals(CubeXExpression other) {
-		if(other != null && other.isAppend()){
+	public boolean equals(Object other) {
+		if(other==null)
+			return false;
+		if(!(other instanceof CubeXAppend))
+			return false;
+		
+		if(((CubeXAppend) other).isAppend()){
 			CubeXAppend oA = (CubeXAppend)other;
 			return a.equals(oA.a) && b.equals(oA.b);
 		}
 
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((a == null) ? 0 : a.hashCode());
+		result = prime * result + ((b == null) ? 0 : b.hashCode());
+		return result;
 	}
 	
 	@Override

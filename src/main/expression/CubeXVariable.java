@@ -146,15 +146,15 @@ public class CubeXVariable extends CubeXExpression
 		return this;
 	}
 	
-	@Override
-	public boolean equals(CubeXExpression other) {
-		if(other != null && other.isVariable()){
-			CubeXVariable oV = (CubeXVariable)other;
-			return name.equals(oV.name) && (parent == null ? oV.parent == null : parent.equals(oV.parent));
-		}
-
-		return false;
-	}
+//	@Override
+//	public boolean equals(CubeXExpression other) {
+//		if(other != null && other.isVariable()){
+//			CubeXVariable oV = (CubeXVariable)other;
+//			return name.equals(oV.name) && (parent == null ? oV.parent == null : parent.equals(oV.parent));
+//		}
+//
+//		return false;
+//	}
 	
 	@Override
 	public boolean equals(Object other) {
@@ -173,6 +173,10 @@ public class CubeXVariable extends CubeXExpression
 	@Override
 	public int hashCode()
 	{
-		return name.hashCode()*7+(parent!=null?parent.hashCode():0);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		return result;
 	}
 }

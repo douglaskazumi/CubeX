@@ -394,6 +394,7 @@ public abstract class CubeXType
 		return type;
 	}
 
+	@Override
 	public boolean equals(Object other)
 	{
 		return equals((CubeXType)other);
