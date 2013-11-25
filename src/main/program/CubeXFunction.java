@@ -288,7 +288,10 @@ public class CubeXFunction extends CubeXProgramPiece
 	@Override
 	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
 		ExpressionContext localCon = con.createChildContext();
-		return statement.eliminateCommonSubexpressions(localCon);
+		if(statement != null)
+			return statement.eliminateCommonSubexpressions(localCon);
+		
+		return localCon;
 	}
 	
 	@Override
@@ -314,7 +317,7 @@ public class CubeXFunction extends CubeXProgramPiece
 			if(!(arglist.get(i).equals(oC.arglist.get(i))))
 				return false;
 		
-		return name.equals(oC.name) && (parentHolder == null ? oC.parentHolder == null : parentHolder.equals(oC.parentHolder)) && (returnType == null ? oC.returnType== null : returnType.equals(oC.returnType)) && (statement == null ? oC.statement == null : statement.equals(oC.statement));
+		return name.equals(oC.name) && (returnType == null ? oC.returnType== null : returnType.equals(oC.returnType)) && (statement == null ? oC.statement == null : statement.equals(oC.statement));
 	}
 	
 	@Override
@@ -329,7 +332,6 @@ public class CubeXFunction extends CubeXProgramPiece
 			result = prime * result + arglist.get(i).hashCode();
 		
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((parentHolder == null) ? 0 : parentHolder.hashCode());
 		result = prime * result + ((returnType == null) ? 0 : returnType.hashCode());
 		result = prime * result + ((statement == null) ? 0 : statement.hashCode());
 		return result;

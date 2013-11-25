@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.BitSet;
 
+import main.Optimizations.LiveVariableAnalysis;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.util.CubeXLexer;
@@ -317,7 +318,21 @@ public class TestType {
 			if (thereIsLexerError || thereIsParserError) {
 				outputString = "reject";
 			} else {
+				prog.flattenPieces();
+				try {
+					prog.eliminateCommonSubexpressions();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 				if (prog.typeCheck()) {
+					
+					prog.addBoxes();
+					prog.simplifyFunctionBoxes();
+					prog.primitivifyVariables();
+					prog.reduceBoxes();
+					LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
+					lva.analyze();
+					
 					try
 					{
 						PrintWriter writer = new PrintWriter("out" + i + ".c");
@@ -336,7 +351,7 @@ public class TestType {
 			if(!outputString.equals("reject")){
 				//Compile and run the c code with the proper input
 				Runtime.getRuntime().exec("cp src\\main\\c\\cubex_lib.c cubex_lib.c");
-				Process make = Runtime.getRuntime().exec("make output=\"a" + i + ".out\"  input=\"out" + i + ".c\" java");
+				Process make = Runtime.getRuntime().exec("make output=\"a" + i + ".out\"  input=\"out" + i + ".o\" java");
 				int makeReturn = -1;
 				try {
 					makeReturn = make.waitFor();

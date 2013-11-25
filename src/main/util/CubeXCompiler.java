@@ -71,7 +71,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	CubeXProgram prog = parser.testprogram().x;
 	prog.flattenPieces();
 	try {
-		//prog.eliminateCommonSubexpressions();
+		prog.eliminateCommonSubexpressions();
 		
 		//Only to check the prog toString
 		if(debug){

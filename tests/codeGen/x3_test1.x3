@@ -4,6 +4,4 @@ for ( i in input)
 {
 	ret := [i] ++ ret ++ [i];
 }
-x := 2 + 2;
-y := 2 + 2;
-return ["a"];
+return ret;

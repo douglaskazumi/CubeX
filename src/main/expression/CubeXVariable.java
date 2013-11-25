@@ -169,7 +169,7 @@ public class CubeXVariable extends CubeXExpression
 			return false;
 		if(((CubeXExpression)other).isVariable()){
 			CubeXVariable oV = (CubeXVariable)other;
-			return name.equals(oV.name) && (parent == null ? oV.parent == null : parent.equals(oV.parent));
+			return name.equals(oV.name);
 		}
 
 		return false;
@@ -181,7 +181,6 @@ public class CubeXVariable extends CubeXExpression
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
 		return result;
 	}
 }
