@@ -6,7 +6,6 @@ import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
-import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
@@ -21,7 +20,7 @@ public class CubeXString extends CubeXExpression {
 	}
 	
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) {
+	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) {
 		return CubeXType.getString();
 	}
 
@@ -43,8 +42,8 @@ public class CubeXString extends CubeXExpression {
 	}
 	
 	@Override
-	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
-		return new HashSet<String>();
+	public HashSet<CubeXVariable> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
+		return new HashSet<CubeXVariable>();
 	}
 
 	@Override

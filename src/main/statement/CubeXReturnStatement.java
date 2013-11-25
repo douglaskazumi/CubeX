@@ -18,7 +18,7 @@ import main.expression.CubeXAppend;
 import main.expression.CubeXExpression;
 import main.expression.CubeXFunctionCall;
 import main.expression.CubeXIterable;
-import main.program.CubeXClassBase;
+import main.expression.CubeXVariable;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
@@ -40,7 +40,7 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon,	VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par)	throws ContextException, TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon,	VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par)	throws ContextException, TypeCheckException {
 		CubeXType type = returnValue.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		return new Tuple<Boolean, CubeXType>(true, type);
 	}
@@ -118,16 +118,17 @@ public class CubeXReturnStatement extends CubeXStatement {
 	@Override
 	public ArrayList<CubeXProgramPiece> initializeSucc(CubeXProgramPiece after, boolean isTopLevel)
 	{
+		GlobalAwareness.allNode.add(this);
 		ArrayList<CubeXProgramPiece> returns = new ArrayList<>();
 		returns.add(this);
-		
+		this.setTopLevel(isTopLevel);
 		return returns;
 	}
 
 	@Override
 	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions)
 	{
-		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
+		HashSet<CubeXVariable> usedVars = globals?usedVarsGlobals:usedVarsAll;
 		usedVars.addAll(returnValue.getUsedVars(globals, ignoredFunctions));
 	}
 

@@ -12,16 +12,17 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.expression.CubeXVariable;
 import main.type.CubeXType;
 import main.util.Tuple;
 
 public abstract class CubeXProgramPiece 
 {
-	public ArrayList<String> gcAfter = new ArrayList<>();
+	public ArrayList<CubeXVariable> gcAfter = new ArrayList<>();
 	private boolean isTopLevel = false;
 	public HashMap<String,Boolean>  locals = new HashMap<String,Boolean>();
 
-	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
+	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException;
 	
 	public boolean isTopLevel()
 	{
@@ -64,12 +65,12 @@ public abstract class CubeXProgramPiece
 	public abstract String toC();
 	
 	
-	protected HashSet<String> currentDead;
-	protected HashSet<String> currentOut = new HashSet<String>();
-	protected HashSet<String> currentIn = new HashSet<String>();
-	protected HashSet<String> definedVars = new HashSet<String>();
-	protected HashSet<String> usedVarsGlobals = new HashSet<String>();
-	protected HashSet<String> usedVarsAll = new HashSet<String>();
+	protected HashSet<CubeXVariable> currentDead;
+	protected HashSet<CubeXVariable> currentOut = new HashSet<CubeXVariable>();
+	protected HashSet<CubeXVariable> currentIn = new HashSet<CubeXVariable>();
+	protected HashSet<CubeXVariable> definedVars = new HashSet<CubeXVariable>();
+	protected HashSet<CubeXVariable> usedVarsGlobals = new HashSet<CubeXVariable>();
+	protected HashSet<CubeXVariable> usedVarsAll = new HashSet<CubeXVariable>();
 	protected ArrayList<CubeXProgramPiece> succ = new ArrayList<CubeXProgramPiece>();
 	protected ArrayList<CubeXProgramPiece> pred = new ArrayList<CubeXProgramPiece>();
 	
@@ -96,7 +97,7 @@ public abstract class CubeXProgramPiece
 	protected boolean isUsedInitializedGlobals = false;
 	protected boolean isUsedInitializedAll = false;
 	public abstract void initializeUsedVariables(boolean onlyGlobals, HashSet<CubeXFunction> ignoredFunctions);
-	public HashSet<String> getUsedVariables(boolean onlyGlobals, HashSet<CubeXFunction> ignoredFunctions)
+	public HashSet<CubeXVariable> getUsedVariables(boolean onlyGlobals, HashSet<CubeXFunction> ignoredFunctions)
 	{
 		if(onlyGlobals && !isUsedInitializedGlobals)
 		{
@@ -125,7 +126,7 @@ public abstract class CubeXProgramPiece
 	{
 		return;
 	}
-	public HashSet<String> getDefinedVariables()
+	public HashSet<CubeXVariable> getDefinedVariables()
 	{
 		if(!isDefinedInitialized)
 		{
@@ -135,18 +136,18 @@ public abstract class CubeXProgramPiece
 		return definedVars;
 	}
 	
-	public HashSet<String> getInVariables()
+	public HashSet<CubeXVariable> getInVariables()
 	{
 		return currentIn;
 	}
-	public HashSet<String> getOutVariables()
+	public HashSet<CubeXVariable> getOutVariables()
 	{
 		return currentOut;
 	}
 	
-	public HashSet<String> getAllVariables()
+	public HashSet<CubeXVariable> getAllVariables()
 	{
-		HashSet<String> allVars = new HashSet<>();
+		HashSet<CubeXVariable> allVars = new HashSet<>();
 		allVars.addAll(this.getUsedVariables(true, new HashSet<CubeXFunction>()));
 		allVars.addAll(this.getDefinedVariables());
 		return allVars;
@@ -163,7 +164,7 @@ public abstract class CubeXProgramPiece
 		
 		didChange = didChange | currentIn.addAll(this.getUsedVariables(onlyGlobals, new HashSet<CubeXFunction>()));
 		@SuppressWarnings("unchecked")
-		HashSet<String> temp = (HashSet<String>)currentOut.clone();
+		HashSet<CubeXVariable> temp = (HashSet<CubeXVariable>)currentOut.clone();
 		temp.removeAll(this.getDefinedVariables());
 		didChange = didChange | currentIn.addAll(temp);
 				
@@ -184,8 +185,10 @@ public abstract class CubeXProgramPiece
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for(String var : gcAfter)
+		for(CubeXVariable var : gcAfter)
 		{
+			if(var.getTypeUnsafe().isBool() || var.getTypeUnsafe().isInt() && !var.isField())
+				continue;
 			sb.append("gc(gc_dec(").append(CUtils.canonName(var)).append("));\n");
 			sb.append(CUtils.canonName(var)).append(" = NULL;\n");
 		}

@@ -22,7 +22,7 @@ public abstract class CubeXExpression
 	
 	protected ArrayList<String> temps = new ArrayList<>();
 	
-	public CubeXType getType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon, boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException
+	public CubeXType getType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon, boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException
 	{
 		if(myType==null || force)
 		{
@@ -36,7 +36,7 @@ public abstract class CubeXExpression
 		return myType;
 	}
 
-	protected abstract CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException;
+	protected abstract CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException;
 	
 	public abstract String preC(CubeXProgramPiece par);
 	
@@ -58,7 +58,7 @@ public abstract class CubeXExpression
 		return temps;
 	}
 	
-	public abstract HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions);
+	public abstract HashSet<CubeXVariable> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions);
 	
 	public abstract CubeXExpression addBoxes();
 	public abstract CubeXExpression reduceBoxes();

@@ -1,17 +1,67 @@
-x := 1 . plus < > ( 1 ) ;
-y := x ;
-x := 3 ;
-y := 4 ;
-z := y ;
-var_cubex_temp_2 := y . equals < > ( 32 ) ;
-if ( var_cubex_temp_2 ) {
-var_cubex_temp_0 := [ "GOOD" ] ;
+interface Printer < > extends Thing {
+fun print < > ( ) : Iterable < String < > > ;
+fun line < > ( ) : String < > ;
+}
+class SinglePrinter < > ( s : String < > ) extends Thing {
+super ( ) ;
+fun print < > ( ) : Iterable < String < > > {
+var_cubex_temp_0 := [ s ] ;
 return var_cubex_temp_0 ;
 }
-else {
-var_cubex_temp_1 := [ "BAD" ] ;
-return var_cubex_temp_1 ;
+fun line < > ( ) : String < > return s ;
 }
-var_cubex_temp_3 := [ "REALLY BAD" ] ;
-return var_cubex_temp_3 ;
+class ConstantPrinter < > ( ) extends SinglePrinter < > {
+super ( "Constant") ;
+}
+class Multiplier < > ( s : String < > , n : Integer < > ) extends SinglePrinter < > {
+v := "" ;
+nn := n ;
+while ( 0 . lessThan < > ( nn , true ) ) {
+v := string < > ( v ++ s ) ;
+nn := nn . minus < > ( 1 ) ;
+}
+super ( v) ;
+fun print < > ( ) : Iterable < String < > > {
+ret := [ ] ;
+nnn := n ;
+while ( 0 . lessThan < > ( nnn , true ) ) {
+var_cubex_temp_1 := [ s ] ;
+ret := ret ++ var_cubex_temp_1 ;
+nnn := nnn . minus < > ( 1 ) ;
+}
+return ret ;
+}
+}
+ps := [ ] ;
+c := 0 ;
+m := 0 ;
+for ( i in input ) {
+m := m . plus < > ( 1 ) ;
+var_cubex_temp_6 := c . equals < > ( 0 ) ;
+if ( var_cubex_temp_6 ) {
+var_cubex_temp_2 := [ ConstantPrinter < > ( ) ] ;
+ps := ps ++ var_cubex_temp_2 ;
+c := 1 ;
+}
+else {
+var_cubex_temp_5 := c . equals < > ( 1 ) ;
+if ( var_cubex_temp_5 ) {
+var_cubex_temp_3 := [ SinglePrinter < > ( i ) ] ;
+ps := ps ++ var_cubex_temp_3 ;
+c := 2 ;
+}
+else {
+var_cubex_temp_4 := [ Multiplier < > ( i , m ) ] ;
+ps := ps ++ var_cubex_temp_4 ;
+c := 0 ;
+}
+}
+}
+out := [ ] ;
+for ( p in ps ) {
+var_cubex_temp_7 := [ p . line < > ( ) ] ;
+out := out ++ var_cubex_temp_7 ;
+}
+for ( p in ps ) out := out ++ p . print < > ( ) ;
+return out ;
 

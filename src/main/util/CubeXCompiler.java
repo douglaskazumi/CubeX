@@ -22,7 +22,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
-	public static boolean debug=true;
+	public static boolean debug=false;
 	
 public static void main(String[] args) throws IOException
 {
@@ -71,7 +71,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	CubeXProgram prog = parser.testprogram().x;
 	prog.flattenPieces();
 	try {
-		prog.eliminateCommonSubexpressions();
+		//prog.eliminateCommonSubexpressions();
 		
 		//Only to check the prog toString
 		if(debug){
@@ -79,7 +79,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 			output.println(prog.toString().replace(";", ";\r\n").replace("{", "{\r\n").replace("}", "}\r\n").replace("\r\n ", "\r\n"));
 			output.close();
 		}
-	} catch (ContextException e1) {
+	} catch (Exception e1) {
 		e1.printStackTrace();
 	}
 	
@@ -92,7 +92,7 @@ public void run(String[] args) throws FileNotFoundException, IOException
 		prog.primitivifyVariables();
 		prog.reduceBoxes();
 		LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
-		//lva.analyze();
+		lva.analyze();
 		
 		try
 		{

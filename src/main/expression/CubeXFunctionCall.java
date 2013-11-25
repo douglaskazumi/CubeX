@@ -71,7 +71,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	}
 	
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException 
+	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException 
 	{
 		CubeXFunction fun;
 	
@@ -138,7 +138,9 @@ public class CubeXFunctionCall extends CubeXExpression
 				
 				if(fun.getParent()!=null)
 				{
-					ArrayList<CubeXType> parentParents = CubeXType.getSuperTypes(par.getParentType(), classCon);
+					if(!par.isFunction())
+					{
+					ArrayList<CubeXType> parentParents = CubeXType.getSuperTypes(((CubeXClassBase)par).getParentType(), classCon);
 					CubeXClassBase funParent = fun.getParent();
 					for(CubeXType p : parentParents)
 					{
@@ -147,6 +149,7 @@ public class CubeXFunctionCall extends CubeXExpression
 							cbSub=((CubeXTypeClassBase)p).getTypeVarSub(classCon);
 							break;
 						}
+					}
 					}
 				}
 				
@@ -428,9 +431,9 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
+	public HashSet<CubeXVariable> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
 	{
-		HashSet<String> vars = new HashSet<>();
+		HashSet<CubeXVariable> vars = new HashSet<>();
 		if(calltype==CallType.FUNCTION)
 		{
 			vars.addAll(parent.getUsedVars(globals, ignoredFunctions));

@@ -9,7 +9,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
-import main.program.CubeXClassBase;
+import main.expression.CubeXVariable;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
@@ -29,7 +29,7 @@ public class Boxer extends CubeXExpression {
 	@Override
 	protected CubeXType calculateType(boolean force, ClassContext classCon,
 			FunctionContext funCon, VariableContext varCon,
-			TypeVariableContext typeVarCon, boolean setField, CubeXClassBase par)
+			TypeVariableContext typeVarCon, boolean setField, CubeXProgramPiece par)
 			throws ContextException, TypeCheckException {
 		// TODO Auto-generated method stub
 		return innerExpression.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
@@ -60,7 +60,7 @@ public class Boxer extends CubeXExpression {
 	}
 
 	@Override
-	public HashSet<String> getUsedVars(boolean globals,
+	public HashSet<CubeXVariable> getUsedVars(boolean globals,
 			HashSet<CubeXFunction> ignoredFunctions) {
 		// TODO Auto-generated method stub
 		return innerExpression.getUsedVars(globals, ignoredFunctions);

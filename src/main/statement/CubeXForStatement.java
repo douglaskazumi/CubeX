@@ -13,6 +13,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXVariable;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
@@ -27,6 +28,7 @@ public class CubeXForStatement extends CubeXStatement {
 	private CubeXStatement forbody;
 	private String indexer;
 	private String iterable;
+	private CubeXVariable actualVariable;
 	
 	public CubeXForStatement(String variable, CubeXExpression forexpression, CubeXStatement forbody)
 	{
@@ -36,7 +38,7 @@ public class CubeXForStatement extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException 
 	{
 		CubeXType forExprType = forexpression.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		if(!forExprType.isIterable())
@@ -46,6 +48,9 @@ public class CubeXForStatement extends CubeXStatement {
 		boolean mutable = varCon.isMutable();
 		VariableContext innerCon = (VariableContext)varCon.createChildContext();
 		innerCon.add(variable, innerType);
+		actualVariable=new CubeXVariable(variable);
+		actualVariable.getType(force, classCon, funCon, innerCon, typeVarCon, setField, par);
+
 		forbody.typecheck(force, classCon, funCon, innerCon, typeVarCon, false, par);
 		varCon.setMutable(mutable);
 		
@@ -129,7 +134,7 @@ public class CubeXForStatement extends CubeXStatement {
 	@Override
 	public void initializeUsedVariables(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
 	{
-		HashSet<String> usedVars = globals?usedVarsGlobals:usedVarsAll;
+		HashSet<CubeXVariable> usedVars = globals?usedVarsGlobals:usedVarsAll;
 		usedVars.addAll(forexpression.getUsedVars(globals, ignoredFunctions));
 		forbody.getUsedVariables(globals, ignoredFunctions);
 	}
@@ -137,7 +142,7 @@ public class CubeXForStatement extends CubeXStatement {
 	@Override
 	public void initializeDefinedVariables()
 	{
-		definedVars.add(variable);		
+		definedVars.add(actualVariable);		
 	}
 
 	@Override

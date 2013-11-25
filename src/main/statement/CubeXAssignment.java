@@ -19,7 +19,6 @@ import main.expression.CubeXExpression;
 import main.expression.CubeXFunctionCall;
 import main.expression.CubeXIterable;
 import main.expression.CubeXVariable;
-import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
@@ -50,18 +49,18 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException {
 		
 		CubeXType type = expr.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		if(type.isVariable() && (typeVarCon.lookup(((CubeXTypeVariable)type).getName())==null))
 			throw new ContextException();
 		
-		variable.trySetField(setField, par);
-		
-		variable.isLocal=(!variable.isField() && GlobalContexts.variableContext.lookup(name)!=null);
+
 		
 		previousType=varCon.lookup(name);
 		varCon.add(name, type);
+		
+		variable.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		
 		return new Tuple<Boolean, CubeXType>(false, null);
 	}
@@ -77,6 +76,8 @@ public class CubeXAssignment extends CubeXStatement {
 	@Override
 	public String toC(CubeXProgramPiece par) 
 	{
+		/*if(gcAfter.contains(variable.getName()))
+			return "";*/
 
 		StringBuilder sb = new StringBuilder();
 		String temp = CUtils.getTempName();
@@ -163,7 +164,7 @@ public class CubeXAssignment extends CubeXStatement {
 	public void initializeDefinedVariables()
 	{
 		if(!variable.isField())
-			definedVars.add(variable.getName());		
+			definedVars.add(variable);		
 	}
 
 	@Override

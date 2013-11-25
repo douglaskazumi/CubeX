@@ -19,7 +19,6 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.statement.CubeXAssignment;
@@ -37,7 +36,7 @@ public class CubeXIterable extends CubeXExpression
 	}
 	
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXClassBase par) throws ContextException, TypeCheckException
+	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException
 	{
 		CubeXType curType=CubeXType.getNothing();
 		for(CubeXExpression exp : entries)
@@ -102,8 +101,8 @@ public class CubeXIterable extends CubeXExpression
 	}
 	
 	@Override
-	public HashSet<String> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
-		HashSet<String> vars = new HashSet<String>();
+	public HashSet<CubeXVariable> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) {
+		HashSet<CubeXVariable> vars = new HashSet<CubeXVariable>();
 		for(CubeXExpression expr : entries)
 		{
 			vars.addAll(expr.getUsedVars(globals, ignoredFunctions));
