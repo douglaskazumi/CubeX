@@ -1,4 +1,4 @@
-package main.yields;
+package main.program;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,8 +10,6 @@ import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
-import main.program.CubeXFunction;
-import main.program.CubeXProgramPiece;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.util.Tuple;
@@ -19,7 +17,14 @@ import main.util.Tuple;
 public class CubeXYielder extends CubeXProgramPiece {
 	
 	private CubeXStatement stat;
+	
+	private ArrayList<Integer> internalYields = new ArrayList<>();
 
+	public void addYield(Integer yieldId)
+	{
+		internalYields.add(yieldId);
+	}
+	
 	public CubeXYielder(CubeXStatement stat)
 	{
 		this.stat=stat;
@@ -33,13 +38,11 @@ public class CubeXYielder extends CubeXProgramPiece {
 
 	@Override
 	public String preC() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String toC() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

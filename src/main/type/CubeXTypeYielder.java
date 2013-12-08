@@ -1,7 +1,4 @@
-package main.yields;
-
-import main.type.CubeXType;
-import main.type.CubeXTypeClass;
+package main.type;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,44 +1,40 @@
-package main.yields;
+package main.statement;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
-import main.Optimizations.ExpressionContext;
-import main.context.ClassContext;
-import main.context.FunctionContext;
-import main.context.TypeVariableContext;
-import main.context.VariableContext;
-import main.exceptions.ContextException;
-import main.exceptions.TypeCheckException;
-import main.expression.CubeXExpression;
-import main.program.CubeXFunction;
-import main.program.CubeXProgramPiece;
-import main.statement.CubeXStatement;
-import main.type.CubeXType;
-import main.type.CubeXTypeVariable;
-import main.util.CubeXArgument;
-import main.util.Tuple;
+import main.Optimizations.*;
+import main.c.*;
+import main.context.*;
+import main.exceptions.*;
+import main.expression.*;
+import main.program.*;
+import main.type.*;
+import main.util.*;
 
 public class CubeXYieldStatement extends CubeXStatement 
 {
 
 	private CubeXExpression expr;
+	private int yieldId;
 	
 	public CubeXYieldStatement(CubeXExpression x)
 	{
 		expr=x;
+		yieldId = GlobalAwareness.getNextYieldId();
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 	@Override
-	public String preC(CubeXProgramPiece par) {
-		// TODO Auto-generated method stub
-		return null;
+	public String preC(CubeXProgramPiece par)
+	{
+		
+		((CubeXYielder)par).addYield(yieldId);
+		return "";
 	}
 
 	@Override
