@@ -24,10 +24,10 @@ import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClass;
 import main.type.CubeXTypeClassBase;
+import main.type.CubeXTypeYielder;
 import main.util.CubeXArgument;
 import main.util.Triple;
 import main.util.TypeVarSubstitution;
-import main.yields.CubeXTypeYielder;
 
 public class CubeXFunctionCall extends CubeXExpression 
 {

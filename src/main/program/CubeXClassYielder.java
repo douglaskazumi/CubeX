@@ -1,4 +1,4 @@
-package main.yields;
+package main.program;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,10 +10,6 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
-import main.program.CubeXClass;
-import main.program.CubeXClassBase;
-import main.program.CubeXFunction;
-import main.program.CubeXProgramPiece;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClass;
@@ -217,6 +213,30 @@ public class CubeXClassYielder extends CubeXClass {
 		return null;
 	}
 	
+	@Override
+	public String preC() {
+		return "";
+	}
+
+	@Override
+	public String toC() 
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		for(CubeXFunction fun : functions)
+		{
+			if(fun.getParent().name.equals(this.getName()))
+			{
+				sb.append(fun.preC());
+				sb.append(fun.toC());
+			}
+		}
+		
+		sb.append(yielder.preC());
+		sb.append(yielder.toC());
+		
+		return sb.toString();
+	}
 	
 	public String toString()
 	{

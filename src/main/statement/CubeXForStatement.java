@@ -18,8 +18,8 @@ import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
+import main.type.CubeXTypeYielder;
 import main.util.Tuple;
-import main.yields.CubeXTypeYielder;
 
 public class CubeXForStatement extends CubeXStatement {
 
