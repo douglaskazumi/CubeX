@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.BitSet;
 
-import main.Optimizations.LiveVariableAnalysis;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 

@@ -12,10 +12,8 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClass;
-import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
-import main.statement.CubeXStatement;
 import main.type.CubeXType;
 
 
