@@ -35,7 +35,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	private boolean simplified = false;
 
 	private String name;
-	private ArrayList<? extends CubeXType> parameters;
+	private ArrayList<CubeXType> parameters;
 	private ArrayList<CubeXExpression> args;
 
 	private String tempVar=null;
@@ -44,7 +44,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 	private CallType calltype;
 	
-	public CubeXFunctionCall(CubeXExpression parent, String name, ArrayList<? extends CubeXType> parameters, ArrayList<CubeXExpression> args)
+	public CubeXFunctionCall(CubeXExpression parent, String name, ArrayList<CubeXType> parameters, ArrayList<CubeXExpression> args)
 	{
 		this.parent=parent;
 		this.name=name;

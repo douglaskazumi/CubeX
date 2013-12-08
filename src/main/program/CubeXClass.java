@@ -15,11 +15,11 @@ import main.util.*;
 public class CubeXClass extends CubeXClassBase {
 
 
-	private ArrayList<CubeXArgument> constructorArgs;
-	private ArrayList<CubeXStatement> statements;
-	private ArrayList<CubeXExpression> superArgs;
+	protected ArrayList<CubeXArgument> constructorArgs;
+	protected ArrayList<CubeXStatement> statements;
+	protected ArrayList<CubeXExpression> superArgs;
 
-	private FunctionContext myFunctionContext;
+	protected FunctionContext myFunctionContext;
 	
 	public ArrayList<String> definedFields;
 
@@ -79,7 +79,7 @@ public class CubeXClass extends CubeXClassBase {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, boolean isYielder) throws ContextException,TypeCheckException 
 	{
 		if (classCon.lookup(name)!=null)
 			throw new ContextException("Class already in context");
@@ -110,7 +110,7 @@ public class CubeXClass extends CubeXClassBase {
 		
 		for(CubeXStatement stat : statements)
 		{
-			stat.typecheck(force, classCon, funCon, newVarCon, classTypeVarCon, true, this);
+			stat.typecheck(force, classCon, funCon, newVarCon, classTypeVarCon, true, this, false);
 		}
 		
 		ArrayList<String> parentFields = new ArrayList<>();
@@ -237,7 +237,7 @@ public class CubeXClass extends CubeXClassBase {
 		for(CubeXFunction f : functions)
 		{
 			if(!f.isDeclaration())
-				f.typecheck(force, classCon, innerFunCon, newVarCon, classTypeVarCon, false, this);
+				f.typecheck(force, classCon, innerFunCon, newVarCon, classTypeVarCon, false, this, false);
 		}
 		
 		functions.addAll(noChecking);

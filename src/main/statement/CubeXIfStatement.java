@@ -37,7 +37,7 @@ public class CubeXIfStatement extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, boolean isYielder) throws ContextException,TypeCheckException {
 		
 		CubeXType condType = condition.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		if(!condType.isBool())
@@ -47,8 +47,8 @@ public class CubeXIfStatement extends CubeXStatement {
 		VariableContext innerConTrue = (VariableContext)varCon.createChildContext();
 		VariableContext innerConFalse = (VariableContext)varCon.createChildContext();
 		
-		Tuple<Boolean, CubeXType> resTrue = ifstatement.typecheck(force, classCon, funCon, innerConTrue, typeVarCon, false, par);
-		Tuple<Boolean, CubeXType> resFalse = elsestatement.typecheck(force, classCon, funCon, innerConFalse, typeVarCon, false, par);
+		Tuple<Boolean, CubeXType> resTrue = ifstatement.typecheck(force, classCon, funCon, innerConTrue, typeVarCon, false, par, isYielder);
+		Tuple<Boolean, CubeXType> resFalse = elsestatement.typecheck(force, classCon, funCon, innerConFalse, typeVarCon, false, par, isYielder);
 		
 		varCon.setMutable(mutable);
 		
@@ -65,8 +65,8 @@ public class CubeXIfStatement extends CubeXStatement {
 			innerConTrue.getInnerMap().clear();
 			innerConFalse.getInnerMap().clear();
 			
-			resTrue = ifstatement.typecheck(true, classCon, funCon, innerConTrue, typeVarCon, setField, par);
-			resFalse = elsestatement.typecheck(true, classCon, funCon, innerConFalse, typeVarCon, setField, par);
+			resTrue = ifstatement.typecheck(true, classCon, funCon, innerConTrue, typeVarCon, setField, par, false);
+			resFalse = elsestatement.typecheck(true, classCon, funCon, innerConFalse, typeVarCon, setField, par, false);
 			
 			varCon.setMutable(mutable);
 		

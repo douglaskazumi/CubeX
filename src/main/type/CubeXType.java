@@ -97,7 +97,12 @@ public abstract class CubeXType
 	
 	public boolean isExtendable()
 	{
-		return true;
+		return false;
+	}
+	
+	public boolean isYielder()
+	{
+		return false;
 	}
 	
 	public boolean isString()
@@ -145,18 +150,20 @@ public abstract class CubeXType
 			return isSubType(child, intersection2.left, classCon) && isSubType(child, intersection2.right, classCon);
 		}
 		
-		if(child.isIterable())
+		if(child.isIterable() && !child.isYielder())
 		{
-			if(parent.isIterable())
+			if(parent.isIterable() && !parent.isYielder())
 			{
 				CubeXTypeIterable iterable1 = (CubeXTypeIterable)child;
 				CubeXTypeIterable iterable2 = (CubeXTypeIterable)parent;
-				return isSubType(iterable1.getInnerType(), iterable2.getInnerType(), classCon);
+				boolean innerSubTyped = isSubType(iterable1.getInnerType(), iterable2.getInnerType(), classCon);
+				
+				return false;
 			}
 			
 			return false;
 		}
-		if(parent.isIterable())
+		if(parent.isIterable() && !parent.isYielder())
 			return false;
 	
 		if(child.isVariable())

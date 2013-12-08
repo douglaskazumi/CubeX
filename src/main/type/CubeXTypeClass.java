@@ -16,12 +16,12 @@ public class CubeXTypeClass extends CubeXTypeClassBase
 	
 	private CubeXClass classDeclaration;
 		
-	protected CubeXTypeClass(String name, ArrayList<? extends CubeXType> parameters)
+	protected CubeXTypeClass(String name, ArrayList<CubeXType> arrayList)
 	{
-		super(name, parameters);
+		super(name, arrayList);
 	}
 	
-	public static CubeXTypeClass NewCubeXTypeClass(String name, ArrayList<? extends CubeXType> parameters) throws TypeCheckException
+	public static CubeXTypeClass NewCubeXTypeClass(String name, ArrayList<CubeXType> parameters) throws TypeCheckException
 	{
 	
 		if(name.equals("Iterable"))

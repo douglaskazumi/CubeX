@@ -345,7 +345,7 @@ public class CubeXProgram {
 				{
 					wasStatement=true;
 					CubeXStatement stat = (CubeXStatement)piece;
-					lastDidReturn=stat.typecheck(false, GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null);
+					lastDidReturn=stat.typecheck(false, GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null, false);
 					if(lastDidReturn.first && (!lastDidReturn.second.isIterable() || !((((CubeXTypeIterable)lastDidReturn.second).getInnerType().isString())||((CubeXTypeIterable)lastDidReturn.second).getInnerType().isNothing())))
 						throw new TypeCheckException("Final return not a Iterable<String>");
 				}
@@ -357,7 +357,7 @@ public class CubeXProgram {
 						GlobalContexts.variableContext.setMutable(false);
 						GlobalContexts.variableContext=GlobalContexts.variableContext.createChildContext();
 					}
-					piece.typecheck(false, GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null);
+					piece.typecheck(false, GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null, false);
 				}
 				
 				wasFunction = false;
@@ -391,7 +391,7 @@ public class CubeXProgram {
 				GlobalContexts.functionContext.add(f.getName(), f);
 			}
 			for (CubeXFunction f : curFunSet) {
-				f.typecheck(false, GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null);
+				f.typecheck(false, GlobalContexts.classContext, GlobalContexts.functionContext, GlobalContexts.variableContext, new TypeVariableContext(null), false, null, false);
 			}
 			curFunSet.clear();
 		}

@@ -20,7 +20,7 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 	protected String name;
 	protected ArrayList<CubeXTypeVariable> types;
 	protected CubeXType parentType;
-	protected ArrayList<CubeXFunction> functions;
+	public ArrayList<CubeXFunction> functions;
 
 
 	protected FunctionContext myFunctionContext;

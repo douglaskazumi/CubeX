@@ -49,7 +49,7 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, boolean isYielder) throws ContextException, TypeCheckException {
 		
 		CubeXType type = expr.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		if(type.isVariable() && (typeVarCon.lookup(((CubeXTypeVariable)type).getName())==null))

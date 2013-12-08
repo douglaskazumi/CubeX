@@ -40,7 +40,9 @@ public class CubeXReturnStatement extends CubeXStatement {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon,	VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par)	throws ContextException, TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon,	VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, boolean isYielder)	throws ContextException, TypeCheckException {
+		if(isYielder)
+			throw new TypeCheckException("Return in yielder");
 		CubeXType type = returnValue.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		return new Tuple<Boolean, CubeXType>(true, type);
 	}

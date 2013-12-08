@@ -54,13 +54,13 @@ public class CubeXBlock extends CubeXStatement
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, boolean isYielder) throws ContextException,TypeCheckException 
 	{
 		boolean willReturn=false;
 		CubeXType returnType=CubeXType.getNothing();
 		for(CubeXStatement stat : innerStatements)
 		{
-			Tuple<Boolean, CubeXType> res = stat.typecheck(force, classCon, funCon, varCon, typeVarCon, setField, par);
+			Tuple<Boolean, CubeXType> res = stat.typecheck(force, classCon, funCon, varCon, typeVarCon, setField, par, isYielder);
 			if(res.first)
 			{
 				willReturn=true;

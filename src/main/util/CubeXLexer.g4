@@ -1,5 +1,8 @@
 lexer grammar CubeXLexer;
 
+@header{
+package main.util;
+}
 
 TRUE : 'true';
 FALSE : 'false';
@@ -16,6 +19,9 @@ CLASS : 'class';
 EXTENDS : 'extends';
 THING : 'Thing';
 NOTHING : 'Nothing';
+YIELDER : 'yielder';
+YIELD : 'yield';
+ITERABLE : 'Iterable';
 
 INT : [0-9]+;
 NAMEUSINGLE : [A-Z];

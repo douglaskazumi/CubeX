@@ -34,7 +34,7 @@ public class CubeXBoolean extends CubeXExpression
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(value);
+		sb.append("createBoolean(").append(value).append(", 0)");
 		return sb.toString();
 	}
 

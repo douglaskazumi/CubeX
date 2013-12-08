@@ -8,6 +8,9 @@ import main.expression.*;
 import main.statement.*;
 import main.program.*;
 import main.type.*;
+import main.yields.CubeXClassYielder;
+import main.yields.CubeXYieldStatement;
+import main.yields.CubeXYielder;
 }
 
 options { tokenVocab = CubeXLexer; }
@@ -99,7 +102,9 @@ stat returns [CubeXStatement x]
 	| FOR LPAREN v=NAMEL IN e=expr RPAREN s=stat
 	{$x = new CubeXForStatement($v.text, $e.x, $s.x);}
 	| RETURN e=expr SEMICOLON
-	{$x = new CubeXReturnStatement($e.x) ;};
+	{$x = new CubeXReturnStatement($e.x) ;}
+	| YIELD e=expr SEMICOLON
+	{$x = new CubeXYieldStatement($e.x) ;};
 	
 functiondecl returns [CubeXFunctionHeader x]
 	: FUN v=NAMEL sch=scheme
@@ -111,10 +116,18 @@ function returns [CubeXFunction x]
 	| d=functiondecl s=stat
 	{$x = new CubeXFunction($d.x,$s.x);};
 	
+yieldfun returns [CubeXYielder x]
+	: YIELDER s=stat
+	{ $x=new CubeXYielder($s.x); };
+	
 interfacex3 returns [CubeXInterface x]
 	: {boolean extttest=false;}INTERFACE n=NAMEU tvlist=typevarlist? (EXTENDS extt=type {extttest=true;})? LBRACE {ArrayList<CubeXFunction> decls = new ArrayList<CubeXFunction>();} ((decl=functiondecl SEMICOLON {decls.add(new CubeXFunction($decl.x));})|(f=function {decls.add($f.x);}))* RBRACE
 		{$x = new CubeXInterface($n.text, $tvlist.x, extttest?$extt.x:null, decls);};
-
+	
+yielder returns [CubeXClassYielder x]
+	: CLASS n=NAMEU tvlist=typevarlist? LPAREN alist=arglist RPAREN  EXTENDS ITERABLE t=typelist LBRACE {ArrayList<CubeXStatement> stats = new ArrayList<CubeXStatement>();} (s=stat {stats.add($s.x);})* {boolean supertest=false;}(SUPER LPAREN superlist=exprlist RPAREN SEMICOLON {supertest=true;})? y=yieldfun {ArrayList<CubeXFunction> funs = new ArrayList<CubeXFunction>();}(f=function {funs.add($f.x);})* RBRACE
+    {$x = new CubeXClassYielder($n.text, $tvlist.x, $alist.x, $typelist.x, stats, supertest?$superlist.x:null, $y.x, funs);};
+		
 classx3 returns [CubeXClass x]
 	: CLASS n=NAMEU tvlist=typevarlist? LPAREN alist=arglist RPAREN {boolean extttest=false;} (EXTENDS extt=type {extttest=true;})? LBRACE {ArrayList<CubeXStatement> stats = new ArrayList<CubeXStatement>();} (s=stat {stats.add($s.x);})* {boolean supertest=false;}(SUPER LPAREN superlist=exprlist RPAREN SEMICOLON {supertest=true;})? {ArrayList<CubeXFunction> funs = new ArrayList<CubeXFunction>();}(f=function {funs.add($f.x);})* RBRACE
     {$x = new CubeXClass($n.text, $tvlist.x, $alist.x, extttest?$extt.x:null, stats, supertest?$superlist.x:null, funs);};
@@ -127,6 +140,7 @@ program returns [CubeXProgram x]
 	| {$x = new CubeXProgram();} (s=stat {$x.addPiece($s.x);})+ p=program {$x.addPieces($p.x);}
 	| {$x = new CubeXProgram();}(f=function {$x.addPiece($f.x);})+ p=program  {$x.addPieces($p.x);}
 	| {$x = new CubeXProgram();}(i=interfacex3 {$x.addPiece($i.x);})+ p=program {$x.addPieces($p.x);}
+	| {$x = new CubeXProgram();}( y=yielder {$x.addPiece($y.x);})+ p=program {$x.addPieces($p.x);}
 	| {$x = new CubeXProgram();}( c=classx3 {$x.addPiece($c.x);})+ p=program {$x.addPieces($p.x);};
 	
 	

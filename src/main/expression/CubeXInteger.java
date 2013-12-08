@@ -33,7 +33,7 @@ public class CubeXInteger extends CubeXExpression
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(value);
+		sb.append("createInteger(").append(value).append(", 0)");
 		return sb.toString();
 	}
 

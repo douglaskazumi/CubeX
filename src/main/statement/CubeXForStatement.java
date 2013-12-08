@@ -38,7 +38,7 @@ public class CubeXForStatement extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, boolean isYielder) throws ContextException,TypeCheckException 
 	{
 		CubeXType forExprType = forexpression.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
 		if(!forExprType.isIterable())
@@ -51,7 +51,7 @@ public class CubeXForStatement extends CubeXStatement {
 		actualVariable=new CubeXVariable(variable);
 		actualVariable.getType(force, classCon, funCon, innerCon, typeVarCon, setField, par);
 
-		forbody.typecheck(force, classCon, funCon, innerCon, typeVarCon, false, par);
+		forbody.typecheck(force, classCon, funCon, innerCon, typeVarCon, false, par, isYielder);
 		varCon.setMutable(mutable);
 		
 		return new Tuple<Boolean, CubeXType>(false, null);
