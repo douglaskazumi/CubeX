@@ -12,4 +12,7 @@ fun test(x : A, y: A) : A = y;
 
 }
 
+x:=0;
+for(v in Spoon<Integer>(1))
+	x:=x+1;
 return ["HI"];

@@ -3,5 +3,7 @@ super ( ) ;
 yielder yield test < > ( x , x );
 fun test < > ( x : A , y : A ) : A return y ;
 }
+x := 0 ;
+for ( v in Spoon < Integer < > > ( 1 ) ) x := x . plus < > ( 1 ) ;
 return [ "HI" ] ;
 

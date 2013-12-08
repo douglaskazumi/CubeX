@@ -20,6 +20,7 @@ import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
 import main.util.Tuple;
+import main.yields.CubeXTypeYielder;
 
 public class CubeXForStatement extends CubeXStatement {
 
@@ -41,10 +42,23 @@ public class CubeXForStatement extends CubeXStatement {
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, boolean isYielder) throws ContextException,TypeCheckException 
 	{
 		CubeXType forExprType = forexpression.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
-		if(!forExprType.isIterable())
-			throw new TypeCheckException();
-		CubeXTypeIterable forIterable = (CubeXTypeIterable)forExprType;
-		CubeXType innerType=forIterable.getInnerType();		
+		if(!forExprType.isIterable() && !forExprType.isYielder())
+			throw new TypeCheckException("Not iterable or yielder");
+		
+		CubeXType innerType;
+		if(forExprType.isYielder())
+		{
+			CubeXTypeYielder forIterable = (CubeXTypeYielder)forExprType;
+			innerType=forIterable.getInnerType();	
+		}
+		else if (forExprType.isIterable())
+		{
+			CubeXTypeIterable forIterable = (CubeXTypeIterable)forExprType;
+			innerType=forIterable.getInnerType();	
+
+		}
+		else
+			throw new TypeCheckException("Not iterable or yielder");
 		boolean mutable = varCon.isMutable();
 		VariableContext innerCon = (VariableContext)varCon.createChildContext();
 		innerCon.add(variable, innerType);
@@ -65,12 +79,27 @@ public class CubeXForStatement extends CubeXStatement {
 		iterable = CUtils.getTempName();
 		return sb.toString();
 	}
-
+	
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		
-		CubeXType innerType = ((CubeXTypeIterable)forexpression.getTypeUnsafe()).getInnerType();
+		CubeXType forExprType = forexpression.getTypeUnsafe();
+		
+		CubeXType innerType;
+		if(forExprType.isYielder())
+		{
+			CubeXTypeYielder forIterable = (CubeXTypeYielder)forExprType;
+			innerType=forIterable.getInnerType();	
+		}
+		else 
+		{
+			CubeXTypeIterable forIterable = (CubeXTypeIterable)forExprType;
+			innerType=forIterable.getInnerType();	
+
+		}
+		
+		
 		boolean isInnerPrim = innerType.isBool() || innerType.isInt();
 		
 		if(par!=null)

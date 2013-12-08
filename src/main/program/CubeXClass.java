@@ -46,6 +46,11 @@ public class CubeXClass extends CubeXClassBase {
 	{
 		return true;
 	}
+	
+	public boolean isYielder()
+	{
+		return false;
+	}
 
 	public FunctionContext getFunctionContext()
 	{

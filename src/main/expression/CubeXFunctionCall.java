@@ -27,6 +27,7 @@ import main.type.CubeXTypeClassBase;
 import main.util.CubeXArgument;
 import main.util.Triple;
 import main.util.TypeVarSubstitution;
+import main.yields.CubeXTypeYielder;
 
 public class CubeXFunctionCall extends CubeXExpression 
 {
@@ -198,7 +199,10 @@ public class CubeXFunctionCall extends CubeXExpression
 						throw new TypeCheckException("BAD ARGUMENT TO CONSTRUCTOR CALL");
 				}
 				
-				return CubeXTypeClass.NewCubeXTypeClass(name, parameters);
+				if(clss.isYielder())
+					return new CubeXTypeYielder(name, parameters.get(0));
+				else
+					return CubeXTypeClass.NewCubeXTypeClass(name, parameters);
 			}
 		}
 	}
