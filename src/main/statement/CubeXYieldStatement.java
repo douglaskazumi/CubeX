@@ -35,6 +35,7 @@ public class CubeXYieldStatement extends CubeXStatement
 		sb.append("LABEL_").append(yieldId).append(":").append(System.lineSeparator());
 		
 		return sb.toString();
+		
 	}
 
 	@Override
