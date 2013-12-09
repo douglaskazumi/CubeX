@@ -420,14 +420,29 @@ public class CubeXProgram {
 		
 
 		sb2.append(vtables).append(init.init());
+		sb2.append(getYielders());
 		sb2.append(sb);
 		return sb2.toString();
+	}
+	
+	public String getYielders()
+	{
+		StringBuilder sb = new StringBuilder();
+		for(CubeXProgramPiece piece : pieces){
+			if(piece.isClass() && ((CubeXClass)piece).isYielder())
+			{
+				sb.append(piece.preC());
+				sb.append(piece.toC());
+			}
+		}
+		return sb.toString();
 	}
 	
 	public String getRunFunction() throws ContextException
 	{
 		StringBuilder sb = new StringBuilder();
 		
+		 
 		for(CubeXProgramPiece piece : pieces){
 			if(piece.isFunction())
 			{

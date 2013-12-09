@@ -5,11 +5,13 @@ import java.util.HashMap;
 
 import main.exceptions.ContextException;
 import main.program.CubeXClass;
+import main.program.CubeXClassYielder;
 import main.program.CubeXProgramPiece;
 
 public class GlobalAwareness {
 	private static StringBuilder declarations = new StringBuilder();
 	private static Constructor cons = new Constructor();
+	private static YielderStructs yieldstructs = new YielderStructs();
 	private static CreateObject createObj = new CreateObject();
 	public static HashMap<String,Boolean>  locals = new HashMap<String,Boolean>();
 	public static int tempVarIndex = 0;
@@ -35,6 +37,11 @@ public class GlobalAwareness {
 		declarations.append(System.getProperty("line.separator"));
 	}
 	
+	public static void addYielder(CubeXClassYielder yielderclss)
+	{
+		yieldstructs.addYielder(yielderclss);
+	}
+	
 	public static String getDeclarations()
 	{
 		return declarations.toString();
@@ -50,6 +57,11 @@ public class GlobalAwareness {
 		return cons.toC();
 	}
 	
+	public static String getYielders()
+	{
+		return yieldstructs.toC();
+		
+	}
 	public static void addClass(CubeXClass clss) throws ContextException
 	{
 		createObj.addClass(clss);
