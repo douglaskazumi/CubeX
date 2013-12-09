@@ -19,6 +19,7 @@ import main.exceptions.TypeCheckException;
 import main.expression.CubeXVariable;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
+import main.program.CubeXClassYielder;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.statement.CubeXBlock;
@@ -407,10 +408,11 @@ public class CubeXProgram {
 		StringBuilder sb = new StringBuilder();		
 		sb.append(getRunFunction());
 		StringBuilder sb2 = new StringBuilder();
-		
+		initYielders();
 		sb2.append("#include \"cubex_lib.h\"\n");
 		sb2.append("#include \"cubex_main.h\"\n");
 		sb2.append("#include \"cubex_external_functions.h\"\n\n");
+		sb2.append(GlobalAwareness.getYielderDecl());
 		sb2.append(GlobalAwareness.getDeclarations());
 		sb2.append("object_t *v_input;\n");
 		for(String var : GlobalAwareness.locals.keySet())
@@ -420,22 +422,20 @@ public class CubeXProgram {
 		
 
 		sb2.append(vtables).append(init.init());
-		sb2.append(getYielders());
+		sb2.append(GlobalAwareness.getYielders());
 		sb2.append(sb);
 		return sb2.toString();
 	}
 	
-	public String getYielders()
+	public void initYielders()
 	{
 		StringBuilder sb = new StringBuilder();
 		for(CubeXProgramPiece piece : pieces){
 			if(piece.isClass() && ((CubeXClass)piece).isYielder())
 			{
-				sb.append(piece.preC());
-				sb.append(piece.toC());
+				GlobalAwareness.addYielder((CubeXClassYielder)piece);
 			}
 		}
-		return sb.toString();
 	}
 	
 	public String getRunFunction() throws ContextException

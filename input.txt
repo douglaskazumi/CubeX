@@ -1,18 +1,15 @@
 
-class Spoon<A>(x : A) extends Iterable<A>
+class Spoon() extends Iterable<Integer>
 {
 
 yielder
 {
-	yield x;
+	yield 7;
 }
-
-fun test(x : A, y: A) : A = y;
-
 
 }
 
 x:=0;
-for(v in Spoon<Integer>(1))
-	x:=x+1;
+for(v in Spoon())
+	x:=v;
 return ["HI"];

@@ -57,9 +57,13 @@ public class GlobalAwareness {
 		return cons.toC();
 	}
 	
+	public static String getYielderDecl()
+	{
+		return yieldstructs.getStructs();
+	}
 	public static String getYielders()
 	{
-		return yieldstructs.toC();
+		return yieldstructs.getYieldFunctions();
 		
 	}
 	public static void addClass(CubeXClass clss) throws ContextException

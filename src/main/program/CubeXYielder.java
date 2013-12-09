@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import main.Optimizations.ExpressionContext;
 import main.c.CUtils;
+import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
 import main.context.TypeVariableContext;
@@ -50,8 +51,13 @@ public class CubeXYielder extends CubeXProgramPiece {
 	@Override
 	public String toC() {
 		StringBuilder sb = new StringBuilder();
+		StringBuilder sbdecl = new StringBuilder();
+
+		sbdecl.append("yielder_").append(parent.getName()).append("_t * ").append("y_").append(parent.getName()).append("(yielder_").append(parent.getName()).append("_t *yielder, object_t *__this__)");
+
+		sb.append(sbdecl.toString()).append("\n {\n").append(System.lineSeparator());
 		
-		sb.append("yielder_").append(parent.getName()).append("_t * ").append("y_").append(parent.getName()).append("(yielder_").append(parent.getName()).append("_t *yielder){").append(System.lineSeparator());
+		GlobalAwareness.declarationAppend(sbdecl.append(";\n").toString());
 		
 		for (String var : parent.locals.keySet()) {
 			sb.append("object_t *").append(var).append(" = ").append("yielder->").append(CUtils.canonName(var)).append(";").append(System.lineSeparator());

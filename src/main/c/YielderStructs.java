@@ -50,12 +50,17 @@ public class YielderStructs {
 		"			break;\r\n") ;
 	}
 	
-	public String toC()
+	public String getStructs()
+	{
+		return yieldstructs.toString();
+	}
+	
+	public String getYieldFunctions()
 	{
 		yieldCreator.append("	}\r\n" + 
 		"	return yielder;\r\n" + 
 		"}\n\n");
 		
-		return yieldstructs.toString()+yieldCreator.toString();
+		return yieldCreator.toString();
 	}
 }

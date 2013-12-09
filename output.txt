@@ -1,9 +1,8 @@
-class Spoon < A > ( x : A ) extends Iterable < A > {
+class Spoon < > ( ) extends Iterable < Integer < > > {
 super ( ) ;
-yielder yield x;
-fun test < > ( x : A , y : A ) : A return y ;
+yielder yield 7;
 }
 x := 0 ;
-for ( v in Spoon < Integer < > > ( 1 ) ) x := x . plus < > ( 1 ) ;
+for ( v in Spoon < > ( ) ) x := v ;
 return [ "HI" ] ;
 

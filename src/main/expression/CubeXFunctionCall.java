@@ -24,6 +24,7 @@ import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClass;
 import main.type.CubeXTypeClassBase;
+import main.type.CubeXTypeIterable;
 import main.type.CubeXTypeYielder;
 import main.util.CubeXArgument;
 import main.util.Triple;
@@ -200,7 +201,10 @@ public class CubeXFunctionCall extends CubeXExpression
 				}
 				
 				if(clss.isYielder())
-					return new CubeXTypeYielder(name, parameters.get(0));
+				{
+					CubeXType innerType = ((CubeXTypeIterable)classCon.lookup(clss.getName()).getParentType()).getInnerType();
+					return new CubeXTypeYielder(name, innerType);
+				}
 				else
 					return CubeXTypeClass.NewCubeXTypeClass(name, parameters);
 			}
