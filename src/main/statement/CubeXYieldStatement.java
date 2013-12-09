@@ -26,9 +26,8 @@ public class CubeXYieldStatement extends CubeXStatement
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		
 		for (String var : par.locals.keySet()) {
-			sb.append("yielder->var_").append(var).append(" = ").append(var).append(";").append(System.lineSeparator());
+			sb.append("yielder->var_").append(CUtils.canonName(var)).append(" = ").append(CUtils.canonName(var)).append(";").append(System.lineSeparator());
 		}
 		sb.append(System.lineSeparator()).append("yielder->status = ").append(yieldId).append(";").append(System.lineSeparator());
 		sb.append("yielder->returnValue = ").append(expr.toC(this)).append(";").append(System.lineSeparator());
@@ -44,7 +43,7 @@ public class CubeXYieldStatement extends CubeXStatement
 		if(par != null)
 			((CubeXYielder)par).addYield(yieldId);
 		
-		return "";
+		return expr.preC(par);
 	}
 
 	@Override

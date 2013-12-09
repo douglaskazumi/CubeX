@@ -14,6 +14,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
+import main.util.CubeXArgument;
 import main.util.Tuple;
 
 public class CubeXYielder extends CubeXProgramPiece {
@@ -53,14 +54,21 @@ public class CubeXYielder extends CubeXProgramPiece {
 		StringBuilder sb = new StringBuilder();
 		StringBuilder sbdecl = new StringBuilder();
 
-		sbdecl.append("yielder_").append(parent.getName()).append("_t * ").append("y_").append(parent.getName()).append("(yielder_").append(parent.getName()).append("_t *yielder, object_t *__this__)");
+		sbdecl.append("yielder_").append(parent.getName()).append("_t * ").append("y_").append(parent.getName()).append("(yielder_").append(parent.getName()).append("_t *yielder, object_t *this)");
 
 		sb.append(sbdecl.toString()).append("\n {\n").append(System.lineSeparator());
 		
 		GlobalAwareness.declarationAppend(sbdecl.append(";\n").toString());
 		
-		for (String var : parent.locals.keySet()) {
-			sb.append("object_t *").append(var).append(" = ").append("yielder->").append(CUtils.canonName(var)).append(";").append(System.lineSeparator());
+		HashSet<String> strArgs = new HashSet<String>();
+
+		for(String var :locals.keySet())
+		{
+			sb.append("\tobject_t * ").append(CUtils.canonName(var)).append(" = NULL;\n");
+		}
+		
+		for (String var : locals.keySet()) {
+			sb.append("object_t *").append(CUtils.canonName(var)).append(" = ").append("yielder->").append(CUtils.canonName(var)).append(";").append(System.lineSeparator());
 		}
 		
 		sb.append("switch(yielder->status){").append(System.lineSeparator());

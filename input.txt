@@ -4,7 +4,10 @@ class Spoon() extends Iterable<Integer>
 
 yielder
 {
-	yield 7;
+	x:=4;
+	yield x;
+	x:=x+1;
+	yield x-2;
 }
 
 }

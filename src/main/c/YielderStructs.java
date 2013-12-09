@@ -36,7 +36,7 @@ public class YielderStructs {
 		yieldstructs.append("typedef struct { \n int status;\n object_t *returnValue;\n int numVars;\n");
 		for(String var: yielder.locals.keySet())
 		{
-			yieldstructs.append("object_t *var_").append(var).append(";\n");
+			yieldstructs.append("object_t *var_").append(CUtils.canonName(var)).append(";\n");
 		}
 		yieldstructs.append(" } yielder_").append(yielderclss.getName()).append("_t;\n\n");
 		

@@ -1,6 +1,11 @@
 class Spoon < > ( ) extends Iterable < Integer < > > {
 super ( ) ;
-yielder yield 7;
+yielder {
+x := 4 ;
+yield x;
+x := x . plus < > ( 1 ) ;
+yield x . minus < > ( 2 );
+}
 }
 x := 0 ;
 for ( v in Spoon < > ( ) ) x := v ;
