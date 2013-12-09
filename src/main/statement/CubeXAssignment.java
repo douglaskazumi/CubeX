@@ -81,6 +81,7 @@ public class CubeXAssignment extends CubeXStatement {
 		StringBuilder sb = new StringBuilder();
 		String temp = CUtils.getTempName();
 		boolean wasPrimitive = previousType!=null && (previousType.isBool()||previousType.isInt());
+		wasPrimitive=false;
 		if((!wasPrimitive && previousType!=null) || (previousType==null && !isPrimitive) )
 			sb.append("\t").append(CUtils.canonName(temp)).append(" = (object_t *)(").append(variable.toC(par)).append(");\n");
 		if(isPrimitive && !variable.isField())

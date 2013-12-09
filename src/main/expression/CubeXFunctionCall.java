@@ -218,6 +218,7 @@ public class CubeXFunctionCall extends CubeXExpression
 		{
 
 			 boolean isPrim = parent.getTypeUnsafe().isBool()||parent.getTypeUnsafe().isInt();
+			 isPrim=false;
 			 tempVar = CUtils.getTempName();
 			 
 			 if(par!=null)
@@ -326,6 +327,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					{
 						CubeXType argType = fun.getArglist().get(i).type;
 						boolean isPrim = argType.isBool() || argType.isInt();
+						isPrim=false;
 						if(!isPrim)
 						{
 							sb.append(", object_t *");
@@ -343,6 +345,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					{
 						CubeXType argType = fun.getArglist().get(i).type;
 						boolean isPrim = argType.isBool() || argType.isInt();
+						isPrim=false;
 						if(!isPrim)
 						{
 							sb.append(", gc_inc(").append(exp.toC(par)).append(")");
@@ -368,6 +371,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				{
 					CubeXType argType = fun.getArglist().get(i).type;
 					boolean isPrim = argType.isBool() || argType.isInt();
+					isPrim=false;
 					if(!isPrim)
 					{
 						sb.append(prefix).append("gc_inc(").append(exp.toC(par)).append(")");
@@ -705,6 +709,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			{
 			CubeXType argType = argList.get(i).type;
 			boolean isPrim = argType.isBool() || argType.isInt();
+			isPrim=false;
 			if(isPrim)
 				newEntry=Boxer.unboxify(newEntry);
 			}

@@ -151,16 +151,8 @@ public class CubeXFunction extends CubeXProgramPiece
 			separator=", ";
 		}
 		for (CubeXArgument arg : arglist) {
-			boolean isPrim = arg.type.isBool()||arg.type.isInt();
-			if(isPrim)
-			{
-				sb.append(separator).append(" int ").append(" ").append(CUtils.canonName(arg.variable));
-			}
-			else
-			{
-				sb.append(separator).append(" object_t * ").append(" ").append(CUtils.canonName(arg.variable));
-			}
-			
+
+			sb.append(separator).append(" object_t * ").append(" ").append(CUtils.canonName(arg.variable));			
 			separator = ", ";
 		}
 		sb.append(")");

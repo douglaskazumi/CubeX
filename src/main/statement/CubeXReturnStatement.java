@@ -57,7 +57,7 @@ public class CubeXReturnStatement extends CubeXStatement {
 		String temp = CUtils.getTempName();
 		
 		boolean primReturnValue =(par!=null && par.isFunction() && (((CubeXFunction)par).getReturnType().isBool()||((CubeXFunction)par).getReturnType().isInt()));
-		
+		primReturnValue=false;
 		StringBuilder sb = new StringBuilder();
 		
 		if(primReturnValue)
