@@ -25,15 +25,25 @@ public class CubeXYieldStatement extends CubeXStatement
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
-		// TODO Auto-generated method stub
-		return "";
+		StringBuilder sb = new StringBuilder();
+		
+		for (String var : par.locals.keySet()) {
+			sb.append("yielder->var_").append(var).append(" = ").append(var).append(";").append(System.lineSeparator());
+		}
+		sb.append(System.lineSeparator()).append("yielder->status = ").append(yieldId).append(";").append(System.lineSeparator());
+		sb.append("yielder->returnValue = ").append(expr.toC(this)).append(";").append(System.lineSeparator());
+		sb.append("return yielder;").append(System.lineSeparator());
+		sb.append("LABEL_").append(yieldId).append(":").append(System.lineSeparator());
+		
+		return sb.toString();
 	}
 
 	@Override
 	public String preC(CubeXProgramPiece par)
 	{
+		if(par != null)
+			((CubeXYielder)par).addYield(yieldId);
 		
-		((CubeXYielder)par).addYield(yieldId);
 		return "";
 	}
 

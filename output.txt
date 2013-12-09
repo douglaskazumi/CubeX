@@ -1,6 +1,6 @@
 class Spoon < A > ( x : A ) extends Iterable < A > {
 super ( ) ;
-yielder yield test < > ( x , x );
+yielder yield x;
 fun test < > ( x : A , y : A ) : A return y ;
 }
 x := 0 ;

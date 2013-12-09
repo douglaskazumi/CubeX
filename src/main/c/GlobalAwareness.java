@@ -13,7 +13,7 @@ public class GlobalAwareness {
 	private static CreateObject createObj = new CreateObject();
 	public static HashMap<String,Boolean>  locals = new HashMap<String,Boolean>();
 	public static int tempVarIndex = 0;
-	public static int yielderId = 0;
+	public static int yielderId = 1;
 	
 	public static int getNextYieldId()
 	{

@@ -4,7 +4,7 @@ class Spoon<A>(x : A) extends Iterable<A>
 
 yielder
 {
-	yield test(x,x);
+	yield x;
 }
 
 fun test(x : A, y: A) : A = y;
