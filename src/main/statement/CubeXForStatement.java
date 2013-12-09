@@ -101,6 +101,7 @@ public class CubeXForStatement extends CubeXStatement {
 		
 		
 		boolean isInnerPrim = innerType.isBool() || innerType.isInt();
+		isInnerPrim = false;
 		
 		if(par!=null)
 		{
@@ -117,14 +118,8 @@ public class CubeXForStatement extends CubeXStatement {
 		sb.append(CUtils.canonName(indexer)).append(" = (object_t *)createIndexer();\n");
 		sb.append("\t").append(CUtils.canonName(iterable)).append(" = gc_inc(").append(forexpression.toC(par)).append(");\n");
 		sb.append("\twhile(iterableHasNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("))\n\t{\n");
-		if(isInnerPrim)
-		{
-			sb.append("\t\t").append(CUtils.canonName(variable)).append(" = (object_t *)unbox(iterableNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("));\n");
-		}
-		else
-		{
-			sb.append("\t\t").append(CUtils.canonName(variable)).append(" = gc_inc(iterableNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("));\n");
-		}
+
+		sb.append("\t\t").append(CUtils.canonName(variable)).append(" = gc_inc(iterableNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("));\n");
 		
 		String pre = forbody.preC(par);
 		if(!pre.isEmpty())

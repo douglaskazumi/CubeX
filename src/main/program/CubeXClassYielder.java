@@ -37,6 +37,11 @@ public class CubeXClassYielder extends CubeXClass {
 		return true;
 	}
 	
+	public CubeXYielder getYielder()
+	{
+		return yielder;
+	}
+	
 	@Override
 	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, boolean isYielder) throws ContextException,TypeCheckException 
 	{
