@@ -14,7 +14,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
 import main.expression.CubeXVariable;
-import main.program.CubeXClassBase;
+import main.program.CubeXClassYielder;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
@@ -29,6 +29,7 @@ public class CubeXForStatement extends CubeXStatement {
 	private CubeXStatement forbody;
 	private String indexer;
 	private String iterable;
+	private String yielder;
 	private CubeXVariable actualVariable;
 	
 	public CubeXForStatement(String variable, CubeXExpression forexpression, CubeXStatement forbody)
@@ -77,6 +78,7 @@ public class CubeXForStatement extends CubeXStatement {
 		sb.append(forexpression.preC(par));
 		indexer = CUtils.getTempName();
 		iterable = CUtils.getTempName();
+		yielder = CUtils.getTempName();
 		return sb.toString();
 	}
 	
@@ -90,15 +92,39 @@ public class CubeXForStatement extends CubeXStatement {
 		if(forExprType.isYielder())
 		{
 			CubeXTypeYielder forIterable = (CubeXTypeYielder)forExprType;
+			String tempVar = CUtils.getTempName();
+			String yielderClassName = "ClassName";
+			
 			innerType=forIterable.getInnerType();	
+			sb.append("yielder_").append(yielderClassName).append("_t *").append(CUtils.canonName(yielder)).append(" = ").append("(yielder_").append(yielderClassName).append("_t *)").append("createYielder(").append("needToChangeThis").append(");\n");
+			sb.append("while(true){").append(System.lineSeparator());
+			sb.append("yielder_").append(yielderClassName).append("_t *").append(CUtils.canonName(tempVar)).append(" = y_").append(yielderClassName).append("(").append(CUtils.canonName(yielder)).append(");").append(System.lineSeparator());
+			sb.append("if(").append(CUtils.canonName(tempVar)).append("->status=-1)").append(System.lineSeparator());
+			sb.append("break;").append(System.lineSeparator());
+			
+			sb.append(CUtils.canonName(variable)).append(" = ").append(CUtils.canonName(tempVar)).append("->returnValue;").append(System.lineSeparator());
+			
+			String pre = forbody.preC(par);
+			if(!pre.isEmpty())
+				sb.append("\t\t").append(pre);
+			
+			sb.append("\t\t").append(forbody.toC(par));
+			sb.append("\t\tgc(gc_dec(").append(CUtils.canonName(variable)).append("));\n");
+			sb.append("\t\t").append(CUtils.canonName(variable)).append(" = NULL;\n");
+			sb.append("\t}\n");
+			sb.append("\t\tgc(gc_dec(").append(CUtils.canonName(yielder)).append("));\n");
+			sb.append("\t\t").append(CUtils.canonName(yielder)).append(" = NULL;\n");
+			sb.append(forexpression.postC(par));
+			sb.append(this.gcDeadVariables());
+			
+			return sb.toString();
 		}
 		else 
 		{
 			CubeXTypeIterable forIterable = (CubeXTypeIterable)forExprType;
 			innerType=forIterable.getInnerType();	
 
-		}
-		
+		}		
 		
 		boolean isInnerPrim = innerType.isBool() || innerType.isInt();
 		isInnerPrim = false;
@@ -115,6 +141,7 @@ public class CubeXForStatement extends CubeXStatement {
 			GlobalAwareness.addLocal(iterable, false);
 			GlobalAwareness.addLocal(variable, isInnerPrim);
 		}
+		
 		sb.append(CUtils.canonName(indexer)).append(" = (object_t *)createIndexer();\n");
 		sb.append("\t").append(CUtils.canonName(iterable)).append(" = gc_inc(").append(forexpression.toC(par)).append(");\n");
 		sb.append("\twhile(iterableHasNext(").append(CUtils.canonName(iterable)).append(", (iterableIndex_t *)").append(CUtils.canonName(indexer)).append("))\n\t{\n");

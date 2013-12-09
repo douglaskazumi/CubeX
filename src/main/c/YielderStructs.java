@@ -1,6 +1,5 @@
 package main.c;
 
-import main.program.CubeXClass;
 import main.program.CubeXClassYielder;
 import main.program.CubeXYielder;
 

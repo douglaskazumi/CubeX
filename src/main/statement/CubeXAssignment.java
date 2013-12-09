@@ -9,7 +9,6 @@ import main.c.CUtils;
 import main.c.GlobalAwareness;
 import main.context.ClassContext;
 import main.context.FunctionContext;
-import main.context.GlobalContexts;
 import main.context.TypeVariableContext;
 import main.context.VariableContext;
 import main.exceptions.ContextException;

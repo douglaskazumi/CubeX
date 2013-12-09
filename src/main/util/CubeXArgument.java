@@ -1,7 +1,6 @@
 package main.util;
 
 import main.expression.CubeXVariable;
-import main.program.CubeXClass;
 import main.type.CubeXType;
 
 public class CubeXArgument {
