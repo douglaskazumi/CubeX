@@ -1,15 +1,38 @@
 
-class Spoon(x : Iterable<String>) extends Iterable<String>
+class Spoon(x : Iterable<String>, y : Iterable<String>) extends Iterable<String>
 {
 
 yielder
 {
-	for(v in x)
+	for(pi in [1,2,3])
 	{
-		for(q in x)
+		for(v in x)
 		{
-			yield string(q++v);
+			for(q in y)
+			{
+				yield string(v++q);
+			}
 		}
+		yield "LLAMA";
+		yield "SPOON";
+		yield "Phlegmiferous";
+		
+		for(i in 1..10)
+		{
+			yield convert(i*pi);
+		}
+	}
+}
+
+fun convert(z:Integer) : String
+{
+	if(z==2 | z>7)
+	{
+		return "YAY";
+	}
+	else
+	{
+		return "Bob";
 	}
 }
 
@@ -17,7 +40,8 @@ yielder
 
 ret:=[];
 asdf:=["Hello", "World!"];
-for(v in Spoon(asdf))
+ueoa:=["Cows", "ARE", "__awesome__!"];
+for(v in Spoon<>(asdf,ueoa))
 {
 	ret :=ret++[v];
 }

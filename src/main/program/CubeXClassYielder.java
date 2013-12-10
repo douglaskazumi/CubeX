@@ -200,6 +200,7 @@ public class CubeXClassYielder extends CubeXClass {
 			
 		}
 		this.myFunctionContext=innerFunCon;
+		newVarCon.setMutable(false);
 		for(CubeXFunction f : functions)
 		{
 			if(!f.isDeclaration())
@@ -213,7 +214,7 @@ public class CubeXClassYielder extends CubeXClass {
 		Tuple<Boolean, CubeXType> returnedValue = yielder.typecheck(force, classCon, innerFunCon, newVarCon, classTypeVarCon, false, this, true);
 		if(!returnedValue.first || !CubeXType.isSubType(returnedValue.second, CubeXType.makeSubstitution(yieldType, clSub), classCon))
 			throw new TypeCheckException("Bad yield return Value");
-		
+		yielder.setParent(this);
 		
 		return null;
 	}

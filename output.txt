@@ -1,9 +1,18 @@
-class Spoon < > ( x : Iterable < String < > > ) extends Iterable < String < > > {
+class Spoon < > ( x : Iterable < String < > > , y : Iterable < String < > > ) extends Iterable < String < > > {
 super ( ) ;
-yielder for ( v in x ) for ( q in x ) yield string < > ( q ++ v );
+yielder for ( pi in [ 1 , 2 , 3 ] ) {
+for ( v in x ) for ( q in y ) yield string < > ( v ++ q );
+yield "LLAMA";
+yield "SPOON";
+yield "Phlegmiferous";
+for ( i in 1 . through < > ( 10 , true , true ) ) yield convert < > ( i . times < > ( pi ) );
+}
+fun convert < > ( z : Integer < > ) : String < > if ( z . equals < > ( 2 ) . or < > ( 7 . lessThan < > ( z , true ) ) ) return "YAY" ;
+else return "Bob" ;
 }
 ret := [ ] ;
 asdf := [ "Hello" , "World!" ] ;
-for ( v in Spoon < > ( asdf ) ) ret := ret ++ [ v ] ;
+ueoa := [ "Cows" , "ARE" , "__awesome__!" ] ;
+for ( v in Spoon < > ( asdf , ueoa ) ) ret := ret ++ [ v ] ;
 return ret ;
 

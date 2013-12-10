@@ -18,6 +18,7 @@ import main.program.CubeXClass;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
+import main.program.CubeXYielder;
 import main.statement.CubeXAssignment;
 import main.statement.CubeXBlock;
 import main.statement.CubeXStatement;
@@ -33,6 +34,8 @@ import main.util.TypeVarSubstitution;
 public class CubeXFunctionCall extends CubeXExpression 
 {
 	private CubeXExpression parent;
+	
+	private CubeXType faketcb;
 	
 	private boolean simplified = false;
 
@@ -78,10 +81,28 @@ public class CubeXFunctionCall extends CubeXExpression
 		CubeXFunction fun;
 	
 		//Object function calls
-		if(parent!=null)
+		boolean isObjectCall = parent!=null || (par!=null && (par.isClass()||par.isInterface()) && (GlobalContexts.functionContext.lookup(name)==null) && funCon.lookup(name)!=null);
+		
+		if(isObjectCall)
 		{
+			
 			calltype=CallType.FUNCTION;
-			CubeXType pType = parent.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+
+			CubeXType pType;
+
+			if(parent==null)
+			{
+				
+				ArrayList<CubeXType> types = new ArrayList<>();
+				types.addAll(((CubeXClassBase)par).getTypes());
+					
+				pType =  CubeXTypeClass.NewCubeXTypeClass(((CubeXClassBase)par).getName(), types);
+			}
+			else
+			{
+				pType = parent.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+			}
+			faketcb = pType;
 			if(pType.isVariable())
 				throw new TypeCheckException("Parent type is variable");
 			
@@ -161,8 +182,8 @@ public class CubeXFunctionCall extends CubeXExpression
 				{
 					CubeXExpression exp = argValuesIt.next();
 					CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub), cbSub);
-										
-					if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par), tpe, classCon))
+					CubeXType expType = CubeXType.makeSubstitution(CubeXType.makeSubstitution(exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par), sub), cbSub);
+					if(!CubeXType.isSubType(expType, tpe, classCon))
 						throw new TypeCheckException("BAD ARGUMENT TO GLOBAL FUNCTION CALL");
 				}
 				
@@ -202,7 +223,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				
 				if(clss.isYielder())
 				{
-					CubeXType innerType = ((CubeXTypeIterable)classCon.lookup(clss.getName()).getParentType()).getInnerType();
+					CubeXType innerType = CubeXType.makeSubstitution(((CubeXTypeIterable)classCon.lookup(clss.getName()).getParentType()).getInnerType(),sub);
 					return new CubeXTypeYielder(name, innerType);
 				}
 				else
@@ -252,10 +273,21 @@ public class CubeXFunctionCall extends CubeXExpression
 		{
 			if(calltype==CallType.FUNCTION) //e.fun();
 			{
+				CubeXClassBase cb = null;
+				CubeXFunction fun = null;
+
+				if(parent==null)
+				{
+					cb=((CubeXTypeClassBase)faketcb).getDeclaration(GlobalContexts.classContext);
+					fun=cb.getFunctionContext().lookup(name);
+				}
+				else
+				{
+					Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res = parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext);
+					cb=res.third.getDeclaration(GlobalContexts.classContext);
+					fun=res.second;
+				}
 	
-					Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res =  parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext);
-					CubeXClassBase cb = (CubeXClassBase)res.third.getDeclaration(GlobalContexts.classContext);
-					CubeXFunction fun = res.second;
 					ArrayList<CubeXFunction> funs = cb.getFunctions();
 					int fIndex=-1;
 					for(int i=0; i<funs.size(); ++i)
@@ -291,8 +323,18 @@ public class CubeXFunctionCall extends CubeXExpression
 						}
 						i++;
 					}
-					sb.append("))").append("(getMethod(").append(CUtils.canonName(tempVar)).append(", ").append(cb.getID()).append(", ").append(fIndex).append(")))");
-					sb.append("(gc_inc(").append(CUtils.canonName(tempVar)).append(")");
+					
+					sb.append("))").append("(getMethod(");
+					if(parent==null)
+						sb.append("this");
+					else
+						sb.append(CUtils.canonName(tempVar));
+					sb.append(", ").append(cb.getID()).append(", ").append(fIndex).append(")))");
+					if(parent==null)
+						sb.append("(gc_inc(").append("this").append(")");
+					else
+						sb.append("(gc_inc(").append(CUtils.canonName(tempVar)).append(")");
+					
 					i=0;
 					for(CubeXExpression exp : args)
 					{
@@ -317,6 +359,19 @@ public class CubeXFunctionCall extends CubeXExpression
 			else if(calltype==CallType.GLOBAL) //Global Function
 			{
 				CubeXFunction fun =  GlobalContexts.functionContext.lookup(name);
+				
+				if(fun==null && (par.isFunction() || par.isYielder() )) //Change for interfaces
+				{
+					if(par.isFunction())
+					{
+						fun=((CubeXFunction)par).getParent().getFunctionContext().lookup(name);
+					}
+					else
+					{
+						fun=((CubeXYielder)par).getParent().getFunctionContext().lookup(name);
+					}
+				}
+				
 				sb.append("(").append(CUtils.canonName(fun, false)).append("(");
 				String prefix="";
 				int i=0;

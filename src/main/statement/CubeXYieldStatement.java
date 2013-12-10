@@ -30,7 +30,7 @@ public class CubeXYieldStatement extends CubeXStatement
 			sb.append("yielder->var_").append(CUtils.canonName(var)).append(" = ").append(CUtils.canonName(var)).append(";").append(System.lineSeparator());
 		}
 		sb.append(System.lineSeparator()).append("yielder->status = ").append(yieldId).append(";").append(System.lineSeparator());
-		sb.append("yielder->returnValue = ").append(expr.toC(this)).append(";").append(System.lineSeparator());
+		sb.append("yielder->returnValue = ").append(expr.toC(par)).append(";").append(System.lineSeparator());
 		sb.append("return yielder;").append(System.lineSeparator());
 		sb.append("LABEL_").append(yieldId).append(":").append(System.lineSeparator());
 		

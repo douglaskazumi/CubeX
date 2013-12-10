@@ -20,6 +20,7 @@ public class CubeXYielder extends CubeXProgramPiece {
 	
 	private CubeXStatement stat;
 	
+	private CubeXClassBase parentHolder;
 	private CubeXClassYielder parent;
 	
 	private ArrayList<Integer> internalYields = new ArrayList<>();
@@ -43,6 +44,21 @@ public class CubeXYielder extends CubeXProgramPiece {
 		return stat.typecheck(force, classCon, funCon, varCon, typeVarCon, setField, par, true);
 	}
 
+	public CubeXClassBase getParent()
+	{
+		return parentHolder;
+	}
+	
+	public void setParent(CubeXClassBase p)
+	{
+		parentHolder=p;
+	}
+	
+	public boolean isYielder()
+	{
+		return true;
+	}
+	
 	@Override
 	public String preC() {
 		return "";

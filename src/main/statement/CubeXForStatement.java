@@ -50,7 +50,7 @@ public class CubeXForStatement extends CubeXStatement {
 		if(forExprType.isYielder())
 		{
 			CubeXTypeYielder forIterable = (CubeXTypeYielder)forExprType;
-			innerType=forIterable.getInnerType();	
+			innerType = CubeXType.makeSubstitution(forIterable.getInnerType(), forIterable.getTypeVarSub(classCon));
 		}
 		else if (forExprType.isIterable())
 		{
@@ -59,7 +59,7 @@ public class CubeXForStatement extends CubeXStatement {
 
 		}
 		else
-			throw new TypeCheckException("Not iterable or yielder");
+			throw new TypeCheckException("Not iterable or yielder");		
 		boolean mutable = varCon.isMutable();
 		VariableContext innerCon = (VariableContext)varCon.createChildContext();
 		innerCon.add(variable, innerType);
