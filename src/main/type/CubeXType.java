@@ -156,9 +156,8 @@ public abstract class CubeXType
 			{
 				CubeXTypeIterable iterable1 = (CubeXTypeIterable)child;
 				CubeXTypeIterable iterable2 = (CubeXTypeIterable)parent;
-				boolean innerSubTyped = isSubType(iterable1.getInnerType(), iterable2.getInnerType(), classCon);
-				
-				return false;
+				return isSubType(iterable1.getInnerType(), iterable2.getInnerType(), classCon);
+
 			}
 			
 			return false;

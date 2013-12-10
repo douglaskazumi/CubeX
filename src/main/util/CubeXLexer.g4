@@ -16,12 +16,13 @@ INTERFACE : 'interface';
 FUN : 'fun';
 SUPER : 'super';
 CLASS : 'class';
+EXTENDSITERABLE : 'extends' [ \t\r\n]* 'Iterable';
 EXTENDS : 'extends';
 THING : 'Thing';
 NOTHING : 'Nothing';
 YIELDER : 'yielder';
 YIELD : 'yield';
-ITERABLE : 'Iterable';
+
 
 INT : [0-9]+;
 NAMEUSINGLE : [A-Z];

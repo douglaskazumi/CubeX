@@ -125,7 +125,7 @@ interfacex3 returns [CubeXInterface x]
 		{$x = new CubeXInterface($n.text, $tvlist.x, extttest?$extt.x:null, decls);};
 	
 yielder returns [CubeXClassYielder x]
-	: CLASS n=NAMEU tvlist=typevarlist? LPAREN alist=arglist RPAREN  EXTENDS ITERABLE t=typelist LBRACE {ArrayList<CubeXStatement> stats = new ArrayList<CubeXStatement>();} (s=stat {stats.add($s.x);})* {boolean supertest=false;}(SUPER LPAREN superlist=exprlist RPAREN SEMICOLON {supertest=true;})? y=yieldfun {ArrayList<CubeXFunction> funs = new ArrayList<CubeXFunction>();}(f=function {funs.add($f.x);})* RBRACE
+	: CLASS n=NAMEU tvlist=typevarlist? LPAREN alist=arglist RPAREN  EXTENDSITERABLE t=typelist LBRACE {ArrayList<CubeXStatement> stats = new ArrayList<CubeXStatement>();} (s=stat {stats.add($s.x);})* {boolean supertest=false;}(SUPER LPAREN superlist=exprlist RPAREN SEMICOLON {supertest=true;})? y=yieldfun {ArrayList<CubeXFunction> funs = new ArrayList<CubeXFunction>();}(f=function {funs.add($f.x);})* RBRACE
     {$x = new CubeXClassYielder($n.text, $tvlist.x, $alist.x, $typelist.x, stats, supertest?$superlist.x:null, $y.x, funs);};
 		
 classx3 returns [CubeXClass x]

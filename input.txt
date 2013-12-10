@@ -6,19 +6,19 @@ yielder
 {
 	for(v in x)
 	{
-		yield v;
-	}
-	for(v in x)
-	{
-		yield v;
+		for(q in x)
+		{
+			yield string(q++v);
+		}
 	}
 }
 
 }
 
 ret:=[];
-for(v in Spoon(["Hello", "World!"]))
+asdf:=["Hello", "World!"];
+for(v in Spoon(asdf))
 {
-	ret :=ret++v;
+	ret :=ret++[v];
 }
 return ret;

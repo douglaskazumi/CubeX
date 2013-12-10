@@ -1,166 +1,23 @@
 
 bool gc(object_t *obj)
 {
-	return false;/*
-	iterable_t *iter;
-	iterableEntry_t *iterEntry;
-	int i;
-	if(obj==NULL)
-		return true;
-
-	if(obj->numFields==-3)
-	{
-		gc_iterableIndex((iterableIndex_t *)obj);
-		return true;
-	}
-
-	if(obj->refCount != 0)
-		return false;
-
-	if(obj->numFields==-1)
-	{
-		x3free(obj);
-		return true;
-	}
-	if(obj->numFields==-2)
-	{
-		iter = (iterable_t *)obj;
-
-		for(i=0; i<iter->numEntries; i++)
-		{
-			iterEntry = iter->entries[i];
-			if(iter->entries[i]==NULL || iterEntry->refCount!=0 || iter->entries[i]->magic!=0x12345678)
-				continue;
-			switch(iterEntry->type)
-			{
-			case OBJECT:
-				gc(((objectIterableEntry_t *)iterEntry)->obj);
-				break;
-			case INPUT:
-				gc((object_t *)(((inputIterableEntry_t *)iterEntry)->store));
-				break;
-			case STRING:
-				x3free(((stringIterableEntry_t *)iterEntry)->string);
-			case RANGE:
-			case INFINITE:
-				break;
-			}
-			iter->entries[i]->magic=0;
-			x3free(iter->entries[i]);
-			iter->entries[i]=NULL;
-		}
-		x3free(iter->entries);
-		x3free(obj);
-		return true;
-	}
-
-	for(i=0; i<obj->numFields; i++)
-	{
-		gc(*(((object_t **)(obj+1))+i));
-	}
-	x3free(obj);
-	return true;*/
+	return false;
 }
 
 object_t* gc_inc(object_t *obj)
 {
-	return obj;/*
-	iterable_t *iter;
-	iterableEntry_t *iterEntry;
-	int i;
-	if(obj==NULL)
-		return NULL;
-
-	if(obj->numFields==-3)
-		return obj;
-
-	obj->refCount+=1;
-
-	if(obj->numFields==-1)
-	{
-		return obj;
-	}
-	else if (obj->numFields==-2)
-	{
-		iter = (iterable_t *)obj;
-		for(i=0; i<iter->numEntries; i++)
-		{
-			iterEntry = iter->entries[i];
-			iterEntry->refCount+=1;
-			switch(iterEntry->type)
-			{
-			case OBJECT:
-				gc_inc(((objectIterableEntry_t *)iterEntry)->obj);
-				break;
-			case INPUT:
-				gc_inc((object_t *)(((inputIterableEntry_t *)iterEntry)->store));
-				break;
-			default:
-				break;
-			}
-		}
-		return obj;
-	}
-
-	for(i=0; i<obj->numFields; i++)
-	{
-		gc_inc(*(((object_t **)(obj+1))+i));
-	}
-	return obj;*/
+	return obj;
 }
 
 object_t* gc_dec(object_t *obj)
 {
-	return obj;/*
-	iterable_t *iter;
-	iterableEntry_t *iterEntry;
-	int i;
-	if(obj==NULL)
-		return NULL;
-
-	if(obj->numFields==-3)
-		return obj;
-
-	obj->refCount-=1;
-
-	if(obj->numFields==-1)
-	{
-		return obj;
-	}
-	else if (obj->numFields==-2)
-	{
-		iter = (iterable_t *)obj;
-		for(i=0; i<iter->numEntries; i++)
-		{
-			iterEntry = iter->entries[i];
-			iterEntry->refCount--;
-			switch(iterEntry->type)
-			{
-			case OBJECT:
-				gc_dec(((objectIterableEntry_t *)iterEntry)->obj);
-				break;
-			case INPUT:
-				gc_dec((object_t *)(((inputIterableEntry_t *)iterEntry)->store));
-				break;
-			default:
-				break;
-			}
-		}
-		return obj;
-	}
-
-	for(i=0; i<obj->numFields; i++)
-	{
-		gc_dec(*(((object_t **)(obj+1))+i));
-	}
-	return obj;*/
+	return obj;
 }
 
 
 void gc_vTable(vTable_t *vtable)
 {
-	x3free(vtable->iTable);
-	x3free(vtable);
+
 	return;
 }
 
@@ -175,7 +32,7 @@ iterableIndex_t * createIndexer()
 
 void gc_iterableIndex(iterableIndex_t* iterIndex)
 {
-	x3free(iterIndex);
+
 }
 
 bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
@@ -268,16 +125,7 @@ object_t * iterableAppend_sr(object_t * obj1, object_t * obj2, int startingRefs)
 
 	newIter->entries = entryTable;
 
-	if(obj1->refCount==0)
-	{
-		x3free(iter1->entries);
-		x3free(iter1);
-	}
-	if(obj1!=obj2 && obj2->refCount==0)
-	{
-		x3free(iter2->entries);
-		x3free(iter2);
-	}
+
 
 	return (object_t *)newIter;
 }
@@ -381,13 +229,7 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 			newTempStoredValue = (iterable_t *)createIterable_value((object_t *)str,refs);
 			inpEntry->store = (iterable_t *)iterableAppend_sr((object_t *)oldStore,(object_t *)newTempStoredValue, refs);
 
-			if(oldStore!=NULL)
-			{
-				x3free(oldStore->entries);
-				x3free(oldStore);
-				x3free(newTempStoredValue->entries);
-				x3free(newTempStoredValue);
-			}
+
 
 			indexer->innerIndex+=1;
 
@@ -665,6 +507,11 @@ object_t *__string(object_t *chars)
 	stringIterableEntry_t *sEntry;
 	unsigned int totalLength = 0;
 	char *buf;
+
+	if(chars==NULL)
+	{
+		return (object_t *)createIterable_string(NULL, 0, 0, false);
+	}
 
 	for(i=0; i<iter->numEntries; i++)
 	{

@@ -651,7 +651,7 @@ public class CubeXFunctionCall extends CubeXExpression
 		}
 		else
 		{
-			CubeXClass base = (CubeXClass)GlobalContexts.classContext.lookup(name);
+			//CubeXClass base = (CubeXClass)GlobalContexts.classContext.lookup(name);
 			//argList=base.getConstructorArgs();
 		}
 		

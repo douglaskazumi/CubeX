@@ -14,7 +14,6 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
-import main.util.CubeXArgument;
 import main.util.Tuple;
 
 public class CubeXYielder extends CubeXProgramPiece {
@@ -64,7 +63,6 @@ public class CubeXYielder extends CubeXProgramPiece {
 		
 		GlobalAwareness.declarationAppend(sbdecl.append(";\n").toString());
 		
-		HashSet<String> strArgs = new HashSet<String>();
 
 		for(String var :locals.keySet())
 		{

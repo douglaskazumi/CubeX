@@ -429,7 +429,6 @@ public class CubeXProgram {
 	
 	public void initYielders()
 	{
-		StringBuilder sb = new StringBuilder();
 		for(CubeXProgramPiece piece : pieces){
 			if(piece.isClass() && ((CubeXClass)piece).isYielder())
 			{

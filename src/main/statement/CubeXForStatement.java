@@ -66,10 +66,10 @@ public class CubeXForStatement extends CubeXStatement {
 		actualVariable=new CubeXVariable(variable);
 		actualVariable.getType(force, classCon, funCon, innerCon, typeVarCon, setField, par);
 
-		forbody.typecheck(force, classCon, funCon, innerCon, typeVarCon, false, par, isYielder);
+		Tuple<Boolean, CubeXType> ret = forbody.typecheck(force, classCon, funCon, innerCon, typeVarCon, false, par, isYielder);
 		varCon.setMutable(mutable);
 		
-		return new Tuple<Boolean, CubeXType>(false, null);
+		return ret;
 	}
 
 	@Override
