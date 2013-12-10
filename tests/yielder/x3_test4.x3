@@ -1,0 +1,23 @@
+class Spoon() extends Iterable<String>
+{
+	yielder{
+		for(i in input){
+			yield complex(i);
+		}
+	}
+	
+	fun complex(i:String):String{
+		return string(i++i);
+	}
+}
+
+p := Spoon();
+ret := [];
+
+for(a in p){
+	for(b in p){
+		ret := ret++[a]++[b];
+	}
+}
+
+return ret;

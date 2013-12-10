@@ -15,8 +15,10 @@ import java.nio.file.Paths;
 import java.util.BitSet;
 
 import main.Optimizations.LiveVariableAnalysis;
+import main.c.GlobalAwareness;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.program.CubeXClassBase;
 import main.util.CubeXLexer;
 import main.util.CubeXParser;
 import main.util.CubeXProgram;
@@ -111,6 +113,13 @@ public class TestType {
 		// if dir does not exists, create
 		if (!file.exists()) {
 			file.mkdir();
+		}
+		else{
+			for (File f : file.listFiles()){
+				if(f.isFile() && f.lastModified() < System.currentTimeMillis() - 86400000L){
+					f.delete();
+				}
+			}
 		}
 
 		file = new File("tests/logs/" + fileName + ".txt");
@@ -296,7 +305,7 @@ public class TestType {
 
 	/**/
 
-	// *
+	/*
 	@Test
 	public void codeGenerationTests() throws IOException {
 		String path = "tests/codeGen";
@@ -305,6 +314,8 @@ public class TestType {
 		int count = dir.listFiles().length / 3 + 1;
 		for (int i = 1; i < count; i++) {
 			System.out.println("Generating code for " + i);
+			GlobalAwareness.reset();
+			CubeXClassBase.curTypeID = 5;
 			thereIsLexerError = false;
 			thereIsParserError = false;
 			String cubex_content = loadFile(path, filePrefix, i, "x3");
@@ -399,6 +410,99 @@ public class TestType {
 		}
 	}
 	/**/
+	
+	@Test
+	public void yielderTests() throws IOException {
+		String type = "yielder";
+		String path = "tests/yielder";
+		String filePrefix = "x3_test";
+		File dir = new File(path);
+		int count = dir.listFiles().length / 3 + 1;
+		for (int i = 1; i < count; i++) {
+			System.out.println("Generating code for " + i);
+			GlobalAwareness.reset();
+			CubeXClassBase.curTypeID = 5;
+			
+			thereIsLexerError = false;
+			thereIsParserError = false;
+			String cubex_content = loadFile(path, filePrefix, i, "x3");
+			String in_content = loadFile(path, filePrefix, i, "in");
+			String out_content = loadFile(path, filePrefix, i, "out");
+			String outputString = "";
+
+			CubeXLexer lexer = getLexer(cubex_content);
+
+			CubeXProgram prog = getProgram(lexer);
+			if (thereIsLexerError || thereIsParserError) {
+				outputString = "reject";
+			} else {
+				if (prog.typeCheck()) {
+
+					
+					try
+					{
+						PrintWriter writer = new PrintWriter("tests\\out" + i + type + ".c");
+						writer.println(prog.toC());
+						writer.close();
+						
+					} catch (TypeCheckException | ContextException e)
+					{
+						e.printStackTrace();
+					}
+				} else {
+					outputString = "reject";
+				}
+			}
+			if(!outputString.equals("reject")){
+				//Compile and run the c code with the proper input
+//				Runtime.getRuntime().exec("cp src\\main\\c\\cubex_lib.c cubex_lib.c");
+				Process make = Runtime.getRuntime().exec("make output=\"tests\\a" + i + type +".out\"  input=\"tests\\out" + i + type + ".o\" java");
+				int makeReturn = -1;
+				try {
+					makeReturn = make.waitFor();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				if(makeReturn == 0){
+					Process exec = Runtime.getRuntime().exec("tests\\a" + i + type + ".out " + in_content);
+					try {
+						exec.waitFor();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					outputString = getProcessOutput(exec);
+					PrintWriter writer = new PrintWriter("tests\\output" + i + type + ".txt");
+					writer.print(outputString);
+					writer.close();
+				} else {
+					outputString = getProcessError(make);
+					PrintWriter writer = new PrintWriter("tests\\ERRORLOG" + i + type + ".txt");
+					writer.println(outputString);
+					writer.close();
+				}
+			}
+				
+			System.out.println();
+			//Check for the final result
+			if (out_content.equals(outputString)) {
+				if (outputString == "accept") {
+					errorLog.write("-------Type checking test file " + i + type + " succeeded\n");
+				} else {
+					if (!thereIsLexerError && !thereIsParserError)
+						errorLog.write("-------Type checking test file " + i + type + " succeeded. Msg: " + prog.getErrorMsg() + "\n");
+					else
+						errorLog.write("-------Type checking test file " + i + type + " succeeded. Msg: lexer/parser error\n");
+				}
+			} else {
+				if (!thereIsLexerError && !thereIsParserError)
+					errorLog.write("-------Type checking test file " + i + type + " FAILED. Msg: " + prog.getErrorMsg() + "\n");
+				else
+					errorLog.write("-------Type checking test file " + i + type + " FAILED. Msg: lexer/parser error\n");
+			}
+			assertEquals(out_content, outputString);
+		}
+	}
 
 	public String getProcessOutput(Process proc) throws IOException {
 		BufferedReader procError = new BufferedReader(new InputStreamReader(proc.getInputStream()));
@@ -447,7 +551,6 @@ public class TestType {
 	public CubeXProgram getProgram(CubeXLexer lexer) {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		CubeXParser parser = new CubeXParser(tokens);
-		parser.removeErrorListeners();
 		parser.addErrorListener(new ParserError());
 
 		CubeXProgram prog = parser.testprogram().x;

@@ -1,0 +1,17 @@
+class Spoon() extends Iterable<String>
+{
+	yielder{
+		for(i in input){
+			yield i;
+		}
+	}
+}
+
+p := Spoon();
+ret := [];
+
+for(a in p){
+	ret := ret++[a];
+}
+
+return ret;

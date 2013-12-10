@@ -17,6 +17,16 @@ public class GlobalAwareness {
 	public static int tempVarIndex = 0;
 	public static int yielderId = 1;
 	
+	public static void reset(){
+		declarations = new StringBuilder();
+		cons = new Constructor();
+		yieldstructs = new YielderStructs();
+		createObj = new CreateObject();
+		locals = new HashMap<String,Boolean>();
+		tempVarIndex = 0;
+		yielderId = 1;
+	}
+	
 	public static int getNextYieldId()
 	{
 		return yielderId++;

@@ -29,3 +29,11 @@ a1.out
 out1.c
 output1.txt
 example.txt
+tests/ERRORLOG1yielder.txt
+tests/ERRORLOG3yielder.txt
+tests/a1yielder.out
+tests/a3yielder.out
+tests/out1yielder.c
+tests/out3yielder.c
+tests/output1yielder.txt
+tests/output3yielder.txt
