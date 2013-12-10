@@ -1,6 +1,7 @@
 
 bool gc(object_t *obj)
 {
+	return false;/*
 	iterable_t *iter;
 	iterableEntry_t *iterEntry;
 	int i;
@@ -58,11 +59,12 @@ bool gc(object_t *obj)
 		gc(*(((object_t **)(obj+1))+i));
 	}
 	x3free(obj);
-	return true;
+	return true;*/
 }
 
 object_t* gc_inc(object_t *obj)
 {
+	return obj;/*
 	iterable_t *iter;
 	iterableEntry_t *iterEntry;
 	int i;
@@ -104,11 +106,12 @@ object_t* gc_inc(object_t *obj)
 	{
 		gc_inc(*(((object_t **)(obj+1))+i));
 	}
-	return obj;
+	return obj;*/
 }
 
 object_t* gc_dec(object_t *obj)
 {
+	return obj;/*
 	iterable_t *iter;
 	iterableEntry_t *iterEntry;
 	int i;
@@ -150,7 +153,7 @@ object_t* gc_dec(object_t *obj)
 	{
 		gc_dec(*(((object_t **)(obj+1))+i));
 	}
-	return obj;
+	return obj;*/
 }
 
 
@@ -915,6 +918,11 @@ object_t * getInput()
 	iter->entries=entryPtr;
 	return (object_t *)iter;
 
+}
+
+void cint_Iterable(object_t *this)
+{
+	return;
 }
 
 void cubex_main()

@@ -1,18 +1,24 @@
 
-class Spoon() extends Iterable<Integer>
+class Spoon(x : Iterable<String>) extends Iterable<String>
 {
 
 yielder
 {
-	x:=4;
-	yield x;
-	x:=x+1;
-	yield x-2;
+	for(v in x)
+	{
+		yield v;
+	}
+	for(v in x)
+	{
+		yield v;
+	}
 }
 
 }
 
-x:=0;
-for(v in Spoon())
-	x:=v;
-return ["HI"];
+ret:=[];
+for(v in Spoon(["Hello", "World!"]))
+{
+	ret :=ret++v;
+}
+return ret;

@@ -46,13 +46,17 @@ public class CubeXYielder extends CubeXProgramPiece {
 
 	@Override
 	public String preC() {
-		return stat.preC(this);
+		return "";
 	}
 
 	@Override
 	public String toC() {
 		StringBuilder sb = new StringBuilder();
 		StringBuilder sbdecl = new StringBuilder();
+		
+		StringBuilder sbafter = new StringBuilder();
+		sbafter.append(stat.preC(this));
+		sbafter.append(stat.toC(this));
 
 		sbdecl.append("yielder_").append(parent.getName()).append("_t * ").append("y_").append(parent.getName()).append("(yielder_").append(parent.getName()).append("_t *yielder, object_t *this)");
 
@@ -68,7 +72,7 @@ public class CubeXYielder extends CubeXProgramPiece {
 		}
 		
 		for (String var : locals.keySet()) {
-			sb.append("object_t *").append(CUtils.canonName(var)).append(" = ").append("yielder->").append(CUtils.canonName(var)).append(";").append(System.lineSeparator());
+			sb.append(CUtils.canonName(var)).append(" = ").append("yielder->var_").append(CUtils.canonName(var)).append(";").append(System.lineSeparator());
 		}
 		
 		sb.append("switch(yielder->status){").append(System.lineSeparator());
@@ -79,7 +83,7 @@ public class CubeXYielder extends CubeXProgramPiece {
 		}
 		sb.append("}").append(System.lineSeparator());
 		
-		sb.append(stat.toC(this));
+		sb.append(sbafter);
 		
 		sb.append("yielder->status = -1;").append(System.lineSeparator());
 		sb.append("return yielder;").append(System.lineSeparator());

@@ -248,57 +248,6 @@ public class CubeXFunctionCall extends CubeXExpression
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		
-		if(simplified)
-		{
-			if(name.equals("negative"))
-			{
-				sb.append("-((int)(").append(parent.toC(par)).append("))");
-				return sb.toString();
-			}
-			else if(name.equals("negate"))
-			{
-				sb.append("!((int)(").append(parent.toC(par)).append("))");
-				return sb.toString();
-			}
-			
-			String op="";
-			if(name.equals("lessThan"))
-			{
-				if(((CubeXBoolean)args.get(1)).getValue())
-					op="<";
-				else
-					op="<=";
-			}
-			else if(name.equals("and"))
-			{
-				op="&&";
-			}
-			else if(name.equals("or"))
-			{
-				op="||";
-			}
-			else if(name.equals("times"))
-			{
-				op="*";
-			}
-			else if(name.equals("plus"))
-			{
-				op="+";
-			}
-			else if(name.equals("minus"))
-			{
-				op="-";
-			}
-			else if(name.equals("equals"))
-			{
-				op="==";
-			}
-			
-			sb.append("((object_t *)(((int)").append(parent.toC(par)).append(") ").append(op).append(" ((int)").append(args.get(0).toC(par)).append(")))");
-
-			return sb.toString();
-		}
-		
 		try
 		{
 			if(calltype==CallType.FUNCTION) //e.fun();

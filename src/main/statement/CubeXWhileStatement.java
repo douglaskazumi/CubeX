@@ -57,7 +57,7 @@ public class CubeXWhileStatement extends CubeXStatement
 		
 		sb.append("while(true)\n\t{\n");
 		sb.append(condition.preC(par));
-		sb.append("\tif(!((bool)").append(condition.toC(par)).append("))\n\t");
+		sb.append("\tif(!((bool)isTrue(").append(condition.toC(par)).append(")))\n\t");
 		sb.append("{\n");
 		sb.append(condition.postC(par));
 		sb.append("\t\tbreak;\n\t}\n");

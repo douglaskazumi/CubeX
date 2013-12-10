@@ -96,7 +96,7 @@ public class CubeXIfStatement extends CubeXStatement {
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("if((bool)(").append(condition.toC(par)).append(")){\n");
+		sb.append("if((bool)(isTrue(").append(condition.toC(par)).append("))){\n");
 		sb.append(this.gcDeadVariables());
 		sb.append("\t\t").append(ifstatement.preC(par));
 		sb.append("\t\t").append(ifstatement.toC(par));

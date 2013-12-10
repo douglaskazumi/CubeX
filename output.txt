@@ -1,13 +1,11 @@
-class Spoon < > ( ) extends Iterable < Integer < > > {
+class Spoon < > ( x : Aa < String < > > ) extends Iterable < String < > > {
 super ( ) ;
 yielder {
-x := 4 ;
-yield x;
-x := x . plus < > ( 1 ) ;
-yield x . minus < > ( 2 );
+for ( v in x ) yield v;
+for ( v in x ) yield v;
 }
 }
-x := 0 ;
-for ( v in Spoon < > ( ) ) x := v ;
-return [ "HI" ] ;
+ret := [ ] ;
+for ( v in Spoon < > ( [ "Hello" , "World!" ] ) ) ret := ret ++ v ;
+return ret ;
 

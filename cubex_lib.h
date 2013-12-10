@@ -121,6 +121,12 @@ typedef struct {
 } iterableIndex_t;
 
 
+/*Yielders*/
+typedef struct {
+ int status;
+ object_t *returnValue;
+ int numVars;
+ } yielder_t;
 
 
 
@@ -177,6 +183,9 @@ object_t *_Integer_divide(object_t *__this__, object_t * that);
 object_t *_Integer_times(object_t *__this__, object_t *that);
 object_t *_Integer_negative(object_t *__this__);
 object_t *_String_equals(object_t *__this__, object_t *that);
+
+
+yielder_t * createYielder(int type);
 
 void init_VTables();
 object_t * cubex_main_int();

@@ -120,13 +120,13 @@ public class CubeXForStatement extends CubeXStatement {
 			String yielderClassName = yielderClss.getName();
 			
 			innerType=forIterable.getInnerType();	
-			sb.append(CUtils.canonName(iterable)).append(" = ").append("(yielder_").append(yielderClassName).append("_t *)").append("createYielder(").append(yielderClss.myTypeID).append(");\n");
+			sb.append(CUtils.canonName(iterable)).append(" = ").append("(object_t *)").append("createYielder(").append(yielderClss.myTypeID).append(");\n");
 			sb.append("while(true){").append(System.lineSeparator());
-			sb.append(CUtils.canonName(iterable)).append(" = y_").append(yielderClassName).append("(").append(CUtils.canonName(iterable)).append(");").append(System.lineSeparator());
-			sb.append("if(").append(CUtils.canonName(iterable)).append("->status=-1)").append(System.lineSeparator());
+			sb.append(CUtils.canonName(iterable)).append(" = (object_t *)y_").append(yielderClassName).append("((yielder_").append(yielderClassName).append("_t *)").append(CUtils.canonName(iterable)).append(", gc_inc(").append(forexpression.toC(par)).append("));").append(System.lineSeparator());
+			sb.append("if(((yielder_t *)").append(CUtils.canonName(iterable)).append(")->status==-1)").append(System.lineSeparator());
 			sb.append("break;").append(System.lineSeparator());
 			
-			sb.append(CUtils.canonName(variable)).append(" = ").append(CUtils.canonName(iterable)).append("->returnValue;").append(System.lineSeparator());
+			sb.append(CUtils.canonName(variable)).append(" = ((yielder_t *)").append(CUtils.canonName(iterable)).append(")->returnValue;").append(System.lineSeparator());
 			
 			String pre = forbody.preC(par);
 			if(!pre.isEmpty())
