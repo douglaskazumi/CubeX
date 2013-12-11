@@ -65,7 +65,6 @@ typedef struct {
 } iterableEntry_t;
 
 typedef struct {
-	int objmagic;
 	void *vTable;
 	int refCount;
 	int numFields;

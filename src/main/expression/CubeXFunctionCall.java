@@ -293,8 +293,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					for(int i=0; i<funs.size(); ++i)
 					{
 						CubeXFunction f = funs.get(i);
-						
-						//MIGHT NEED TO CHANGE THIS EVENTUALLY (CHECKING FUNCTION NAME VS FUNCTION SCHEME)
+
 						
 						if(f.getName().equals(name))
 						{

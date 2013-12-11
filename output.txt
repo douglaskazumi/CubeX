@@ -1,3 +1,10 @@
+class Tester < > ( ) extends Iterable < String < > > {
+super ( ) ;
+yielder {
+yield "Test1";
+yield "Test2";
+}
+}
 class Spoon < > ( x : Iterable < String < > > , y : Iterable < String < > > ) extends Iterable < String < > > {
 super ( ) ;
 yielder for ( pi in [ 1 , 2 , 3 ] ) {
@@ -13,6 +20,6 @@ else return "Bob" ;
 ret := [ ] ;
 asdf := [ "Hello" , "World!" ] ;
 ueoa := [ "Cows" , "ARE" , "__awesome__!" ] ;
-for ( v in Spoon < > ( asdf , ueoa ) ) ret := ret ++ [ v ] ;
+for ( v in Spoon < > ( Tester < > ( ) , ueoa ) ) ret := ret ++ [ v ] ;
 return ret ;
 

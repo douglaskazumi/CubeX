@@ -25,5 +25,10 @@ public class TypeVarSubstitution
 	{
 		return mapping.get(var);
 	}
+	
+	public String toString()
+	{
+		return mapping.toString();
+	}
 
 }
