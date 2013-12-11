@@ -1,0 +1,33 @@
+fun print(s : String, ss : String, b : Boolean) : String
+{
+	out := s;
+	
+	if (b) {
+		out := out++" == ";
+	}
+	else {
+		out := out++" != ";
+	}
+	
+	return string(out++ss);
+}
+
+retval := [print("true", "false", true == false)]++[print("56", "65", 56 == 65)];
+
+for (str in input)
+{
+	for (c in str)
+	{
+		retval := retval++[print(string([c]), string([c]), c == c)];
+	}
+}
+
+for (one in input)
+{
+	for (two in input)
+	{
+		retval := retval++[print(one, two, one == two)];
+	}
+}
+
+return retval;

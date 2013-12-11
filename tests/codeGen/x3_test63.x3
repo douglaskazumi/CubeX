@@ -1,0 +1,15 @@
+class MyClass(b : Boolean)
+{
+	fun whatAmI() : String
+	{
+		if(b)
+		{
+			return "I'm true";
+		}
+		else
+		{
+			return "I'm false";
+		}
+	}
+}
+return [MyClass(true).whatAmI(),MyClass(false).whatAmI()];

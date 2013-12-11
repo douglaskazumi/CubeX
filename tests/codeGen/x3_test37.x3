@@ -1,0 +1,24 @@
+class Singleton<A>(a : A) {
+  fun get() : A { return a; }
+}
+
+class SettableSingleton<B>(b : B) extends Singleton<B> {
+  super(b);
+
+  fun set(b : B) : SettableSingleton<B> = SettableSingleton<B>(b);
+}
+
+l := [SettableSingleton<String>("hello"), SettableSingleton<String>("foo")];
+for (i in input)
+{
+	l := l ++ [SettableSingleton<String>(i)];
+}
+
+ll := [];
+for (x in l)
+{
+	s := x.get();
+	ll := ll ++ [x.set(string(s++"WAT")).get()];
+}
+
+return ll;

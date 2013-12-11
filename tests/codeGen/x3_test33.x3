@@ -1,0 +1,25 @@
+a := true;
+b := true;
+retval := "How did you get here?";
+
+if (a & b) {
+	retval := "";
+}
+while (a | b) {
+	if (a) {
+		retval := retval++"a";
+		a := false;
+	}
+	else {
+		if (!b) {
+			retval := retval++"Nobody's supposed to be here.";
+			b := false;
+		}
+		else {
+			retval := retval++"b";
+			b := false;
+		}
+	}
+}
+
+return [string(retval)];

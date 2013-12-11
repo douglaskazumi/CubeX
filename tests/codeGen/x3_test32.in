@@ -1,0 +1,6 @@
+A few parts of the semantics are less than obvious.
+The following constraints,
+along with the above directive to implement the obvious semantics whenever such are available,
+should give you enough information to complete this assignment.
+Of course,
+we reserve the right to add to this list when we discover that we have (inevitably) left something out.

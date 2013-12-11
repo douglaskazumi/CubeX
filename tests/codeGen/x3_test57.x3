@@ -1,0 +1,34 @@
+fun id<T> (t : T) : T = t;
+
+fun singleton<T> (t : T) : Iterable<T> = [t];
+
+fun test<T> (t : T) : Iterable<T> = id<Iterable<T>>(singleton<T>(t));
+
+fun output<T> (t : T, b : Boolean) : Iterable<String>
+{
+	ret := "";
+	if (b)
+	{
+		return singleton<String>("Yes.");
+	}
+	else
+	{
+		ret := "FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU...";
+	}
+	return [ret];
+}
+
+fun charoutput (char : Character) : Iterable<String>
+{
+	bool := false;
+	
+	for (c in test<Character>(char)) {
+		if (c == char) {
+			bool := true;
+		}
+	}
+	
+	return output<Character>(char, bool);	
+}
+
+return charoutput(character(66));

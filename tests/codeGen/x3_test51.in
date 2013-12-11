@@ -1,0 +1,2 @@
+Characters in the core language which have no obvious ASCII equivalent are represented in the full language in ASCII as follows:
+Expressions (denoted e in the grammar) may be surrounded by parentheses.

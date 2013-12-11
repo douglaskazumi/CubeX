@@ -1,0 +1,5 @@
+This assignment will be graded in a staged mode, which means that you can concentrate on some parts of the assignment and leave others out with a predictable loss of points. Our tests will be organized in the following stages (same as PA3), meaning that programs only consist of the things in that stage and the preceding ones:
+This line should never be read, right?
+Along with this one.
+Ignore this one, too.
+We returned after reading only one line.

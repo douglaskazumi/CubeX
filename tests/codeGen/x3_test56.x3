@@ -1,0 +1,16 @@
+str1 := "TenTs:";
+for (i in 0..9) {
+	str1 := str1++"T";
+}
+
+str2 := "";
+for (i in 96<..) {
+	if (i == 123) {
+		return [string(str1)]++[string(str2)];
+	}
+	else {
+		str2 := str2++[character(i)];
+	}
+}
+
+return ["WAT"];

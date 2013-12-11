@@ -1,0 +1,22 @@
+class Foo<A>(a : A) {
+  fun get() : A { return a; }
+}
+
+class Bar<A>(a : A) extends Foo<A> { 
+  super(a);
+}
+
+x := Bar<String>("hello");
+y := Foo<String>("world");
+lst := [x, y];
+ret := [];
+for (i in input) {
+	lst := lst ++ [Bar<String>(i), Foo<String>(i)];
+	
+	for (z in lst) {
+		ret := ret ++ [z.get()];
+	}
+	return ret;
+}
+
+return ["You didn't read the input :("];

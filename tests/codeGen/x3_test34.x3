@@ -1,0 +1,21 @@
+fun coolname() : Iterable<Character> {
+	temp := 20;
+
+	for (num in 1<<100) {
+		if (num != 75) {
+		}
+		else {
+			for (t in num/3) {
+				temp := t;
+			}
+		}
+	}
+	
+	if ((temp > 21) & (temp == 25)) {
+		return [character(121), character(101), character(115)];
+	}
+	
+	return [];
+}
+
+return [string(coolname())];

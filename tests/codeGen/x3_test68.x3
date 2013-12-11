@@ -1,0 +1,50 @@
+fun isEmpty<T> (l : Iterable<T>) : Boolean
+{
+	ret := true;
+	for (e in l)
+	{
+		ret := false;
+	}
+	return ret;
+}
+
+fun length<T> (l : Iterable<T>) : Integer
+{
+	len := 0;
+	for (e in l)
+	{
+		len := len + 1;
+	}
+	return len;
+}
+
+fun areWeGood<T> (l : Iterable<T>) : Iterable<Character>
+{
+	good := false;
+	
+	if (isEmpty<T>(l))
+	{
+		if (length<T>(l) == 0)
+		{
+			good := true;
+		}
+	}
+	else
+	{
+		if (length<T>(l) > 0)
+		{
+			good := true;
+		}
+	}
+	
+	if (good)
+	{
+		return "Yeah, we good!";
+	}
+	else
+	{
+		return "No, we are not good. Something went very, very wrong.";
+	}
+}
+
+return [string(areWeGood<Integer>(3..15))];

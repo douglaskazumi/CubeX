@@ -1,0 +1,34 @@
+bools := [(-6 < -90), (11 + 1 == 100), (36 - 6 == 3), (3 * 89 == 267)];
+
+bool := false;
+for (x in 100/9) {
+	if (x == 11) {
+		bool := true;
+	}
+}
+for (x in 29/0) {
+	bool := false;
+}
+bools := bools++[bool];
+
+bool := false;
+for (x in 484%9) {
+	if (x == 7) {
+		bool := true;
+	}
+}
+for (x in 73%0) {
+	bool := false;
+}
+bools := bools++[bool];
+
+str := "";
+for (b in bools) {
+	if (b) {
+		str := str++"t";
+	}
+	else {
+		str := str++"f";
+	}
+}
+return [string(str)];

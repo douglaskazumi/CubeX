@@ -1,0 +1,68 @@
+fun copy<T>(i : Integer, its : Iterable<T>) : Iterable<T>
+{
+	out := [];
+	
+	for (x in 1..i)
+	{
+		out := out++its;
+	}
+	
+	return out;
+}
+
+fun inttostring(i : Integer) : String
+{
+	if (i == 0)
+	{
+		return "0";
+	}
+	
+	neg := false;
+	if (i < 0)
+	{
+		neg := true;
+		i := -i;
+	}
+	
+	retval := "";
+	while (i > 0)
+	{
+		mod := i % 10;
+		for (m in mod) {
+			retval := [character(m + 48)]++retval;
+		}
+		div := i / 10;
+		for (t in div)
+		{
+			i := t;
+		}
+	}
+	
+	if (neg)
+	{
+		retval := "-"++retval;
+	}
+	
+	return string(retval);
+}
+
+fun intstostring(ints : Iterable<Integer>) : String
+{
+	retval := "";
+	
+	for (i in ints)
+	{
+		retval := retval++inttostring(i)++", ";
+	}
+	
+	return string(retval);
+}
+
+retval := [intstostring(copy<Integer>(-5, [54, 9, 23, 87, 5, -587, -432, 0]))]++[intstostring(copy<Integer>(3, 35<.40))];
+
+for (i in input)
+{
+	retval := retval++[string(copy<Character>(10, i))];
+}
+
+return retval;

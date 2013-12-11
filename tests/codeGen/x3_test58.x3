@@ -1,0 +1,11 @@
+bools := [("a" != "a"), (character(65) == character(66)), (3 > 15), (347 >= 346), (false < true), (true <= true)];
+str := "";
+for (b in bools) {
+	if (b) {
+		str := str++"t";
+	}
+	else {
+		str := str++"f";
+	}
+}
+return [string(str)];

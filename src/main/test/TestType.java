@@ -1,37 +1,11 @@
 package main.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.BitSet;
-
-import main.Optimizations.LiveVariableAnalysis;
-import main.exceptions.ContextException;
-import main.exceptions.TypeCheckException;
-import main.util.CubeXLexer;
-import main.util.CubeXParser;
-import main.util.CubeXProgram;
-
-import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import src.main.Optimizations.LiveVariableAnalysis;
+import src.main.exceptions.ContextException;
+import src.main.exceptions.TypeCheckException;
+import src.main.util.CubeXLexer;
+import src.main.util.CubeXParser;
+import src.main.util.CubeXProgram;
 
 class LexerError implements ANTLRErrorListener {
 

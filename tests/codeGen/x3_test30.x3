@@ -1,0 +1,10 @@
+t := [""];
+if (true)
+{
+	t := ["TRUE"];
+}
+else
+{
+	t := ["FALSE"];
+}
+return t;

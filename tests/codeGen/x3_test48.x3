@@ -1,0 +1,25 @@
+interface TheInterface<T>
+{
+	fun getString() : String = "Interface";
+	fun getIT(it : Iterable<T>) : Iterable<T>;
+}
+
+class TheFirstClass<T>() extends TheInterface<T>
+{
+	fun getIT(it : Iterable<T>) : Iterable<T> = it++it;
+}
+
+class TheSecondClass<T>() extends TheInterface<T>
+{
+	fun getString() : String = "Second Class";
+	fun getIT(it : Iterable<T>) : Iterable<T> = it++it++it;
+}
+
+for (i in input)
+{
+	one := TheFirstClass<Character>();
+	two := TheSecondClass<Character>();
+	return [one.getString()]++[string(one.getIT(i))]++[two.getString()]++[string(two.getIT(i))];
+}
+
+return ["Que paso?"];
