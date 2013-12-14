@@ -17,6 +17,7 @@ import main.expression.CubeXVariable;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
+import main.util.CubeXCompiler;
 import main.util.Tuple;
 
 public class CubeXWhileStatement extends CubeXStatement 
@@ -57,7 +58,10 @@ public class CubeXWhileStatement extends CubeXStatement
 		
 		sb.append("while(true)\n\t{\n");
 		sb.append(condition.preC(par));
-		sb.append("\tif(!((bool)").append(condition.toC(par)).append("))\n\t");
+		if(CubeXCompiler.optimizations)
+			sb.append("\tif(!((bool)").append(condition.toC(par)).append("))\n\t");
+		else
+			sb.append("\tif(!((bool)(isTrue(").append(condition.toC(par)).append("))))\n\t");
 		sb.append("{\n");
 		sb.append(condition.postC(par));
 		sb.append("\t\tbreak;\n\t}\n");

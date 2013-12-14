@@ -25,6 +25,7 @@ import main.type.CubeXType;
 import main.type.CubeXTypeClass;
 import main.type.CubeXTypeClassBase;
 import main.util.CubeXArgument;
+import main.util.CubeXCompiler;
 import main.util.Triple;
 import main.util.TypeVarSubstitution;
 
@@ -33,6 +34,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	private CubeXExpression parent;
 	
 	private boolean simplified = false;
+	private CubeXType faketcb;
 
 	private String name;
 	private ArrayList<? extends CubeXType> parameters;
@@ -74,12 +76,30 @@ public class CubeXFunctionCall extends CubeXExpression
 	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException 
 	{
 		CubeXFunction fun;
+		
+		boolean isObjectCall = parent!=null || (par!=null && (par.isClass()||par.isInterface()) && (GlobalContexts.functionContext.lookup(name)==null) && funCon.lookup(name)!=null);
 	
 		//Object function calls
-		if(parent!=null)
+		if(isObjectCall)
 		{
 			calltype=CallType.FUNCTION;
-			CubeXType pType = parent.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+			
+			CubeXType pType;
+
+			if(parent==null)
+			{
+				
+				ArrayList<CubeXType> types = new ArrayList<>();
+				types.addAll(((CubeXClassBase)par).getTypes());
+					
+				pType =  CubeXTypeClass.NewCubeXTypeClass(((CubeXClassBase)par).getName(), types);
+			}
+			else
+			{
+				pType = parent.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+			}
+			faketcb = pType;
+			
 			if(pType.isVariable())
 				throw new TypeCheckException("Parent type is variable");
 			
@@ -214,6 +234,7 @@ public class CubeXFunctionCall extends CubeXExpression
 		{
 
 			 boolean isPrim = parent.getTypeUnsafe().isBool()||parent.getTypeUnsafe().isInt();
+			 isPrim &= CubeXCompiler.optimizations;
 			 tempVar = CUtils.getTempName();
 			 
 			 if(par!=null)
@@ -239,7 +260,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
 		
-		if(simplified)
+		if(simplified && CubeXCompiler.optimizations)
 		{
 			if(name.equals("negative"))
 			{
@@ -304,8 +325,6 @@ public class CubeXFunctionCall extends CubeXExpression
 					{
 						CubeXFunction f = funs.get(i);
 						
-						//MIGHT NEED TO CHANGE THIS EVENTUALLY (CHECKING FUNCTION NAME VS FUNCTION SCHEME)
-						
 						if(f.getName().equals(name))
 						{
 							fIndex=i;
@@ -322,6 +341,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					{
 						CubeXType argType = fun.getArglist().get(i).type;
 						boolean isPrim = argType.isBool() || argType.isInt();
+						isPrim &= CubeXCompiler.optimizations;
 						if(!isPrim)
 						{
 							sb.append(", object_t *");
@@ -332,13 +352,24 @@ public class CubeXFunctionCall extends CubeXExpression
 						}
 						i++;
 					}
-					sb.append("))").append("(getMethod(").append(CUtils.canonName(tempVar)).append(", ").append(cb.getID()).append(", ").append(fIndex).append(")))");
-					sb.append("(gc_inc(").append(CUtils.canonName(tempVar)).append(")");
+					
+					sb.append("))").append("(getMethod(");
+					if(parent==null)
+						sb.append("this");
+					else
+						sb.append(CUtils.canonName(tempVar));
+					sb.append(", ").append(cb.getID()).append(", ").append(fIndex).append(")))");
+					if(parent==null)
+						sb.append("(gc_inc(").append("this").append(")");
+					else
+						sb.append("(gc_inc(").append(CUtils.canonName(tempVar)).append(")");
+					
 					i=0;
 					for(CubeXExpression exp : args)
 					{
 						CubeXType argType = fun.getArglist().get(i).type;
 						boolean isPrim = argType.isBool() || argType.isInt();
+						isPrim &= CubeXCompiler.optimizations;
 						if(!isPrim)
 						{
 							sb.append(", gc_inc(").append(exp.toC(par)).append(")");
@@ -364,6 +395,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				{
 					CubeXType argType = fun.getArglist().get(i).type;
 					boolean isPrim = argType.isBool() || argType.isInt();
+					isPrim &= CubeXCompiler.optimizations;
 					if(!isPrim)
 					{
 						sb.append(prefix).append("gc_inc(").append(exp.toC(par)).append(")");
@@ -429,7 +461,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	}
 
 	
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	public HashSet<CubeXVariable> getUsedVars(boolean globals, HashSet<CubeXFunction> ignoredFunctions) 
 	{
@@ -443,6 +475,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				fun =  parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext).second;
 				if(!ignoredFunctions.contains(fun))
 				{
+					@SuppressWarnings("unchecked")
 					HashSet<CubeXFunction> ignoredFunctionsNew = (HashSet<CubeXFunction>) ignoredFunctions.clone();
 					ignoredFunctionsNew.add(fun);
 					vars.addAll(fun.getInnerGlobals(ignoredFunctionsNew));
@@ -458,6 +491,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			CubeXFunction fun=GlobalContexts.functionContext.lookup(name);
 			if(!ignoredFunctions.contains(fun))
 			{
+				@SuppressWarnings("unchecked")
 				HashSet<CubeXFunction> ignoredFunctionsNew = (HashSet<CubeXFunction>) ignoredFunctions.clone();
 				ignoredFunctionsNew.add(fun);
 				vars.addAll(fun.getInnerGlobals(ignoredFunctionsNew));
@@ -543,6 +577,9 @@ public class CubeXFunctionCall extends CubeXExpression
 	@Override
 	public CubeXExpression reduceBoxes() 
 	{
+		if(!CubeXCompiler.optimizations)
+			return this;
+		
 		if(parent!=null)
 			parent=parent.reduceBoxes();
 		
@@ -560,6 +597,9 @@ public class CubeXFunctionCall extends CubeXExpression
 	@Override
 	public CubeXExpression addBoxes() 
 	{
+		if(!CubeXCompiler.optimizations)
+			return this;
+		
 		if(parent!=null)
 			parent=parent.addBoxes();
 		for(int i=0; i<args.size(); ++i)
@@ -598,7 +638,10 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 	public CubeXExpression simplifyFunctionBoxes()
 	{
-		if(parent!=null)
+		if(!CubeXCompiler.optimizations)
+			return this;
+				
+		if(calltype==CallType.FUNCTION)
 		{
 			if(parent.getTypeUnsafe().isInt())
 			{
@@ -672,6 +715,9 @@ public class CubeXFunctionCall extends CubeXExpression
 	@Override
 	public CubeXExpression primitivifyVariables() {
 		
+		if(!CubeXCompiler.optimizations)
+			return this;
+		
 		if(parent!=null)
 			parent=parent.primitivifyVariables();
 		
@@ -701,6 +747,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			{
 			CubeXType argType = argList.get(i).type;
 			boolean isPrim = argType.isBool() || argType.isInt();
+			isPrim &= CubeXCompiler.optimizations;
 			if(isPrim)
 				newEntry=Boxer.unboxify(newEntry);
 			}

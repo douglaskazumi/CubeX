@@ -1,0 +1,5 @@
+out4.c: In function 'createObject':
+out4.c:278:2: error: duplicate case value
+out4.c:272:2: error: previously used here
+make: *** [out4.o] Error 1
+

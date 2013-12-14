@@ -10,6 +10,7 @@ import main.context.VariableContext;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
+import main.util.CubeXCompiler;
 
 public class CubeXBoolean extends CubeXExpression 
 {
@@ -27,14 +28,16 @@ public class CubeXBoolean extends CubeXExpression
 
 	@Override
 	public String preC(CubeXProgramPiece par) {
-		// TODO Auto-generated method stub
 		return "";
 	}
 
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(value);
+		if(CubeXCompiler.optimizations)
+			sb.append(value);
+		else
+			sb.append("createBoolean(").append(value).append(", 0)");
 		return sb.toString();
 	}
 

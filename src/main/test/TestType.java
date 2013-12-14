@@ -1,11 +1,30 @@
 package main.test;
 
-import src.main.Optimizations.LiveVariableAnalysis;
-import src.main.exceptions.ContextException;
-import src.main.exceptions.TypeCheckException;
-import src.main.util.CubeXLexer;
-import src.main.util.CubeXParser;
-import src.main.util.CubeXProgram;
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.BitSet;
+
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.junit.*;
+
+import main.Optimizations.LiveVariableAnalysis;
+import main.exceptions.ContextException;
+import main.exceptions.TypeCheckException;
+import main.util.CubeXLexer;
+import main.util.CubeXParser;
+import main.util.CubeXProgram;
 
 class LexerError implements ANTLRErrorListener {
 
@@ -116,7 +135,7 @@ public class TestType {
 		}
 	}
 
-	/*
+	//*
 
 	@Test
 	public void lexerTests() throws IOException {
@@ -186,7 +205,7 @@ public class TestType {
 
 	/**/
 
-	/*
+	//*
 	@Test
 	public void parserTests() throws IOException {
 		String path = "tests/parser";
@@ -223,7 +242,7 @@ public class TestType {
 
 	/**/
 
-	/*
+	//*
 	@Test
 	public void typeCheckTests() throws IOException {
 		String path = "tests/typeCheck";

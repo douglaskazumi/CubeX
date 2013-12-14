@@ -19,6 +19,7 @@ import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.type.CubeXTypeIterable;
+import main.util.CubeXCompiler;
 import main.util.Tuple;
 
 public class CubeXForStatement extends CubeXStatement {
@@ -72,6 +73,7 @@ public class CubeXForStatement extends CubeXStatement {
 		
 		CubeXType innerType = ((CubeXTypeIterable)forexpression.getTypeUnsafe()).getInnerType();
 		boolean isInnerPrim = innerType.isBool() || innerType.isInt();
+		isInnerPrim &=CubeXCompiler.optimizations;
 		
 		if(par!=null)
 		{

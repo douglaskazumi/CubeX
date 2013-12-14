@@ -19,6 +19,7 @@ import main.program.CubeXClass;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
+import main.util.CubeXCompiler;
 import main.util.Tuple;
 
 public class CubeXIfStatement extends CubeXStatement {
@@ -96,6 +97,12 @@ public class CubeXIfStatement extends CubeXStatement {
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
+		
+		if(CubeXCompiler.optimizations)
+			sb.append("if((bool)(").append(condition.toC(par)).append(")){\n");
+		else
+			sb.append("if((bool)isTrue(").append(condition.toC(par)).append(")){\n");
+		
 		sb.append("if((bool)(").append(condition.toC(par)).append(")){\n");
 		sb.append(this.gcDeadVariables());
 		sb.append("\t\t").append(ifstatement.preC(par));

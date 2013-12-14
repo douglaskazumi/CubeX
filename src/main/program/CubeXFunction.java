@@ -18,6 +18,7 @@ import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
 import main.util.CubeXArgument;
+import main.util.CubeXCompiler;
 import main.util.CubeXFunctionHeader;
 import main.util.Tuple;
 
@@ -152,6 +153,7 @@ public class CubeXFunction extends CubeXProgramPiece
 		}
 		for (CubeXArgument arg : arglist) {
 			boolean isPrim = arg.type.isBool()||arg.type.isInt();
+			isPrim &= CubeXCompiler.optimizations;
 			if(isPrim)
 			{
 				sb.append(separator).append(" int ").append(" ").append(CUtils.canonName(arg.variable));

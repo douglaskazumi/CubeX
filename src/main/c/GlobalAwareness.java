@@ -6,6 +6,7 @@ import java.util.HashMap;
 import main.exceptions.ContextException;
 import main.program.CubeXClass;
 import main.program.CubeXProgramPiece;
+import main.util.CubeXCompiler;
 
 public class GlobalAwareness {
 	private static StringBuilder declarations = new StringBuilder();
@@ -21,6 +22,8 @@ public class GlobalAwareness {
 	
 	public static  void addLocal(String name, Boolean isPrim)
 	{
+		if(CubeXCompiler.optimizations)
+			isPrim=false;
 		locals.put(name, isPrim);
 	}
 	

@@ -14,6 +14,7 @@ import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXVariable;
 import main.type.CubeXType;
+import main.util.CubeXCompiler;
 import main.util.Tuple;
 
 public abstract class CubeXProgramPiece 
@@ -57,6 +58,7 @@ public abstract class CubeXProgramPiece
 
 	public void addLocal(String name, Boolean isPrimitive)
 	{
+		isPrimitive &= CubeXCompiler.optimizations;
 		locals.put(name, isPrimitive);
 	}
 

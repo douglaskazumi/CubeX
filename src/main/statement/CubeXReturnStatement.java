@@ -23,6 +23,7 @@ import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.util.CubeXArgument;
+import main.util.CubeXCompiler;
 import main.util.Tuple;
 
 public class CubeXReturnStatement extends CubeXStatement {
@@ -55,6 +56,8 @@ public class CubeXReturnStatement extends CubeXStatement {
 		String temp = CUtils.getTempName();
 		
 		boolean primReturnValue =(par!=null && par.isFunction() && (((CubeXFunction)par).getReturnType().isBool()||((CubeXFunction)par).getReturnType().isInt()));
+		primReturnValue &=CubeXCompiler.optimizations;
+		
 		
 		StringBuilder sb = new StringBuilder();
 		

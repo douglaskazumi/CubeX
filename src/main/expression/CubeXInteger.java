@@ -10,6 +10,7 @@ import main.context.VariableContext;
 import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
+import main.util.CubeXCompiler;
 
 public class CubeXInteger extends CubeXExpression 
 {
@@ -33,7 +34,11 @@ public class CubeXInteger extends CubeXExpression
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(value);
+		if(CubeXCompiler.optimizations)
+			sb.append(value);
+		else
+			sb.append("createInteger(").append(value).append(", 0)");
+			
 		return sb.toString();
 	}
 

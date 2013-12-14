@@ -65,6 +65,7 @@ typedef struct {
 } iterableEntry_t;
 
 typedef struct {
+	int objmagic;
 	void *vTable;
 	int refCount;
 	int numFields;
@@ -120,12 +121,6 @@ typedef struct {
 } iterableIndex_t;
 
 
-/*Yielders*/
-typedef struct {
- int status;
- object_t *returnValue;
- int numVars;
- } yielder_t;
 
 
 
@@ -160,31 +155,28 @@ object_t * getInput();
 
 void * getMethod(object_t *obj, unsigned int myTypeId, unsigned int functionIndex);
 
-object_t *__character(object_t * unicode);
+object_t *__character(int unicode);
 object_t *__string(object_t *chars);
 object_t *_Character_equals(object_t *__this__, object_t *that);
 object_t *_Character_unicode(object_t *__this__);
-object_t *_Boolean_equals(object_t *__this__, object_t * that);
-object_t *_Boolean_lessThan(object_t *__this__, object_t * that, object_t * strict);
-object_t *_Boolean_onwards(object_t *__this__, object_t * inclusive);
-object_t *_Boolean_through(object_t *__this__, object_t * that, object_t * includeLower, object_t * includeUpper);
+object_t *_Boolean_equals(object_t *__this__, bool that);
+object_t *_Boolean_lessThan(object_t *__this__, bool that, bool strict);
+object_t *_Boolean_onwards(object_t *__this__, bool inclusive);
+object_t *_Boolean_through(object_t *__this__, bool that, bool includeLower, bool includeUpper);
 object_t *_Boolean_or(object_t *__this__, object_t *that);
 object_t *_Boolean_and(object_t *__this__, object_t *that);
 object_t *_Boolean_negate(object_t *__this__);
 object_t *_Integer_equals(object_t *__this__, object_t *that);
-object_t *_Integer_lessThan(object_t *__this__, object_t * that, object_t * strict);
-object_t *_Integer_onwards(object_t *__this__, object_t * inclusive);
-object_t *_Integer_through(object_t *__this__, object_t * that, object_t * includeLower, object_t * includeUpper);
+object_t *_Integer_lessThan(object_t *__this__, int that, int strict);
+object_t *_Integer_onwards(object_t *__this__, int inclusive);
+object_t *_Integer_through(object_t *__this__, int that, bool includeLower, bool includeUpper);
 object_t *_Integer_minus(object_t *__this__, object_t *that);
 object_t *_Integer_plus(object_t *__this__, object_t *that);
-object_t *_Integer_modulo(object_t *__this__, object_t * that);
-object_t *_Integer_divide(object_t *__this__, object_t * that);
+object_t *_Integer_modulo(object_t *__this__, int that);
+object_t *_Integer_divide(object_t *__this__, int that);
 object_t *_Integer_times(object_t *__this__, object_t *that);
 object_t *_Integer_negative(object_t *__this__);
 object_t *_String_equals(object_t *__this__, object_t *that);
-
-
-yielder_t * createYielder(int type);
 
 void init_VTables();
 object_t * cubex_main_int();

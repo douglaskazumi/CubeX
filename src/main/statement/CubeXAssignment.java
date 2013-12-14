@@ -23,6 +23,7 @@ import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.type.CubeXType;
 import main.type.CubeXTypeVariable;
+import main.util.CubeXCompiler;
 import main.util.Tuple;
 
 public class CubeXAssignment extends CubeXStatement {
@@ -82,6 +83,9 @@ public class CubeXAssignment extends CubeXStatement {
 		StringBuilder sb = new StringBuilder();
 		String temp = CUtils.getTempName();
 		boolean wasPrimitive = previousType!=null && (previousType.isBool()||previousType.isInt());
+		wasPrimitive &= CubeXCompiler.optimizations;
+		isPrimitive &=CubeXCompiler.optimizations;
+		
 		if((!wasPrimitive && previousType!=null) || (previousType==null && !isPrimitive) )
 			sb.append("\t").append(CUtils.canonName(temp)).append(" = (object_t *)(").append(variable.toC(par)).append(");\n");
 		if(isPrimitive && !variable.isField())

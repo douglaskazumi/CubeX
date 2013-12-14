@@ -1,78 +1,30 @@
-# Cubex Compiler Test 6 - Stage 8
+# Cubex Compiler Test 4 - Stage 4
 
-interface Printer
-{
-	fun print() : Iterable<String>;
-	fun line() : String;
-}
-
-class SinglePrinter(s:String)
+class Multiplier(s : String, n : Integer)
 {
 	fun print() : Iterable<String>
 	{
-		return [s];
-	}
-	fun line() : String = s;
-}
-
-class ConstantPrinter() extends SinglePrinter
-{
-	super("Constant");
-}
-
-class Multiplier(s : String, n : Integer) extends SinglePrinter
-{
-	v:="";
-	nn := n;
-	while(nn>0)
-	{
-		v:=string(v++s);
-		nn := nn-1;
-	}
-	super(v);
-	
-	fun print() : Iterable<String>
-	{
-		ret:=[];
-		nnn := n;
-		while (nnn>0)
+		ret := [];
+		v := n;
+		while(v>0)
 		{
-			ret:=ret++[s];
-			nnn:=nnn-1;
+			v:=v-1;
+			ret := ret ++ [s];
 		}
 		return ret;
 	}
 }
 
-ps := [];
+ds := [];
 c := 0;
-m := 0;
 for(i in input)
 {
-	m:=m+1;
-	if(c==0)
-	{
-		ps := ps ++ [ConstantPrinter()];
-		c := 1;
-	}
-	else if(c==1)
-	{
-		ps := ps ++ [SinglePrinter(i)];
-		c := 2;
-	}
-	else
-	{
-		ps := ps ++ [Multiplier(i,m)];
-		c := 0;
-	}
+	ds := ds ++ [Multiplier(i,c)];
+	c := c + 1;
 }
 out := [];
-for(p in ps)
+for(d in ds)
 {
-	out := out ++ [p.line()];
-}
-for(p in ps)
-{
-	out := out ++ p.print();
+	out := out ++ d.print();
 }
 return out;

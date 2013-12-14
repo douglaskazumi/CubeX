@@ -2,13 +2,18 @@ package main.c;
 
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 import main.context.GlobalContexts;
 import main.exceptions.TypeCheckException;
 import main.program.CubeXClass;
 import main.program.CubeXClassBase;
+import main.util.CubeXCompiler;
 
 
 public class Initializer 
@@ -55,7 +60,11 @@ public class Initializer
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append(GlobalAwareness.getCreateObj());
-		BufferedReader bf = new BufferedReader(new FileReader("src/main/c/cubex_lib.c"));
+		BufferedReader bf;
+		if(CubeXCompiler.optimizations)
+			bf = new BufferedReader(new FileReader("src/main/c/cubex_lib.c"));
+		else
+			bf = new BufferedReader(new FileReader("src/main/c/cubex_lib_unopt.c"));
 		
 		String line = bf.readLine();
 		while(line!=null)
@@ -67,7 +76,38 @@ public class Initializer
 		
 		sb.append(GlobalAwareness.getConstructors());
 		
+		String headerFile;
+		
+		if(CubeXCompiler.optimizations)
+			headerFile = "src/main/c/cubex_lib.h";
+		else
+			headerFile = "src/main/c/cubex_lib_unopt.h";
+			
+		copyFile(new File(headerFile), new File("cubex_lib.h"));
 
 		return sb.toString();
+	}
+	
+	public static void copyFile(File sourceFile, File destFile) throws IOException {
+	    if(!destFile.exists()) {
+	        destFile.createNewFile();
+	    }
+
+	    FileChannel source = null;
+	    FileChannel destination = null;
+
+	    try {
+	        source = new FileInputStream(sourceFile).getChannel();
+	        destination = new FileOutputStream(destFile).getChannel();
+	        destination.transferFrom(source, 0, source.size());
+	    }
+	    finally {
+	        if(source != null) {
+	            source.close();
+	        }
+	        if(destination != null) {
+	            destination.close();
+	        }
+	    }
 	}
 }
