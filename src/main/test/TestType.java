@@ -20,8 +20,12 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.junit.*;
 
 import main.Optimizations.LiveVariableAnalysis;
+import main.c.CUtils;
+import main.c.GlobalAwareness;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
+import main.program.CubeXClassBase;
+import main.util.CubeXCompiler;
 import main.util.CubeXLexer;
 import main.util.CubeXParser;
 import main.util.CubeXProgram;
@@ -89,9 +93,12 @@ public class TestType {
 	public static boolean thereIsLexerError = false;
 	public static boolean thereIsParserError = false;
 	public static BufferedWriter errorLog;
-
+	public static boolean oldDebug;
+	
 	@BeforeClass
 	public static void setUp() {
+		oldDebug=CubeXCompiler.debug;
+		CubeXCompiler.debug=false;
 		File dir = new File(".");
 		for (File f : dir.listFiles()) {
 			if(f.getName().matches(".*output[0-9]+.txt") ||	f.getName().matches(".*out[0-9]+.c") || f.getName().matches(".*ERRORLOG[0-9]+.txt") || f.getName().matches(".*a[0-9]+.out")){
@@ -128,6 +135,7 @@ public class TestType {
 
 	@AfterClass
 	public static void cleanUp() {
+		CubeXCompiler.debug=oldDebug;
 		try {
 			errorLog.close();
 		} catch (IOException e) {
@@ -304,27 +312,36 @@ public class TestType {
 			String in_content = loadFile(path, filePrefix, i, "in");
 			String out_content = loadFile(path, filePrefix, i, "out");
 			String outputString = "";
-
+			int memDiff = 0;
+			
+			CUtils.resetStatics();
+			GlobalAwareness.resetStatics();
+			CubeXClassBase.resetStatics();
+			
 			CubeXLexer lexer = getLexer(cubex_content);
 
 			CubeXProgram prog = getProgram(lexer);
 			if (thereIsLexerError || thereIsParserError) {
 				outputString = "reject";
 			} else {
-				prog.flattenPieces();
+				if(CubeXCompiler.optimizations)
+					prog.flattenPieces();
 				try {
-					prog.eliminateCommonSubexpressions();
+					if(CubeXCompiler.optimizations)
+						prog.eliminateCommonSubexpressions();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				if (prog.typeCheck()) {
-					
-					prog.addBoxes();
-					prog.simplifyFunctionBoxes();
-					prog.primitivifyVariables();
-					prog.reduceBoxes();
-					LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
-					lva.analyze();
+					if(CubeXCompiler.optimizations)
+					{
+						prog.addBoxes();
+						prog.simplifyFunctionBoxes();
+						prog.primitivifyVariables();
+						prog.reduceBoxes();
+						LiveVariableAnalysis lva = new LiveVariableAnalysis(prog);
+						lva.analyze();
+					}
 					
 					try
 					{
@@ -343,7 +360,7 @@ public class TestType {
 			
 			if(!outputString.equals("reject")){
 				//Compile and run the c code with the proper input
-				Runtime.getRuntime().exec("cp src\\main\\c\\cubex_lib.c cubex_lib.c");
+				//Runtime.getRuntime().exec("cp src\\main\\c\\cubex_lib.c cubex_lib.c");
 				Process make = Runtime.getRuntime().exec("make output=\"a" + i + ".out\"  input=\"out" + i + ".o\" java");
 				int makeReturn = -1;
 				try {
@@ -351,6 +368,7 @@ public class TestType {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				
 				
 				if(makeReturn == 0){
 					Process exec = Runtime.getRuntime().exec("a" + i + ".out " + in_content);
@@ -360,6 +378,7 @@ public class TestType {
 						e.printStackTrace();
 					}
 					outputString = getProcessOutput(exec);
+					memDiff = exec.exitValue();
 					PrintWriter writer = new PrintWriter("output" + i + ".txt");
 					writer.print(outputString);
 					writer.close();
@@ -388,7 +407,19 @@ public class TestType {
 //				else
 //					errorLog.write("-------Type checking test file " + i + " FAILED. Msg: lexer/parser error\n");
 //			}
-			assertEquals(out_content, outputString);
+			if(!out_content.equals(outputString))
+			{
+				System.out.println("BAD OUTPUT");
+				assertEquals(out_content, outputString);
+			}
+			
+			/*
+			if(memDiff!=0)
+			{
+				System.out.println("BAD MEM DIFF");
+				assertEquals(0, memDiff);
+			}
+			/**/
 		}
 	}
 	/**/

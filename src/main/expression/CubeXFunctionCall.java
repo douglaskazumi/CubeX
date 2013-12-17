@@ -24,6 +24,7 @@ import main.statement.CubeXStatement;
 import main.type.CubeXType;
 import main.type.CubeXTypeClass;
 import main.type.CubeXTypeClassBase;
+import main.type.CubeXTypeInterface;
 import main.util.CubeXArgument;
 import main.util.CubeXCompiler;
 import main.util.Triple;
@@ -34,7 +35,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	private CubeXExpression parent;
 	
 	private boolean simplified = false;
-	private CubeXType faketcb;
+	private CubeXType classbase;
 
 	private String name;
 	private ArrayList<? extends CubeXType> parameters;
@@ -73,7 +74,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	}
 	
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException 
+	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) throws ContextException, TypeCheckException 
 	{
 		CubeXFunction fun;
 		
@@ -91,14 +92,20 @@ public class CubeXFunctionCall extends CubeXExpression
 				
 				ArrayList<CubeXType> types = new ArrayList<>();
 				types.addAll(((CubeXClassBase)par).getTypes());
-					
-				pType =  CubeXTypeClass.NewCubeXTypeClass(((CubeXClassBase)par).getName(), types);
+				if(par.isInterface())
+				{
+					pType =  new CubeXTypeInterface(((CubeXClassBase)par).getName(), types);
+				}
+				else
+				{
+					pType =  CubeXTypeClass.NewCubeXTypeClass(((CubeXClassBase)par).getName(), types);
+				}
 			}
 			else
 			{
-				pType = parent.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+				pType = parent.getType(force, classCon, funCon, varCon, typeVarCon, setField, par, parFunction);
 			}
-			faketcb = pType;
+			classbase = pType;
 			
 			if(pType.isVariable())
 				throw new TypeCheckException("Parent type is variable");
@@ -131,7 +138,7 @@ public class CubeXFunctionCall extends CubeXExpression
 				CubeXExpression exp = argValuesIt.next();
 				CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(argExpectedTypesIt.next().type, funSub), classSub);
 				
-				if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par), tpe, classCon))
+				if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par, parFunction), tpe, classCon))
 					throw new TypeCheckException("BAD ARGUMENT TO FUNCTION CALL");
 			}
 			
@@ -180,7 +187,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					CubeXExpression exp = argValuesIt.next();
 					CubeXType tpe = CubeXType.makeSubstitution(CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub), cbSub);
 										
-					if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par), tpe, classCon))
+					if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par, parFunction), tpe, classCon))
 						throw new TypeCheckException("BAD ARGUMENT TO GLOBAL FUNCTION CALL");
 				}
 				
@@ -214,7 +221,7 @@ public class CubeXFunctionCall extends CubeXExpression
 					CubeXExpression exp = argValuesIt.next();
 					CubeXType tpe = CubeXType.makeSubstitution(argExpectedTypesIt.next().type, sub);
 					
-					if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par), tpe, classCon))
+					if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par, parFunction), tpe, classCon))
 						throw new TypeCheckException("BAD ARGUMENT TO CONSTRUCTOR CALL");
 				}
 				
@@ -316,7 +323,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			if(calltype==CallType.FUNCTION) //e.fun();
 			{
 	
-					Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res =  parent.getTypeUnsafe().methodLookup(name, GlobalContexts.classContext);
+					Triple<TypeVarSubstitution, CubeXFunction, CubeXTypeClassBase> res =  classbase.methodLookup(name, GlobalContexts.classContext);
 					CubeXClassBase cb = (CubeXClassBase)res.third.getDeclaration(GlobalContexts.classContext);
 					CubeXFunction fun = res.second;
 					ArrayList<CubeXFunction> funs = cb.getFunctions();

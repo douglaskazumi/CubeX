@@ -29,10 +29,10 @@ public class Boxer extends CubeXExpression {
 	@Override
 	protected CubeXType calculateType(boolean force, ClassContext classCon,
 			FunctionContext funCon, VariableContext varCon,
-			TypeVariableContext typeVarCon, boolean setField, CubeXProgramPiece par)
+			TypeVariableContext typeVarCon, boolean setField, CubeXProgramPiece par, CubeXFunction parFunction)
 			throws ContextException, TypeCheckException {
 		// TODO Auto-generated method stub
-		return innerExpression.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+		return innerExpression.getType(force, classCon, funCon, varCon, typeVarCon, setField, par,parFunction);
 	}
 
 	@Override

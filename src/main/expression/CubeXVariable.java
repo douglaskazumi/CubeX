@@ -17,6 +17,7 @@ import main.program.CubeXFunction;
 import main.program.CubeXProgramPiece;
 import main.statement.CubeXStatement;
 import main.type.CubeXType;
+import main.util.CubeXArgument;
 
 
 public class CubeXVariable extends CubeXExpression 
@@ -35,12 +36,12 @@ public class CubeXVariable extends CubeXExpression
 	}
 		
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException
+	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) throws ContextException, TypeCheckException
 	{
 		CubeXType varType= varCon.lookup(name);
 		if(varType==null)
 			throw new ContextException("Variable not in context");
-		trySetField(setField, par);
+		trySetField(setField, par, parFunction);
 		isLocal = (GlobalContexts.variableContext.lookup(name)==null && par!=null) || isField;
 		
 		return varType;
@@ -64,7 +65,7 @@ public class CubeXVariable extends CubeXExpression
 		isField=true;
 	}
 
-	public void trySetField(boolean setField, CubeXProgramPiece par)
+	public void trySetField(boolean setField, CubeXProgramPiece par, CubeXFunction parFunction)
 	{
 		if(par!=null && par.isFunction())
 			return;
@@ -85,6 +86,14 @@ public class CubeXVariable extends CubeXExpression
 		{
 			if(par!=null && par.isClass())
 			{
+				if(parFunction!=null)
+				{
+					for(CubeXArgument arg : parFunction.getArglist())
+					{
+						if(arg.variable.getName().equals(name))
+							return;
+					}
+				}
 				if(((CubeXClass)par).definedFields.contains(name))
 					this.setIsField(par);
 			}

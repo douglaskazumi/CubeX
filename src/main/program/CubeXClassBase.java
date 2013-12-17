@@ -1,7 +1,10 @@
 package main.program;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import main.c.Constructor;
+import main.c.CreateObject;
 import main.c.VTable;
 import main.context.FunctionContext;
 import main.context.GlobalContexts;
@@ -22,8 +25,16 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 	protected CubeXType parentType;
 	protected ArrayList<CubeXFunction> functions;
 
+	
+	
 
 	protected FunctionContext myFunctionContext;
+	
+	
+	public static void resetStatics()
+	{
+		curTypeID=5;
+	}
 	
 	public CubeXClassBase(String name, ArrayList<CubeXTypeVariable> types, CubeXType parentType, ArrayList<CubeXFunction> functions)
 	{

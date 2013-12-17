@@ -1,22 +1,49 @@
-class Multiplier < > ( s : String < > , n : Integer < > ) extends Thing {
-super ( ) ;
-fun print < > ( ) : Iterable < String < > > {
-ret := [ ] ;
-v := n ;
-while ( 0 . lessThan < > ( v , true ) ) {
-v := v . minus < > ( 1 ) ;
-ret := ret ++ [ s ] ;
+interface Interone < T > extends Thing {
+fun toIter < > ( t : T ) : Iterable < T > ;
 }
+interface Intertwo < T > extends Thing {
+fun twoIter < > ( t1 : T , t2 : T ) : Iterable < T > ;
+}
+class Emptier < T > ( ) extends Interone < T > & Intertwo < T > {
+super ( ) ;
+fun toIter < > ( t : T ) : Iterable < T > return [ ] ;
+fun twoIter < > ( t1 : T , t2 : T ) : Iterable < T > return [ ] ;
+}
+class Copier < T > ( ) extends Interone < T > & Intertwo < T > {
+super ( ) ;
+fun toIter < > ( t : T ) : Iterable < T > return [ t ] ;
+fun twoIter < > ( t1 : T , t2 : T ) : Iterable < T > return [ t1 , t2 ] ;
+}
+class Doubler < T > ( ) extends Interone < T > & Intertwo < T > {
+super ( ) ;
+fun toIter < > ( t : T ) : Iterable < T > return [ t , t ] ;
+fun twoIter < > ( t1 : T , t2 : T ) : Iterable < T > return [ t1 , t1 , t2 , t2 ] ;
+}
+class Dynamicasaurus < T > ( i : Integer < > ) extends Interone < T > & Intertwo < T > {
+super ( ) ;
+fun toIter < > ( t : T ) : Iterable < T > {
+ret := [ ] ;
+for ( x in 1 . through < > ( i , true , true ) ) ret := ret ++ [ t ] ;
 return ret ;
 }
+fun twoIter < > ( t1 : T , t2 : T ) : Iterable < T > return toIter < > ( t1 ) ++ toIter < > ( t2 ) ;
 }
-ds := [ ] ;
-c := 0 ;
+ret := [ ] ;
+int := 1 . negative < > ( ) ;
 for ( i in input ) {
-ds := ds ++ [ Multiplier < > ( i , c ) ] ;
-c := c . plus < > ( 1 ) ;
+e := Emptier < String < > > ( ) ;
+ret := ret ++ e . toIter < > ( i ) ;
+ret := ret ++ e . twoIter < > ( string < > ( i ++ "E" ) , string < > ( i ++ "E2" ) ) ;
+c := Copier < String < > > ( ) ;
+ret := ret ++ c . toIter < > ( i ) ;
+ret := ret ++ c . twoIter < > ( string < > ( i ++ "C" ) , string < > ( i ++ "C2" ) ) ;
+do := Doubler < String < > > ( ) ;
+ret := ret ++ do . toIter < > ( i ) ;
+ret := ret ++ do . twoIter < > ( string < > ( i ++ "Do" ) , string < > ( i ++ "Do2" ) ) ;
+dy := Dynamicasaurus < String < > > ( int ) ;
+ret := ret ++ dy . toIter < > ( i ) ;
+ret := ret ++ dy . twoIter < > ( string < > ( i ++ "Dy" ) , string < > ( i ++ "Dy2" ) ) ;
+int := int . plus < > ( 1 ) ;
 }
-out := [ ] ;
-for ( d in ds ) out := out ++ d . print < > ( ) ;
-return out ;
+return ret ;
 

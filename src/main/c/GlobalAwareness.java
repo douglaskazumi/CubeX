@@ -15,6 +15,15 @@ public class GlobalAwareness {
 	public static HashMap<String,Boolean>  locals = new HashMap<String,Boolean>();
 	public static int tempVarIndex = 0;
 	
+	public static void resetStatics()
+	{
+		declarations = new StringBuilder();
+		cons = new Constructor();
+		createObj = new CreateObject();
+		locals = new HashMap<String,Boolean>();
+		tempVarIndex = 0;
+	}
+	
 	public static String getTempName()
 	{
 		return "var_cubex_temp_"+ tempVarIndex++;

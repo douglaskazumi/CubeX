@@ -353,6 +353,7 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 		break;
 	case STRING:
 		strEntry = (stringIterableEntry_t *)entry;
+		len=strEntry->length;
 		value = createCharacter((strEntry->string)[indexer->innerIndex], 0);
 		if(indexer->innerIndex+1 >= len)
 		{
@@ -658,6 +659,13 @@ object_t *__string(object_t *chars)
 	unsigned int totalLength = 0;
 	char *buf;
 
+
+	if(chars==NULL)
+	{
+		return NULL;
+	}
+
+
 	for(i=0; i<iter->numEntries; i++)
 	{
 		entry = (iter->entries)[i];
@@ -817,9 +825,15 @@ object_t * createIterable_string(char *str, int len, int startingRefs, bool isCo
 	stringIterableEntry_t *entry;
 	iterable_t * iter = (iterable_t *)createObject(4, startingRefs);
 
-	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(sizeof(iterableEntry_t*));
+	iterableEntry_t **entryPtr;
 
 	char * loc = str;
+
+	if(len==0)
+		return NULL;
+
+	entryPtr = (iterableEntry_t **)x3malloc(sizeof(iterableEntry_t*));
+
 	if(isConstantString)
 	{
 		loc = (char *)x3malloc(len*sizeof(char));
@@ -929,6 +943,11 @@ void cubex_main()
 	while(iterableHasNext(returnValue,indexer))
 	{
 		entry = (iterable_t *)iterableNext(returnValue,indexer);
+		if(entry==NULL)
+		{
+			print_line(NULL,0);
+			continue;
+		}
 		print_line(((stringIterableEntry_t *)(entry->entries[0]))->string, (int)(((stringIterableEntry_t *)(entry->entries[0]))->length));
 	}
 

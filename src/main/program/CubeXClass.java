@@ -79,7 +79,7 @@ public class CubeXClass extends CubeXClassBase {
 	}
 	
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException 
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) throws ContextException,TypeCheckException 
 	{
 		if (classCon.lookup(name)!=null)
 			throw new ContextException("Class already in context");
@@ -103,14 +103,14 @@ public class CubeXClass extends CubeXClassBase {
 			CubeXType newType = CubeXType.validateType(arg.type, false,  classCon, classTypeVarCon);
 			newArgs.add(new CubeXArgument(arg.variable, newType));
 			definedFields.add(arg.variable.getName());
-			arg.variable.trySetField(true, this);
+			arg.variable.trySetField(true, this, null);
 			newVarCon.add(arg.variable.getName(), newType);
 		}
 		constructorArgs=newArgs;
 		
 		for(CubeXStatement stat : statements)
 		{
-			stat.typecheck(force, classCon, funCon, newVarCon, classTypeVarCon, true, this);
+			stat.typecheck(force, classCon, funCon, newVarCon, classTypeVarCon, true, this, null);
 		}
 		
 		ArrayList<String> parentFields = new ArrayList<>();
@@ -134,7 +134,7 @@ public class CubeXClass extends CubeXClassBase {
 				TypeVarSubstitution clSub = ((CubeXTypeClass)this.getParentType().getConstructableComponent()).getTypeVarSub(classCon);
 				CubeXType tpe = CubeXType.makeSubstitution(thatArgIt.next().type, clSub);
 				
-				if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, newVarCon, classTypeVarCon, true, this), tpe, classCon))
+				if(!CubeXType.isSubType(exp.getType(force, classCon, funCon, newVarCon, classTypeVarCon, true, this, null), tpe, classCon))
 					throw new TypeCheckException();
 			}
 			
@@ -237,7 +237,7 @@ public class CubeXClass extends CubeXClassBase {
 		for(CubeXFunction f : functions)
 		{
 			if(!f.isDeclaration())
-				f.typecheck(force, classCon, innerFunCon, newVarCon, classTypeVarCon, false, this);
+				f.typecheck(force, classCon, innerFunCon, newVarCon, classTypeVarCon, false, this,null);
 		}
 		
 		functions.addAll(noChecking);

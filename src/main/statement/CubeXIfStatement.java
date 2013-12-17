@@ -38,9 +38,9 @@ public class CubeXIfStatement extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException,TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) throws ContextException,TypeCheckException {
 		
-		CubeXType condType = condition.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+		CubeXType condType = condition.getType(force, classCon, funCon, varCon, typeVarCon, setField, par, parFunction);
 		if(!condType.isBool())
 			throw new TypeCheckException();
 		
@@ -48,8 +48,8 @@ public class CubeXIfStatement extends CubeXStatement {
 		VariableContext innerConTrue = (VariableContext)varCon.createChildContext();
 		VariableContext innerConFalse = (VariableContext)varCon.createChildContext();
 		
-		Tuple<Boolean, CubeXType> resTrue = ifstatement.typecheck(force, classCon, funCon, innerConTrue, typeVarCon, false, par);
-		Tuple<Boolean, CubeXType> resFalse = elsestatement.typecheck(force, classCon, funCon, innerConFalse, typeVarCon, false, par);
+		Tuple<Boolean, CubeXType> resTrue = ifstatement.typecheck(force, classCon, funCon, innerConTrue, typeVarCon, false, par, parFunction);
+		Tuple<Boolean, CubeXType> resFalse = elsestatement.typecheck(force, classCon, funCon, innerConFalse, typeVarCon, false, par, parFunction);
 		
 		varCon.setMutable(mutable);
 		
@@ -66,8 +66,8 @@ public class CubeXIfStatement extends CubeXStatement {
 			innerConTrue.getInnerMap().clear();
 			innerConFalse.getInnerMap().clear();
 			
-			resTrue = ifstatement.typecheck(true, classCon, funCon, innerConTrue, typeVarCon, setField, par);
-			resFalse = elsestatement.typecheck(true, classCon, funCon, innerConFalse, typeVarCon, setField, par);
+			resTrue = ifstatement.typecheck(true, classCon, funCon, innerConTrue, typeVarCon, setField, par, parFunction);
+			resFalse = elsestatement.typecheck(true, classCon, funCon, innerConFalse, typeVarCon, setField, par, parFunction);
 			
 			varCon.setMutable(mutable);
 		
@@ -99,11 +99,10 @@ public class CubeXIfStatement extends CubeXStatement {
 		StringBuilder sb = new StringBuilder();
 		
 		if(CubeXCompiler.optimizations)
-			sb.append("if((bool)(").append(condition.toC(par)).append(")){\n");
+			sb.append("if((bool)(").append(condition.toC(par)).append("))\n{\n");
 		else
-			sb.append("if((bool)isTrue(").append(condition.toC(par)).append(")){\n");
+			sb.append("if((bool)isTrue(").append(condition.toC(par)).append("))\n{\n");
 		
-		sb.append("if((bool)(").append(condition.toC(par)).append(")){\n");
 		sb.append(this.gcDeadVariables());
 		sb.append("\t\t").append(ifstatement.preC(par));
 		sb.append("\t\t").append(ifstatement.toC(par));

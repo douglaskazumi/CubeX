@@ -1,14 +1,12 @@
-
+#define NOGC
 
 bool gc(object_t *obj)
 {
+#ifndef NOGC
 	iterable_t *iter;
 	iterableEntry_t *iterEntry;
 	int i;
 	if(obj==NULL)
-		return true;
-
-	if((unsigned int)obj<65536)
 		return true;
 
 	if(obj->numFields==-3)
@@ -62,19 +60,18 @@ bool gc(object_t *obj)
 		gc(*(((object_t **)(obj+1))+i));
 	}
 	x3free(obj);
+#endif
 	return true;
 }
 
 object_t* gc_inc(object_t *obj)
 {
+#ifndef NOGC
 	iterable_t *iter;
 	iterableEntry_t *iterEntry;
 	int i;
 	if(obj==NULL)
 		return NULL;
-
-	if((unsigned int)obj<65536)
-		return obj;
 
 	if(obj->numFields==-3)
 		return obj;
@@ -111,19 +108,18 @@ object_t* gc_inc(object_t *obj)
 	{
 		gc_inc(*(((object_t **)(obj+1))+i));
 	}
+#endif
 	return obj;
 }
 
 object_t* gc_dec(object_t *obj)
 {
+#ifndef NOGC
 	iterable_t *iter;
 	iterableEntry_t *iterEntry;
 	int i;
 	if(obj==NULL)
 		return NULL;
-
-	if((unsigned int)obj<65536)
-		return obj;
 
 	if(obj->numFields==-3)
 		return obj;
@@ -160,14 +156,17 @@ object_t* gc_dec(object_t *obj)
 	{
 		gc_dec(*(((object_t **)(obj+1))+i));
 	}
+#endif
 	return obj;
 }
 
 
 void gc_vTable(vTable_t *vtable)
 {
+#ifndef NOGC
 	x3free(vtable->iTable);
 	x3free(vtable);
+#endif
 	return;
 }
 
@@ -182,7 +181,9 @@ iterableIndex_t * createIndexer()
 
 void gc_iterableIndex(iterableIndex_t* iterIndex)
 {
+#ifndef NOGC
 	x3free(iterIndex);
+#endif
 }
 
 bool iterableHasNext(object_t *obj, iterableIndex_t *indexer)
@@ -345,6 +346,7 @@ object_t * iterableNext(object_t * obj, iterableIndex_t *indexer)
 		break;
 	case STRING:
 		strEntry = (stringIterableEntry_t *)entry;
+		len=strEntry->length;
 		value = createCharacter((strEntry->string)[indexer->innerIndex], 0);
 		if(indexer->innerIndex+1 >= len)
 		{
@@ -660,7 +662,7 @@ object_t *__string(object_t *chars)
 
 	if(chars==NULL)
 	{
-		return (object_t *)createIterable_string(NULL, 0, 0, false);
+		return NULL;
 	}
 
 	for(i=0; i<iter->numEntries; i++)
@@ -820,12 +822,19 @@ void memcopy(void * src, void * dest, int count)
 
 object_t * createIterable_string(char *str, int len, int startingRefs, bool isConstantString)
 {
+
 	stringIterableEntry_t *entry;
 	iterable_t * iter = (iterable_t *)createObject(4, startingRefs);
 
-	iterableEntry_t **entryPtr = (iterableEntry_t **)x3malloc(sizeof(iterableEntry_t*));
+	iterableEntry_t **entryPtr;
 
 	char * loc = str;
+
+	if(len==0)
+		return NULL;
+
+	entryPtr = (iterableEntry_t **)x3malloc(sizeof(iterableEntry_t*));
+
 	if(isConstantString)
 	{
 		loc = (char *)x3malloc(len*sizeof(char));
@@ -940,6 +949,13 @@ void cubex_main()
 	while(iterableHasNext(returnValue,indexer))
 	{
 		entry = (iterable_t *)iterableNext(returnValue,indexer);
+
+		if(entry==NULL)
+		{
+			print_line(NULL,0);
+			continue;
+		}
+
 		print_line(((stringIterableEntry_t *)(entry->entries[0]))->string, (int)(((stringIterableEntry_t *)(entry->entries[0]))->length));
 	}
 

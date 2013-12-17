@@ -36,12 +36,12 @@ public class CubeXIterable extends CubeXExpression
 	}
 	
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException
+	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) throws ContextException, TypeCheckException
 	{
 		CubeXType curType=CubeXType.getNothing();
 		for(CubeXExpression exp : entries)
 		{
-			curType = CubeXType.join(curType, exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par), classCon);
+			curType = CubeXType.join(curType, exp.getType(force, classCon, funCon, varCon, typeVarCon, setField, par, parFunction), classCon);
 		}
 		return new CubeXTypeIterable(curType);
 	}

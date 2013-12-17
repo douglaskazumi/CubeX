@@ -20,7 +20,7 @@ public class CubeXString extends CubeXExpression {
 	}
 	
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) {
+	protected CubeXType calculateType(boolean force, ClassContext classCon,FunctionContext funCon, VariableContext varCon,	TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) {
 		return CubeXType.getString();
 	}
 
@@ -32,7 +32,10 @@ public class CubeXString extends CubeXExpression {
 	@Override
 	public String toC(CubeXProgramPiece par) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("createIterable_string(\"").append(value.replace("\\","\\\\")).append("\", ").append(value.length()).append(", 0, true)");
+		if(value.equals(""))
+			sb.append("NULL");
+		else
+			sb.append("createIterable_string(\"").append(value.replace("\\","\\\\")).append("\", ").append(value.length()).append(", 0, true)");
 		return sb.toString();
 	}
 

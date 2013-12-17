@@ -36,7 +36,8 @@ public class CubeXTypeIntersection extends CubeXType {
 
 	@Override
 	public ArrayList<CubeXFunction> getAllFunctions(ClassContext classCon) throws ContextException {
-		ArrayList<CubeXFunction> funs = left.getAllFunctions(classCon);
+		ArrayList<CubeXFunction> funs = new ArrayList<CubeXFunction>();
+		funs.addAll(left.getAllFunctions(classCon));
 		funs.addAll(right.getAllFunctions(classCon));
 		return funs;
 	}

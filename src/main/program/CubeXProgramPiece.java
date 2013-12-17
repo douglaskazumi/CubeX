@@ -23,7 +23,7 @@ public abstract class CubeXProgramPiece
 	private boolean isTopLevel = false;
 	public HashMap<String,Boolean>  locals = new HashMap<String,Boolean>();
 
-	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException;
+	public abstract Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) throws ContextException, TypeCheckException;
 	
 	public boolean isTopLevel()
 	{

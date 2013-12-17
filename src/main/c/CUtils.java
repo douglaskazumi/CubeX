@@ -1,12 +1,19 @@
 package main.c;
 
+import java.util.HashMap;
+
 import main.expression.CubeXVariable;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
 
 public class CUtils {
-
+	
 	public static int tempVarIndex = 0;
+	
+	public static void resetStatics()
+	{
+		tempVarIndex = 0;
+	}
 	
 	public static String getTempName()
 	{

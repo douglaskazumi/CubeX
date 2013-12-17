@@ -22,7 +22,7 @@ public class CubeXBoolean extends CubeXExpression
 	}
 	
 	@Override
-	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) {
+	protected CubeXType calculateType(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) {
 		return CubeXType.getBoolean();
 	}
 

@@ -50,9 +50,9 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
-	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par) throws ContextException, TypeCheckException {
+	public Tuple<Boolean, CubeXType> typecheck(boolean force, ClassContext classCon, FunctionContext funCon, VariableContext varCon, TypeVariableContext typeVarCon,  boolean setField, CubeXProgramPiece par, CubeXFunction parFunction) throws ContextException, TypeCheckException {
 		
-		CubeXType type = expr.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+		CubeXType type = expr.getType(force, classCon, funCon, varCon, typeVarCon, setField, par, parFunction);
 		if(type.isVariable() && (typeVarCon.lookup(((CubeXTypeVariable)type).getName())==null))
 			throw new ContextException();
 		
@@ -61,7 +61,7 @@ public class CubeXAssignment extends CubeXStatement {
 		previousType=varCon.lookup(name);
 		varCon.add(name, type);
 		
-		variable.getType(force, classCon, funCon, varCon, typeVarCon, setField, par);
+		variable.getType(force, classCon, funCon, varCon, typeVarCon, setField, par, parFunction);
 		
 		return new Tuple<Boolean, CubeXType>(false, null);
 	}

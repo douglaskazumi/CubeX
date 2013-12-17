@@ -52,7 +52,7 @@ public class CreateObject
 	public void addClass(CubeXClass clss)
 	{
 
-		createObjectFun.append("	case ").append(clss.getID()).append(":\r\n" + 
+		createObjectFun.append("	case ").append(clss.getID()).append(": /*").append(clss.getName()).append("*/\r\n" + 
 				"		object=x3malloc(sizeof(object_t) + ").append(clss.definedFields.size()).append("*sizeof(object_t *));\r\n" + 
 				"		numfields = ").append(clss.definedFields.size()).append(";\r\n" +
 				"		object->numFields=numfields;\r\n" +
