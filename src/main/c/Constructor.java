@@ -46,7 +46,7 @@ public class Constructor {
 		sb.append("cint_").append(clss.getName()).append("(this");
 		for(int i=0; i<clss.getConstructorArgs().size(); ++i)
 		{
-			sb.append(prefix).append("ca_").append(i);
+			sb.append(prefix).append("gc_dec(ca_").append(i).append(")");
 			prefix=", ";
 		}
 		sb.append(");\n");
@@ -74,7 +74,7 @@ public class Constructor {
 		for(CubeXArgument arg : clss.getConstructorArgs())
 		{
 			CubeXVariable var = arg.variable;
-			fields.append("*(((object_t **)(this+1))+").append(clss.definedFields.lastIndexOf(var.getName())).append(") = ca_").append(i).append(";\n");
+			fields.append("*(((object_t **)(this+1))+").append(clss.definedFields.lastIndexOf(var.getName())).append(") = gc_inc(ca_").append(i).append(");\n");
 			i++;
 		}
 		
@@ -107,7 +107,8 @@ public class Constructor {
 			{
 				superCall.append(", ");
 				if(!exp.isVariable() || !((CubeXVariable)exp).isField())
-					superCall.append("gc_inc(").append(exp.toC(dummyFunction)).append(")");
+					superCall.append(exp.toC(dummyFunction));
+					//superCall.append("gc_inc(").append(exp.toC(dummyFunction)).append(")");
 				else
 					superCall.append(exp.toC(dummyFunction));
 			}

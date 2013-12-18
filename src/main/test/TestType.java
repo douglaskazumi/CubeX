@@ -378,7 +378,7 @@ public class TestType {
 						e.printStackTrace();
 					}
 					outputString = getProcessOutput(exec);
-					memDiff = exec.exitValue();
+
 					PrintWriter writer = new PrintWriter("output" + i + ".txt");
 					writer.print(outputString);
 					writer.close();
@@ -413,13 +413,6 @@ public class TestType {
 				assertEquals(out_content, outputString);
 			}
 			
-			/*
-			if(memDiff!=0)
-			{
-				System.out.println("BAD MEM DIFF");
-				assertEquals(0, memDiff);
-			}
-			/**/
 		}
 	}
 	/**/

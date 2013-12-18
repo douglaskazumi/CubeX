@@ -7,7 +7,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.channels.Channel;
+import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 
 import main.context.GlobalContexts;
 import main.exceptions.TypeCheckException;
@@ -62,9 +67,9 @@ public class Initializer
 		sb.append(GlobalAwareness.getCreateObj());
 		BufferedReader bf;
 		if(CubeXCompiler.optimizations)
-			bf = new BufferedReader(new FileReader("src/main/c/cubex_lib.c"));
+			bf = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("main/c/cubex_lib.c")));
 		else
-			bf = new BufferedReader(new FileReader("src/main/c/cubex_lib_unopt.c"));
+			bf = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("main/c/cubex_lib_unopt.c")));
 		
 		String line = bf.readLine();
 		while(line!=null)
@@ -79,27 +84,27 @@ public class Initializer
 		String headerFile;
 		
 		if(CubeXCompiler.optimizations)
-			headerFile = "src/main/c/cubex_lib.h";
+			headerFile = "main/c/cubex_lib.h";
 		else
-			headerFile = "src/main/c/cubex_lib_unopt.h";
+			headerFile = "main/c/cubex_lib_unopt.h";
 			
-		copyFile(new File(headerFile), new File("cubex_lib.h"));
+		copyFile(getClass().getClassLoader().getResourceAsStream(headerFile), new File("cubex_lib.h"));
 
 		return sb.toString();
 	}
 	
-	public static void copyFile(File sourceFile, File destFile) throws IOException {
+	public static void copyFile(InputStream sourceFile, File destFile) throws IOException {
 	    if(!destFile.exists()) {
 	        destFile.createNewFile();
 	    }
 
-	    FileChannel source = null;
+	    Channel source = null;
 	    FileChannel destination = null;
 
 	    try {
-	        source = new FileInputStream(sourceFile).getChannel();
+	        source = Channels.newChannel(sourceFile);
 	        destination = new FileOutputStream(destFile).getChannel();
-	        destination.transferFrom(source, 0, source.size());
+	        destination.transferFrom((ReadableByteChannel) source, 0, Integer.MAX_VALUE);
 	    }
 	    finally {
 	        if(source != null) {

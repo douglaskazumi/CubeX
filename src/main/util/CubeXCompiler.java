@@ -22,8 +22,11 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class CubeXCompiler {
 	
-	public static boolean debug=true;
-	public static boolean optimizations=false;
+	public static boolean debug=false;
+	public static boolean optimizations=true;
+	
+	public static boolean onlyParse=false;
+	public static boolean onlyTypeCheck=false;
 	
 public static void main(String[] args) throws IOException
 {
@@ -70,6 +73,13 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	parser.addErrorListener(new ParserError());
 	
 	CubeXProgram prog = parser.testprogram().x;
+	
+	if(onlyParse)
+	{
+		System.out.println(prog.toString());
+		System.exit(0);
+	}
+	
 	if(CubeXCompiler.optimizations)
 		prog.flattenPieces();
 	try {
@@ -90,6 +100,11 @@ public void run(String[] args) throws FileNotFoundException, IOException
 	
 	if(prog.typeCheck())
 	{
+		if(onlyTypeCheck)
+		{
+			System.out.println("accept");
+			System.exit(0);		
+		}
 		if(CubeXCompiler.optimizations)
 		{
 			prog.addBoxes();
@@ -153,6 +168,11 @@ class LexerError  implements ANTLRErrorListener
 	
 	private void print()
 	{
+		if(CubeXCompiler.onlyParse)
+		{
+			System.out.println("lexer error");
+			System.exit(-1);
+		}
 		System.out.println("reject");
 		System.exit(-1);
 	}
@@ -187,6 +207,11 @@ class ParserError  implements ANTLRErrorListener
 	
 	private void print()
 	{
+		if(CubeXCompiler.onlyParse)
+		{
+			System.out.println("parser error");
+			System.exit(-1);
+		}
 		System.out.println("reject");
 		System.exit(-1);
 	}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.junit.runner.Computer;
+
 import main.Optimizations.Boxer;
 import main.Optimizations.ExpressionContext;
 import main.c.CUtils;
@@ -85,7 +87,7 @@ public class CubeXReturnStatement extends CubeXStatement {
 			for(CubeXArgument var : ((CubeXFunction)par).getArglist())
 			{	
 				toIgnore.add(var.variable.getName());
-				if(var.type.isBool()||var.type.isInt())
+				if(CubeXCompiler.optimizations && (var.type.isBool()||var.type.isInt()))
 					continue;
 				sb.append("\tgc(gc_dec(").append(CUtils.canonName(var.variable.getName())).append("));\n");
 			}
@@ -98,9 +100,14 @@ public class CubeXReturnStatement extends CubeXStatement {
 				continue;
 			sb.append("\tgc(gc_dec(").append(CUtils.canonName(var)).append("));\n");
 		}
-		if(par!=null && par.isFunction() && ((CubeXFunction)par).getParent()!=null)
+
+		
+		if(par!=null && par.isFunction())
 		{
-			sb.append("gc_dec(this);\n");
+
+			CubeXFunction fun = (CubeXFunction)par;
+			if(fun.getParent()!=null)
+				sb.append("gc_dec(this);\n");
 		}
 		
 		
