@@ -1,4 +1,23 @@
-x:=2;
-y:=2;
-z:=2+2;
-return [];
+fun build(n : Integer) : String
+	if (n <= 0)
+	 	return "";
+	else
+		return string(" "++build(n-1));
+fun remove(s : String) : String {
+	r := "";
+	b := false;
+	for (c in s)
+		if ( b )
+			r := string(r++[c]);
+		else
+			b := true;
+	return r;
+}
+fun empty(s : String) : String {
+	for (c in remove(s))
+		return string(empty(remove(s))++empty(remove(s)));
+	return "";
+}
+for (c in empty(build(1000)))
+	return ["No"];
+return ["Yes"];

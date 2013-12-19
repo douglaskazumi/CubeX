@@ -13,6 +13,7 @@ import main.context.VariableContext;
 import main.exceptions.ContextException;
 import main.exceptions.TypeCheckException;
 import main.expression.CubeXExpression;
+import main.expression.CubeXFunctionCall;
 import main.expression.CubeXVariable;
 import main.program.CubeXClassBase;
 import main.program.CubeXFunction;
@@ -156,6 +157,18 @@ public class CubeXForStatement extends CubeXStatement {
 	@Override
 	public CubeXProgramPiece flatten() {
 		this.forbody = (CubeXStatement)forbody.flatten();
+		
+		if(forexpression.isFunctionCall()){
+			CubeXBlock flattened = new CubeXBlock();
+			
+			CubeXExpression originalExpression = CubeXFunctionCall.copy((CubeXFunctionCall)forexpression);
+			
+			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), originalExpression);
+			this.forexpression = tempVar.getVariable();
+			flattened.add(tempVar);
+			flattened.add(this);			
+			return flattened;
+		}
 		
 		return this;
 	}

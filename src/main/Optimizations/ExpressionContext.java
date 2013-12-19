@@ -106,4 +106,8 @@ public class ExpressionContext extends BaseContext<CubeXVariable, CubeXExpressio
 		if(parent != null)
 			((ExpressionContext)parent).invalidateExpressionsUsing(var);
 	}
+	
+	public void replace(CubeXVariable oldVar, CubeXVariable newVar){
+		context.put(oldVar, newVar);
+	}
 }

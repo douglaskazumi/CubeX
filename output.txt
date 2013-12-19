@@ -1,6 +1,32 @@
-x := 2 ;
-y := x ;
-z := 2 . plus < > ( 2 ) ;
-var_cubex_temp_0 := [ ] ;
+fun build < > ( n : Integer < > ) : String < > {
+var_cubex_temp_1 := n . lessThan < > ( 0 , false ) ;
+if ( var_cubex_temp_1 ) return "" ;
+else {
+var_cubex_temp_0 := string < > ( " " ++ build < > ( n . minus < > ( 1 ) ) ) ;
 return var_cubex_temp_0 ;
+}
+}
+fun remove < > ( s : String < > ) : String < > {
+r := "" ;
+b := false ;
+for ( c in s ) if ( b ) r := string < > ( r ++ [ c ] ) ;
+else b := true ;
+return r ;
+}
+fun empty < > ( s : String < > ) : String < > {
+var_cubex_temp_3 := remove < > ( s ) ;
+for ( c in var_cubex_temp_3 ) {
+var_cubex_temp_2 := string < > ( empty < > ( remove < > ( s ) ) ++ empty < > ( remove < > ( s ) ) ) ;
+return var_cubex_temp_2 ;
+}
+return "" ;
+}
+var_cubex_temp_7 := build < > ( 1000 ) ;
+var_cubex_temp_5 := empty < > ( var_cubex_temp_7 ) ;
+for ( c in var_cubex_temp_5 ) {
+var_cubex_temp_4 := [ "No" ] ;
+return var_cubex_temp_4 ;
+}
+var_cubex_temp_6 := [ "Yes" ] ;
+return var_cubex_temp_6 ;
 

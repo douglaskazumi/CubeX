@@ -266,6 +266,7 @@ public class CubeXAssignment extends CubeXStatement {
 		CubeXVariable previousVariable = con.getVariableHolding(expr,variable);
 		if(previousVariable != null && previousVariable != variable){
 			expr = previousVariable;
+			con.replace(variable, previousVariable);
 		}
 		
 		return con;
