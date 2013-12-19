@@ -304,7 +304,9 @@ public class TestType {
 		String filePrefix = "x3_test";
 		File dir = new File(path);
 		int count = dir.listFiles().length / 3 + 1;
-		for (int i = 1; i < count; i++) {
+		for (int i = 61; i < count; i++) {
+			if(i == 6 || i == 8 || i == 19 || i == 37)
+				continue;
 			System.out.println("Generating code for " + i);
 			thereIsLexerError = false;
 			thereIsParserError = false;
