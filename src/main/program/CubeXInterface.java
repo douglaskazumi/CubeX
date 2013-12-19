@@ -259,13 +259,11 @@ public class CubeXInterface extends CubeXClassBase {
 
 	@Override
 	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
-		ExpressionContext localCon = con.createChildContext();
 		
 		for(CubeXFunction fun : functions){
-			fun.eliminateCommonSubexpressions(localCon);
+			fun.eliminateCommonSubexpressions(con.createChildContext());
 		}
-		
-		return localCon;
+		return con;
 	}
 	
 	@Override

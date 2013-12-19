@@ -571,8 +571,7 @@ public class CubeXProgram {
 		ExpressionContext con = new ExpressionContext(null);
 		con.add(new CubeXVariable("input"), new CubeXVariable("input"));
 		
-		for(int i = 0; i < pieces.size();i++){
-			con = pieces.get(i).eliminateCommonSubexpressions(con);
-		}
+		for(CubeXProgramPiece piece : pieces)
+				con = piece.eliminateCommonSubexpressions(con);
 	}
 }

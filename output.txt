@@ -1,14 +1,6 @@
-class Aa < > ( ) extends Thing {
-super ( ) ;
-fun lol < > ( ) : Aa < > {
-a := Aa < > ( ) ;
-return a ;
-}
-fun toString < > ( ) : String < > return "" ;
-}
-interface Bb < > extends Thing {
-fun lmao < > ( ) : Aa < > ;
-}
-fun lol < > ( ab : Aa < > & Bb < > ) : String < > return string < > ( ab . lmao < > ( ) . toString < > ( ) ++ ab . lol < > ( ) . toString < > ( ) ) ;
-return [ "" ] ;
+x := 2 ;
+y := x ;
+z := 2 . plus < > ( 2 ) ;
+var_cubex_temp_0 := [ ] ;
+return var_cubex_temp_0 ;
 

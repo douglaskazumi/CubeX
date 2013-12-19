@@ -245,32 +245,30 @@ public class CubeXAssignment extends CubeXStatement {
 	}
 
 	@Override
-	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
-		ExpressionContext localCon = con.createChildContext();
-		
-		CubeXExpression previousExpr = localCon.lookup(variable);
+	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {		
+		CubeXExpression previousExpr = con.lookup(variable);
 		if(previousExpr != null){
 			if(!(previousExpr.equals(expr))){
 				//if context contains variable, invalidates (replace variable in expressions on the context)
-				localCon.invalidateExpressionsUsing(variable);
+				con.invalidateExpressionsUsing(variable);
 			}
 		}
 
-		for(CubeXVariable var : localCon.getAllVariables()){
-			CubeXExpression replaceVariable =  localCon.lookup(var);
+		for(CubeXVariable var : con.getAllVariables()){
+			CubeXExpression replaceVariable =  con.lookup(var);
 			if(expr.contains(var) && replaceVariable.isVariable()){
 				expr.replace(var, replaceVariable);
 			}
 		}
-		localCon.add(variable, expr);
+		con.add(variable, expr);
 		
 		//replace expr with variables already in context
-		CubeXVariable previousVariable = localCon.getVariableHolding(expr,variable);
+		CubeXVariable previousVariable = con.getVariableHolding(expr,variable);
 		if(previousVariable != null && previousVariable != variable){
 			expr = previousVariable;
 		}
 		
-		return localCon;
+		return con;
 	}	
 	
 	@Override

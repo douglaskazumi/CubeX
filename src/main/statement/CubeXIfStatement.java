@@ -217,14 +217,13 @@ public class CubeXIfStatement extends CubeXStatement {
 
 	@Override
 	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
-		ExpressionContext localCon = con.createChildContext();
 		
-		ExpressionContext ifCon = ifstatement.eliminateCommonSubexpressions(localCon);
-		ExpressionContext elseCon = elsestatement.eliminateCommonSubexpressions(localCon);
+		ExpressionContext ifCon = ifstatement.eliminateCommonSubexpressions(con.createChildContext());
+		ExpressionContext elseCon = elsestatement.eliminateCommonSubexpressions(con.createChildContext());
 		
-		ifCon.merge(localCon, elseCon);
+		ifCon.merge(con, elseCon);
 		
-		return localCon;
+		return con;
 	}
 	
 	@Override

@@ -146,15 +146,14 @@ public class CubeXWhileStatement extends CubeXStatement
 
 	@Override
 	public ExpressionContext eliminateCommonSubexpressions(ExpressionContext con) throws ContextException {
-		ExpressionContext localCon = con.createChildContext();
 		
-		ExpressionContext whileCon = whilestatement.eliminateCommonSubexpressions(localCon);
+		ExpressionContext whileCon = whilestatement.eliminateCommonSubexpressions(con.createChildContext());
 		ExpressionContext addToLocalCon = new ExpressionContext(null);
-		whileCon.merge(addToLocalCon, localCon);
+		whileCon.merge(addToLocalCon, con);
 		
-		localCon.addAll(addToLocalCon);
+		con.addAll(addToLocalCon);
 		
-		return localCon;
+		return con;
 	}
 	
 	@Override

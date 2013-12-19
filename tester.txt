@@ -1,0 +1,46 @@
+fun isEmpty < > ( n : Iterable < Iterable < Nothing > > ) : Iterable < Iterable < Nothing > > {
+for ( x in n ) {
+var_cubex_temp_0 := [ [ ] ] ;
+return var_cubex_temp_0 ;
+}
+var_cubex_temp_1 := [ ] ;
+return var_cubex_temp_1 ;
+}
+fun build < > ( n : Iterable < Iterable < Nothing > > ) : Iterable < Iterable < Nothing > > {
+b := [ [ ] ] ;
+for ( x in isEmpty < > ( n ) ) {
+var_cubex_temp_2 := remove < > ( n ) ;
+a := build < > ( var_cubex_temp_2 ) ;
+for ( i in n ) b := b ++ a ;
+}
+return b ;
+}
+fun remove < > ( s : Iterable < Iterable < Nothing > > ) : Iterable < Iterable < Nothing > > {
+r := var_cubex_temp_1 ;
+b := false ;
+for ( c in s ) if ( b ) {
+var_cubex_temp_3 := [ c ] ;
+r := var_cubex_temp_3 ++ r ;
+}
+else b := true ;
+return r ;
+}
+fun empty < > ( s : Iterable < Iterable < Nothing > > ) : Iterable < Iterable < Nothing > > {
+for ( c in remove < > ( s ) ) {
+var_cubex_temp_4 := remove < > ( s ) ;
+a := empty < > ( var_cubex_temp_4 ) ;
+var_cubex_temp_5 := var_cubex_temp_4 ;
+b := empty < > ( var_cubex_temp_5 ) ;
+var_cubex_temp_6 := a ++ b ;
+return var_cubex_temp_6 ;
+}
+var_cubex_temp_7 := var_cubex_temp_1 ;
+return var_cubex_temp_7 ;
+}
+for ( c in empty < > ( build < > ( [ [ ] , [ ] , [ ] ] ) ) ) {
+var_cubex_temp_8 := [ "No" ] ;
+return var_cubex_temp_8 ;
+}
+var_cubex_temp_9 := [ "Yes" ] ;
+return var_cubex_temp_9 ;
+

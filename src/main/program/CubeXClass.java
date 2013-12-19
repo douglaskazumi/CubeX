@@ -519,10 +519,10 @@ public class CubeXClass extends CubeXClassBase {
 		}
 		
 		for(CubeXFunction fun : functions){
-			fun.eliminateCommonSubexpressions(localCon);
+			fun.eliminateCommonSubexpressions(con.createChildContext());
 		}
 		
-		return localCon;
+		return con;
 	}
 	
 	@Override
