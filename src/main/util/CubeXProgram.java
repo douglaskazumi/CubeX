@@ -514,15 +514,13 @@ public class CubeXProgram {
 	}
 	
 	public void flattenPieces(){
-		boolean notFlattened = true;
-		while(notFlattened){
-			notFlattened = false;
+		GlobalAwareness.notFlattened = true;
+		while(GlobalAwareness.notFlattened){
+			GlobalAwareness.notFlattened = false;
 			ArrayList<CubeXProgramPiece> flattenedPieces = new ArrayList<>();
 			for(CubeXProgramPiece piece : pieces){
 				CubeXProgramPiece flattened = piece.flatten();
-				if(!flattened.equals(piece)){
-					notFlattened = true;
-				}
+				
 				if(flattened.isStatement() && ((CubeXStatement)flattened).isBlock()){
 					flattenedPieces.addAll(((CubeXBlock)flattened).getInnerStatements());
 				}

@@ -122,15 +122,17 @@ public class CubeXAppend extends CubeXExpression {
 	public CubeXStatement flatten(){
 		CubeXBlock flattened = new CubeXBlock();		
 
-		if(a.isAppend()||a.isIterable()){
+		if(a.isAppend()||a.isIterable()||a.isFunctionCall()){
 			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), a);
 			a = tempVar.getVariable();
 			flattened.add(tempVar);
+			GlobalAwareness.notFlattened = true;
 		}
-		if(b.isAppend()||b.isIterable()){
+		if(b.isAppend()||b.isIterable()||b.isFunctionCall()){
 			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), b);
 			b = tempVar.getVariable();
 			flattened.add(tempVar);
+			GlobalAwareness.notFlattened = true;
 		}
 		
 		return flattened;
@@ -169,6 +171,10 @@ public class CubeXAppend extends CubeXExpression {
 	public void replace(CubeXVariable oldVar, CubeXExpression newVar) {
 		a.replace(oldVar, newVar);
 		b.replace(oldVar, newVar);
+	}
+
+	public boolean hasFunctionCall() {
+		return a.isFunctionCall() || b.isFunctionCall();
 	}
 }
 	

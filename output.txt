@@ -1,32 +1,45 @@
-fun build < > ( n : Integer < > ) : String < > {
+fun expensive < > ( n : Integer < > ) : Integer < > {
 var_cubex_temp_1 := n . lessThan < > ( 0 , false ) ;
-if ( var_cubex_temp_1 ) return "" ;
+if ( var_cubex_temp_1 ) return 0 ;
 else {
-var_cubex_temp_0 := string < > ( " " ++ build < > ( n . minus < > ( 1 ) ) ) ;
+var_cubex_temp_10 := n . minus < > ( 1 ) ;
+var_cubex_temp_9 := expensive < > ( var_cubex_temp_10 ) ;
+var_cubex_temp_12 := n . minus < > ( 2 ) ;
+var_cubex_temp_11 := expensive < > ( var_cubex_temp_12 ) ;
+var_cubex_temp_0 := var_cubex_temp_9 . plus < > ( var_cubex_temp_11 ) ;
 return var_cubex_temp_0 ;
 }
 }
-fun remove < > ( s : String < > ) : String < > {
-r := "" ;
-b := false ;
-for ( c in s ) if ( b ) r := string < > ( r ++ [ c ] ) ;
-else b := true ;
-return r ;
+var_cubex_temp_13 := expensive < > ( 9 ) ;
+var_cubex_temp_14 := expensive < > ( 10 ) ;
+var_cubex_temp_2 := var_cubex_temp_13 . lessThan < > ( var_cubex_temp_14 , true ) ;
+if ( var_cubex_temp_2 ) {
+fib := expensive < > ( 40 ) ;
+fibb := expensive < > ( 39 ) ;
+diff := fib . minus < > ( fibb ) ;
 }
-fun empty < > ( s : String < > ) : String < > {
-var_cubex_temp_3 := remove < > ( s ) ;
-for ( c in var_cubex_temp_3 ) {
-var_cubex_temp_2 := string < > ( empty < > ( remove < > ( s ) ) ++ empty < > ( remove < > ( s ) ) ) ;
-return var_cubex_temp_2 ;
+else {
+fibb := expensive < > ( 40 ) ;
+fib := expensive < > ( 39 ) ;
+diff := fibb . minus < > ( fib ) ;
 }
-return "" ;
+i := 0 ;
+sum := i ;
+while ( i . lessThan < > ( 1000 , true ) ) {
+i := i . plus < > ( 1 ) ;
+var_cubex_temp_4 := expensive < > ( 40 ) ;
+var_cubex_temp_5 := expensive < > ( 39 ) ;
+var_cubex_temp_3 := var_cubex_temp_4 . minus < > ( var_cubex_temp_5 ) ;
+sum := var_cubex_temp_3 . plus < > ( i ) ;
 }
-var_cubex_temp_7 := build < > ( 1000 ) ;
-var_cubex_temp_5 := empty < > ( var_cubex_temp_7 ) ;
-for ( c in var_cubex_temp_5 ) {
-var_cubex_temp_4 := [ "No" ] ;
-return var_cubex_temp_4 ;
-}
+var_cubex_temp_15 := diff . times < > ( 1000 ) ;
+var_cubex_temp_7 := sum . equals < > ( var_cubex_temp_15 ) ;
+if ( var_cubex_temp_7 ) {
 var_cubex_temp_6 := [ "Yes" ] ;
 return var_cubex_temp_6 ;
+}
+else {
+}
+var_cubex_temp_8 := [ "No" ] ;
+return var_cubex_temp_8 ;
 

@@ -538,9 +538,20 @@ public class CubeXFunctionCall extends CubeXExpression
 				flattened.add(((CubeXFunctionCall)originalArg).flatten());
 				flattened.add(tempVar);
 				flattenedArgs.add(tempVar.getVariable());
+				GlobalAwareness.notFlattened = true;
 			}
-			else{
-				flattenedArgs.add(arg);
+			else {
+				if((arg.isAppend() && ((CubeXAppend)arg).hasFunctionCall())){
+					CubeXExpression originalArg = CubeXAppend.copy((CubeXAppend)arg);
+					CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), originalArg);
+					flattened.add(((CubeXAppend)originalArg).flatten());
+					flattened.add(tempVar);
+					flattenedArgs.add(tempVar.getVariable());
+					GlobalAwareness.notFlattened = true;
+				}
+				else{
+					flattenedArgs.add(arg);
+				}
 			}
 		}
 		args = flattenedArgs;
@@ -549,7 +560,7 @@ public class CubeXFunctionCall extends CubeXExpression
 	
 	private boolean isArgFun(){
 		for(CubeXExpression arg : args){
-			if(arg.isFunctionCall()){
+			if(arg.isFunctionCall() || (arg.isAppend() && ((CubeXAppend)arg).hasFunctionCall())){
 				return true;
 			}
 		}
@@ -572,6 +583,7 @@ public class CubeXFunctionCall extends CubeXExpression
 			flattened.add(par.flatten());
 			flattened.add(tempVar2);
 			this.parent = tempVar2.getVariable();
+			GlobalAwareness.notFlattened = true;
 		}
 		
 		if(isArgFun()){

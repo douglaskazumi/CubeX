@@ -1,23 +1,24 @@
-fun build(n : Integer) : String
+fun expensive(n : Integer) : Integer {
 	if (n <= 0)
-	 	return "";
+		return 0;
 	else
-		return string(" "++build(n-1));
-fun remove(s : String) : String {
-	r := "";
-	b := false;
-	for (c in s)
-		if ( b )
-			r := string(r++[c]);
-		else
-			b := true;
-	return r;
+		return expensive(n-1)+expensive(n-2);
 }
-fun empty(s : String) : String {
-	for (c in remove(s))
-		return string(empty(remove(s))++empty(remove(s)));
-	return "";
+if (expensive(10) > expensive(9)) {
+	fib := expensive(40);
+	fibb := expensive(39);
+	diff := fib - fibb;
+} else {
+	fibb := expensive(40);
+	fib := expensive(39);
+	diff := fibb - fib;
 }
-for (c in empty(build(1000)))
-	return ["No"];
-return ["Yes"];
+i := 0;
+sum := 0;
+while (i < 1000) {
+	i := i + 1;
+	sum := expensive(40) - expensive(39) + sum;
+}
+if (sum == diff * 1000)
+	return ["Yes"];
+return ["No"];

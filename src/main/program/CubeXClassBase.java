@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import main.c.Constructor;
 import main.c.CreateObject;
+import main.c.GlobalAwareness;
 import main.c.VTable;
 import main.context.FunctionContext;
 import main.context.GlobalContexts;
@@ -125,8 +126,9 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 		for(CubeXFunction fun : functions){
 			if(!fun.isDeclaration())
 			{
-			CubeXFunction flattened = (CubeXFunction)fun.flatten();
-			flattenedFunctions.add(flattened);
+				CubeXFunction flattened = (CubeXFunction)fun.flatten();
+				flattenedFunctions.add(flattened);
+				GlobalAwareness.notFlattened = true;
 			}
 			else
 				flattenedFunctions.add(fun);

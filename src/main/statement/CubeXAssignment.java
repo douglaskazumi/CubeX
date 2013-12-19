@@ -210,6 +210,7 @@ public class CubeXAssignment extends CubeXStatement {
 		}
 		
 		if(wasFlattened){
+			GlobalAwareness.notFlattened = true;
 			flattened.add(this);
 			return flattened;
 		}

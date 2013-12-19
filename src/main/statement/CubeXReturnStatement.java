@@ -164,7 +164,8 @@ public class CubeXReturnStatement extends CubeXStatement {
 			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), originalReturn);
 			this.returnValue = tempVar.getVariable();
 			flattened.add(tempVar);
-			flattened.add(this);			
+			flattened.add(this);
+			GlobalAwareness.notFlattened = true;			
 			return flattened;
 		}
 		

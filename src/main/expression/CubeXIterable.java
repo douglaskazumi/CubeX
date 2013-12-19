@@ -172,6 +172,7 @@ public class CubeXIterable extends CubeXExpression
 				CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), entry);
 				flattened.add(tempVar);
 				flattenedEntries.add(tempVar.getVariable());
+				GlobalAwareness.notFlattened = true;
 			}
 			else{
 				flattenedEntries.add(entry);

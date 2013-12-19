@@ -63,5 +63,6 @@ public class GlobalAwareness {
 	}
 	
 	public static ArrayList<CubeXProgramPiece> allNode = new ArrayList<>();
+	public static boolean notFlattened;
 	
 }

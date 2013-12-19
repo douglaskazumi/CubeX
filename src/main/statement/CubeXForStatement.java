@@ -166,7 +166,8 @@ public class CubeXForStatement extends CubeXStatement {
 			CubeXAssignment tempVar = new CubeXAssignment(GlobalAwareness.getTempName(), originalExpression);
 			this.forexpression = tempVar.getVariable();
 			flattened.add(tempVar);
-			flattened.add(this);			
+			flattened.add(this);	
+			GlobalAwareness.notFlattened = true;		
 			return flattened;
 		}
 		
