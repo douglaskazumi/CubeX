@@ -128,7 +128,6 @@ public abstract class CubeXClassBase extends CubeXProgramPiece {
 			{
 				CubeXFunction flattened = (CubeXFunction)fun.flatten();
 				flattenedFunctions.add(flattened);
-				GlobalAwareness.notFlattened = true;
 			}
 			else
 				flattenedFunctions.add(fun);
